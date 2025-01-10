@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-us" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="sbc 简单介绍\r该 sbc 模块由三部分构成：sbc(sbc 业务服务), sbc-config(sbc 的配置), rtpengine(媒体服务).detrteete\n1.安装准备\r1.1 依赖服务\r1 2 docker 版本：26.1.4 docker-compose 版本:v2.25.0 另外需要安装 sngrep 和 tcpdump 用于问题排查。 sngrep 和 docker-compose 包地址\n1.2 准备工作\r1.2.1 docker 相关\rdocker 要安装在空间较大的磁盘分区上,如果不是请修改 data-root 的路径(低版本的 docker 可能修改的方法不一致,请自行查找)\n1 2 3 4 5 6 7 8 9 /etc/docker/daemon.json { &#34;data-root&#34;:&#34;/home/docker&#34;, &#34;log-driver&#34;: &#34;json-file&#34;, &#34;log-opts&#34;: { &#34;max-size&#34;: &#34;50m&#34;, &#34;max-file&#34;: &#34;10&#34; } } 配置生效\n">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="sbc 简单介绍 该 sbc 模块由三部分构成：sbc(sbc 业务服务), sbc-config(sbc 的配置), rtpengine(媒体服务).detrteete\n1.安装准备 1.1 依赖服务 1 2 docker 版本：26.1.4 docker-compose 版本:v2.25.0 另外需要安装 sngrep 和 tcpdump 用于问题排查。 sngrep 和 docker-compose 包地址\n1.2 准备工作 1.2.1 docker 相关 docker 要安装在空间较大的磁盘分区上,如果不是请修改 data-root 的路径(低版本的 docker 可能修改的方法不一致,请自行查找)\n1 2 3 4 5 6 7 8 9 /etc/docker/daemon.json { &#34;data-root&#34;:&#34;/home/docker&#34;, &#34;log-driver&#34;: &#34;json-file&#34;, &#34;log-opts&#34;: { &#34;max-size&#34;: &#34;50m&#34;, &#34;max-file&#34;: &#34;10&#34; } } 配置生效\n">
 <title>sbc安装说明</title>
 
-<link rel='canonical' href='http://localhost:1313/p/sbc%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E/'>
+<link rel='canonical' href='https://QuincyGao.github.io/p/sbc%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E/'>
 
-<link rel="stylesheet" href="/scss/style.min.73420d5c5eb1d58a48517b5a45e24d1dcd652507330c6e4db1c99e8a57f45255.css"><meta property='og:title' content="sbc安装说明">
-<meta property='og:description' content="sbc 简单介绍\r该 sbc 模块由三部分构成：sbc(sbc 业务服务), sbc-config(sbc 的配置), rtpengine(媒体服务).detrteete\n1.安装准备\r1.1 依赖服务\r1 2 docker 版本：26.1.4 docker-compose 版本:v2.25.0 另外需要安装 sngrep 和 tcpdump 用于问题排查。 sngrep 和 docker-compose 包地址\n1.2 准备工作\r1.2.1 docker 相关\rdocker 要安装在空间较大的磁盘分区上,如果不是请修改 data-root 的路径(低版本的 docker 可能修改的方法不一致,请自行查找)\n1 2 3 4 5 6 7 8 9 /etc/docker/daemon.json { &#34;data-root&#34;:&#34;/home/docker&#34;, &#34;log-driver&#34;: &#34;json-file&#34;, &#34;log-opts&#34;: { &#34;max-size&#34;: &#34;50m&#34;, &#34;max-file&#34;: &#34;10&#34; } } 配置生效\n">
-<meta property='og:url' content='http://localhost:1313/p/sbc%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E/'>
+<link rel="stylesheet" href="/scss/style.min.136f8a80224e1e2a6e19e7fd69c37952664881bef2a6a1062c0fd5a87b675a79.css"><meta property='og:title' content="sbc安装说明">
+<meta property='og:description' content="sbc 简单介绍 该 sbc 模块由三部分构成：sbc(sbc 业务服务), sbc-config(sbc 的配置), rtpengine(媒体服务).detrteete\n1.安装准备 1.1 依赖服务 1 2 docker 版本：26.1.4 docker-compose 版本:v2.25.0 另外需要安装 sngrep 和 tcpdump 用于问题排查。 sngrep 和 docker-compose 包地址\n1.2 准备工作 1.2.1 docker 相关 docker 要安装在空间较大的磁盘分区上,如果不是请修改 data-root 的路径(低版本的 docker 可能修改的方法不一致,请自行查找)\n1 2 3 4 5 6 7 8 9 /etc/docker/daemon.json { &#34;data-root&#34;:&#34;/home/docker&#34;, &#34;log-driver&#34;: &#34;json-file&#34;, &#34;log-opts&#34;: { &#34;max-size&#34;: &#34;50m&#34;, &#34;max-file&#34;: &#34;10&#34; } } 配置生效\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/sbc%E5%AE%89%E8%A3%85%E8%AF%B4%E6%98%8E/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-01-10T14:06:04&#43;08:00'/><meta property='article:modified_time' content='2025-01-10T14:06:04&#43;08:00'/>
 <meta name="twitter:title" content="sbc安装说明">
-<meta name="twitter:description" content="sbc 简单介绍\r该 sbc 模块由三部分构成：sbc(sbc 业务服务), sbc-config(sbc 的配置), rtpengine(媒体服务).detrteete\n1.安装准备\r1.1 依赖服务\r1 2 docker 版本：26.1.4 docker-compose 版本:v2.25.0 另外需要安装 sngrep 和 tcpdump 用于问题排查。 sngrep 和 docker-compose 包地址\n1.2 准备工作\r1.2.1 docker 相关\rdocker 要安装在空间较大的磁盘分区上,如果不是请修改 data-root 的路径(低版本的 docker 可能修改的方法不一致,请自行查找)\n1 2 3 4 5 6 7 8 9 /etc/docker/daemon.json { &#34;data-root&#34;:&#34;/home/docker&#34;, &#34;log-driver&#34;: &#34;json-file&#34;, &#34;log-opts&#34;: { &#34;max-size&#34;: &#34;50m&#34;, &#34;max-file&#34;: &#34;10&#34; } } 配置生效\n">
+<meta name="twitter:description" content="sbc 简单介绍 该 sbc 模块由三部分构成：sbc(sbc 业务服务), sbc-config(sbc 的配置), rtpengine(媒体服务).detrteete\n1.安装准备 1.1 依赖服务 1 2 docker 版本：26.1.4 docker-compose 版本:v2.25.0 另外需要安装 sngrep 和 tcpdump 用于问题排查。 sngrep 和 docker-compose 包地址\n1.2 准备工作 1.2.1 docker 相关 docker 要安装在空间较大的磁盘分区上,如果不是请修改 data-root 的路径(低版本的 docker 可能修改的方法不一致,请自行查找)\n1 2 3 4 5 6 7 8 9 /etc/docker/daemon.json { &#34;data-root&#34;:&#34;/home/docker&#34;, &#34;log-driver&#34;: &#34;json-file&#34;, &#34;log-opts&#34;: { &#34;max-size&#34;: &#34;50m&#34;, &#34;max-file&#34;: &#34;10&#34; } } 配置生效\n">
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -570,7 +570,7 @@
                 src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
                 
                 >
-            </script><script type="text/javascript" src="/ts/main.459612ea9e0834f372d0cbe5f96185c59956db104e17c27ac2fba669d73c43f4.js" defer></script>
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');
