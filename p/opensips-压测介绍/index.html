@@ -508,7 +508,7 @@
             <div>
                 <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-pencil-cog"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /><path d="M19.001 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M19.001 15.5v1.5" /><path d="M19.001 21v1.5" /><path d="M22.032 17.25l-1.299 .75" /><path d="M17.27 20l-1.3 .75" /><path d="M15.97 17.25l1.3 .75" /><path d="M20.733 20l1.3 .75" /></svg>
                 <time class="article-words">
-                    1889 字
+                    1923 字
                 </time>
             </div>
         
@@ -649,8 +649,38 @@
 </div><h4 id="实际压测数据">实际压测数据
 </h4><p>8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。</p>
 <p>压测结束后，通过<code>opensips-cli</code>执行<code>mi get_statistics all</code>
-能够看到实际占用的内存很少，还有1G 左右的内存空闲。</p>
-<h4 id="sip-使用tcp通信">sip 使用tcp通信
+能够看到实际占用的内存很少，还有大量的内存空闲。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    &#34;shmem:total_size&#34;: 2147483648,
+</span></span><span class="line"><span class="cl">    &#34;shmem:max_used_size&#34;: 15768384,
+</span></span><span class="line"><span class="cl">    &#34;shmem:free_size&#34;: 2142524128,
+</span></span><span class="line"><span class="cl">    &#34;shmem:used_size&#34;: 4708928,
+</span></span><span class="line"><span class="cl">    &#34;shmem:real_used_size&#34;: 4959520,
+</span></span><span class="line"><span class="cl">    &#34;shmem:fragments&#34;: 3871,
+</span></span><span class="line"><span class="cl">    &#34;rpmem:rpm_total_size&#34;: 0,
+</span></span><span class="line"><span class="cl">    &#34;rpmem:rpm_used_size&#34;: 0,
+</span></span><span class="line"><span class="cl">    &#34;rpmem:rpm_real_used_size&#34;: 0,
+</span></span><span class="line"><span class="cl">    &#34;rpmem:rpm_fragments&#34;: 0,
+</span></span><span class="line"><span class="cl">    &#34;rpmem:rpm_max_used_size&#34;: 0,
+</span></span><span class="line"><span class="cl">    &#34;rpmem:rpm_free_size&#34;: 0,
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="sip-使用tcp通信">sip 使用tcp通信
 </h4><p>场景：</p>
 <blockquote>
 <p>uac&ndash;tcp&mdash;-&gt;opensips&mdash;-tcp&mdash;-&gt;uas</p>
@@ -793,7 +823,7 @@
         
         
         发表了1篇文章 · 
-        总计1.89k字
+        总计1.92k字
     </section>
 
     <section class="copyright">

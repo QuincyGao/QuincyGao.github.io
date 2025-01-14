@@ -138,8 +138,38 @@
 &lt;/div&gt;&lt;h4 id=&#34;实际压测数据&#34;&gt;实际压测数据
 &lt;/h4&gt;&lt;p&gt;8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。&lt;/p&gt;
 &lt;p&gt;压测结束后，通过&lt;code&gt;opensips-cli&lt;/code&gt;执行&lt;code&gt;mi get_statistics all&lt;/code&gt;
-能够看到实际占用的内存很少，还有1G 左右的内存空闲。&lt;/p&gt;
-&lt;h4 id=&#34;sip-使用tcp通信&#34;&gt;sip 使用tcp通信
+能够看到实际占用的内存很少，还有大量的内存空闲。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;shmem:total_size&amp;#34;: 2147483648,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;shmem:max_used_size&amp;#34;: 15768384,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;shmem:free_size&amp;#34;: 2142524128,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;shmem:used_size&amp;#34;: 4708928,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;shmem:real_used_size&amp;#34;: 4959520,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;shmem:fragments&amp;#34;: 3871,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;rpmem:rpm_total_size&amp;#34;: 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;rpmem:rpm_used_size&amp;#34;: 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;rpmem:rpm_real_used_size&amp;#34;: 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;rpmem:rpm_fragments&amp;#34;: 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;rpmem:rpm_max_used_size&amp;#34;: 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &amp;#34;rpmem:rpm_free_size&amp;#34;: 0,
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;sip-使用tcp通信&#34;&gt;sip 使用tcp通信
 &lt;/h4&gt;&lt;p&gt;场景：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;uac&amp;ndash;tcp&amp;mdash;-&amp;gt;opensips&amp;mdash;-tcp&amp;mdash;-&amp;gt;uas&lt;/p&gt;
