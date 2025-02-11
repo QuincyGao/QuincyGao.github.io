@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>技术生活 on QuincyGao Blog</title>
-        <link>https://QuincyGao.github.io/categories/daily-life/</link>
-        <description>Recent content in 技术生活 on QuincyGao Blog</description>
+        <title>Hugo-Theme-Stack on QuincyGao Blog</title>
+        <link>http://localhost:1313/tags/hugo-theme-stack/</link>
+        <description>Recent content in Hugo-Theme-Stack on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 11 Feb 2025 14:54:27 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 11 Feb 2025 14:54:27 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/hugo-theme-stack/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>hugo 小技巧</title>
-        <link>https://QuincyGao.github.io/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/</link>
+        <link>http://localhost:1313/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/</link>
         <pubDate>Tue, 11 Feb 2025 14:54:27 +0800</pubDate>
         
-        <guid>https://QuincyGao.github.io/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/2.jpg" alt="Featured image of post hugo 小技巧" /&gt;&lt;h2 id=&#34;支持时序图&#34;&gt;支持时序图
+        <guid>http://localhost:1313/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/</guid>
+        <description>&lt;h2 id=&#34;支持时序图&#34;&gt;支持时序图
 &lt;/h2&gt;&lt;p&gt;技术文档中常会用到时序图，hugo 默认不支持时序图，需要安装 mermaid.js.&lt;/p&gt;
 &lt;p&gt;参考: &lt;a class=&#34;link&#34; href=&#34;https://gohugo.io/content-management/diagrams/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;hugo-mermaid&lt;/a&gt;&lt;/p&gt;
