@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="sip协议(rfc2361)原文\rsip协议原文:rfc2361\n旧版sip协议原文:rfc2543\n基础要点\rrequest line的格式为： Method SP Request-URI SP SIP-Version CRLF\nSP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。 信令主要有：REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE\n">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="sip协议(rfc2361)原文 sip协议原文:rfc2361\n旧版sip协议原文:rfc2543\n基础要点 request line的格式为： Method SP Request-URI SP SIP-Version CRLF\nSP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。 信令主要有：REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE\n">
 <title>sip协议(rfc2361)要点笔记(一)</title>
 
-<link rel='canonical' href='http://localhost:1313/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/'>
+<link rel='canonical' href='https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/'>
 
-<link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="sip协议(rfc2361)要点笔记(一)">
-<meta property='og:description' content="sip协议(rfc2361)原文\rsip协议原文:rfc2361\n旧版sip协议原文:rfc2543\n基础要点\rrequest line的格式为： Method SP Request-URI SP SIP-Version CRLF\nSP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。 信令主要有：REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE\n">
-<meta property='og:url' content='http://localhost:1313/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/'>
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="sip协议(rfc2361)要点笔记(一)">
+<meta property='og:description' content="sip协议(rfc2361)原文 sip协议原文:rfc2361\n旧版sip协议原文:rfc2543\n基础要点 request line的格式为： Method SP Request-URI SP SIP-Version CRLF\nSP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。 信令主要有：REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='sip' /><meta property='article:published_time' content='2025-02-12T11:38:46&#43;08:00'/><meta property='article:modified_time' content='2025-02-13T10:38:46&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/4.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='sip' /><meta property='article:published_time' content='2025-02-12T11:38:46&#43;08:00'/><meta property='article:modified_time' content='2025-02-13T10:38:46&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4.jpg' />
 <meta name="twitter:title" content="sip协议(rfc2361)要点笔记(一)">
-<meta name="twitter:description" content="sip协议(rfc2361)原文\rsip协议原文:rfc2361\n旧版sip协议原文:rfc2543\n基础要点\rrequest line的格式为： Method SP Request-URI SP SIP-Version CRLF\nSP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。 信令主要有：REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE\n"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='http://localhost:1313/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/4.jpg' />
+<meta name="twitter:description" content="sip协议(rfc2361)原文 sip协议原文:rfc2361\n旧版sip协议原文:rfc2543\n基础要点 request line的格式为： Method SP Request-URI SP SIP-Version CRLF\nSP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。 信令主要有：REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4.jpg' />
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -343,9 +343,9 @@
 
                             <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
                                 
-                                    <option value="http://localhost:1313/" selected>Chinese</option>
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
                                 
-                                    <option value="http://localhost:1313/en/" >English</option>
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
                                 
                             </select>
                         </li>
@@ -427,8 +427,8 @@
     <header class="article-header">
         <div class="article-image">
             <a href="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/">
-                <img src="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/4_hu17257671013180175793.jpg"
-                        srcset="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/4_hu17257671013180175793.jpg 800w, /p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/4_hu3839701843590085853.jpg 1600w"
+                <img src="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4_hu17257671013180175793.jpg"
+                        srcset="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4_hu17257671013180175793.jpg 800w, /p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4_hu3839701843590085853.jpg 1600w"
                         width="800" 
                         height="535" 
                         loading="lazy"
@@ -967,7 +967,7 @@
     }
 </style><script type="module">
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8365","visitor":"true"});
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
 </script>
 
     
@@ -976,13 +976,13 @@
     <script type="module">
         import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
         pageviewCount({
-          serverURL: "https:\/\/blog.xiaopeng.site:8365"
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
         });
     </script>
     <script type="module">
         import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
         commentCount({
-            serverURL: "https:\/\/blog.xiaopeng.site:8365"
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
         });
     </script>
     
@@ -1113,7 +1113,7 @@
 
             </main>
         </div>
-        <script type="text/javascript" src="/ts/main.9588b5e63ce3e1815e9dd7bd78c514d91e83e1660843be9935f0702315b11b89.js" defer></script>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

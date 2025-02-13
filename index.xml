@@ -7,12 +7,12 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Thu, 13 Feb 2025 10:38:46 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>sip协议(rfc2361)要点笔记</title>
-        <link>https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0/</link>
+        <title>sip协议(rfc2361)要点笔记(一)</title>
+        <link>https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/</link>
         <pubDate>Wed, 12 Feb 2025 11:38:46 +0800</pubDate>
         
-        <guid>https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0/4.jpg" alt="Featured image of post sip协议(rfc2361)要点笔记" /&gt;&lt;h2 id=&#34;sip协议rfc2361原文&#34;&gt;sip协议(rfc2361)原文
+        <guid>https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4.jpg" alt="Featured image of post sip协议(rfc2361)要点笔记(一)" /&gt;&lt;h2 id=&#34;sip协议rfc2361原文&#34;&gt;sip协议(rfc2361)原文
 &lt;/h2&gt;&lt;p&gt;sip协议原文:&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc3261&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;rfc2361&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;旧版sip协议原文:&lt;a class=&#34;link&#34; href=&#34;https://www.rfc-editor.org/rfc/rfc2543&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
