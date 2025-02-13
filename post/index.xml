@@ -6,7 +6,322 @@
         <description>Recent content in Posts on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 11 Feb 2025 14:54:27 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 13 Feb 2025 10:38:46 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>sip协议(rfc2361)要点笔记</title>
+        <link>https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0/</link>
+        <pubDate>Wed, 12 Feb 2025 11:38:46 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0/4.jpg" alt="Featured image of post sip协议(rfc2361)要点笔记" /&gt;&lt;h2 id=&#34;sip协议rfc2361原文&#34;&gt;sip协议(rfc2361)原文
+&lt;/h2&gt;&lt;p&gt;sip协议原文:&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc3261&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;rfc2361&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;旧版sip协议原文:&lt;a class=&#34;link&#34; href=&#34;https://www.rfc-editor.org/rfc/rfc2543&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;rfc2543&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;基础要点&#34;&gt;基础要点
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;request line的格式为：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Method SP Request-URI SP SIP-Version CRLF&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;SP 是空格，Request-URI 是请求的资源，SIP-Version 是sip协议版本号，CRLF 是回车换行。
+信令主要有：&lt;code&gt;REGISTER,INVITE,ACK,CANCEL,BYE,OPTIONS,INFO,SUBSCRIBE,NOTIFY,REFER,MESSAGE&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;uri完整格式:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;sip:user:password@host:port;uri-parameters?headers&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;response line的格式为：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;SIP-Version SP Status-Code SP Reason-Phrase CRLF&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;SIP-Version 是sip协议版本号，Status-Code 是响应码，Reason-Phrase 是响应短语，CRLF 是回车换行。&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;Header字段&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;格式:&lt;code&gt;field-name: field-value&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject:            lunch
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject      :      lunch
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject            :lunch
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject: lunch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;以上都是正确的格式，但是&lt;code&gt;Subject:lunch&lt;/code&gt;是最好的格式。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;field-name相同的可以有多个，以下都是等价的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:alice@atlanta.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject: Lunch
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:bob@biloxi.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:carol@chicago.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:alice@atlanta.com&amp;gt;, &amp;lt;sip:bob@biloxi.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:carol@chicago.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject: Lunch
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Subject: Lunch
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:alice@atlanta.com&amp;gt;, &amp;lt;sip:bob@biloxi.com&amp;gt;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;       &amp;lt;sip:carol@chicago.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;Route是有顺序的，以下两个是不等价的&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:alice@atlanta.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:bob@biloxi.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:carol@chicago.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:bob@biloxi.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:alice@atlanta.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:carol@chicago.com&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;field-name 是没有大小写区分的，但是field-value 是区分大小写的。&lt;/li&gt;
+&lt;li&gt;field-name 可以缩写，避免超过MTU.&lt;/li&gt;
+&lt;li&gt;Header缩写表
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;field-name&lt;/th&gt;
+          &lt;th&gt;简写&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Call-ID&lt;/td&gt;
+          &lt;td&gt;i&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Contact&lt;/td&gt;
+          &lt;td&gt;m&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Content-Encoding&lt;/td&gt;
+          &lt;td&gt;e&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Content-Length&lt;/td&gt;
+          &lt;td&gt;l&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Content-Type&lt;/td&gt;
+          &lt;td&gt;c&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;From&lt;/td&gt;
+          &lt;td&gt;f&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Subject&lt;/td&gt;
+          &lt;td&gt;s&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Supported&lt;/td&gt;
+          &lt;td&gt;k&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;To&lt;/td&gt;
+          &lt;td&gt;t&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Via&lt;/td&gt;
+          &lt;td&gt;v&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;UAC&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;请求头必须有六要素:&lt;code&gt;From, To, Call-ID, CSeq, Via, Max-Forwards&lt;/code&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;response头里的&lt;code&gt;From,Call-ID,CSeq&lt;/code&gt;必须和request头里的相同。response的&lt;code&gt;Via&lt;/code&gt;包含request的&lt;code&gt;Via&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;如果request头里&lt;code&gt;To&lt;/code&gt;没有&lt;code&gt;tag&lt;/code&gt;,response的&lt;code&gt;To&lt;/code&gt;里的&lt;code&gt;URL&lt;/code&gt;必须和request的&lt;code&gt;To&lt;/code&gt;的&lt;code&gt;URL&lt;/code&gt;一样。&lt;/p&gt;
+&lt;p&gt;如何request头里&lt;code&gt;To&lt;/code&gt;有&lt;code&gt;tag&lt;/code&gt;,response的&lt;code&gt;To&lt;/code&gt;必须和request的&lt;code&gt;To&lt;/code&gt;一样。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;5&#34;&gt;
+&lt;li&gt;无状态的UAS&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;不会发送(1xx)response
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;不会重传response
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;忽略ACK request
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;忽略CANCEL request
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;CANCEL 最好只对INVITE 请求使用,不能包括&lt;code&gt;Require&lt;/code&gt;or&lt;code&gt;Proxy-Require&lt;/code&gt;头&lt;/li&gt;
+&lt;li&gt;REGISTER&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;response 带有&lt;code&gt;Date&lt;/code&gt;字段，会通知client校准本地时间&lt;/li&gt;
+&lt;li&gt;response 不能带&lt;code&gt;Record-Route&lt;/code&gt;字段,如果request带&lt;code&gt;Record-Route&lt;/code&gt;字段, UAS要忽略掉。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;expires&lt;/code&gt;的优先级高于&lt;code&gt;Expires&lt;/code&gt;字段&lt;/li&gt;
+&lt;li&gt;200（OK）response必带&lt;code&gt;Contact&lt;/code&gt;字段，以及&lt;code&gt;expires&lt;/code&gt;参数&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;8&#34;&gt;
+&lt;li&gt;dialog&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;如果response没有收到&lt;code&gt;route&lt;/code&gt;，UAC 必须把remote target uri 放到Request-URI里，然后请求不能加&lt;code&gt;Route&lt;/code&gt;头&lt;/li&gt;
+&lt;li&gt;如果reponse收到&lt;code&gt;route&lt;/code&gt;,并且route里的第一个uri包含&lt;code&gt;lr&lt;/code&gt;字段， uac必须把remote target uri 放到Request-URI里，
+然后请求添加&lt;code&gt;Route&lt;/code&gt;头，把respose的&lt;code&gt;route&lt;/code&gt;放到&lt;code&gt;Route&lt;/code&gt;头里。&lt;/li&gt;
+&lt;li&gt;如果response收到&lt;code&gt;route&lt;/code&gt;,并且route里的第一个uri不包含&lt;code&gt;lr&lt;/code&gt;字段， uac必须把&lt;code&gt;route&lt;/code&gt;里的第一个uri去掉其他的参数放到Request-URI里， 然后请求头添加&lt;code&gt;Route&lt;/code&gt;,response的&lt;code&gt;route&lt;/code&gt;放到&lt;code&gt;Route&lt;/code&gt;头里。 把remote target uri 放到``Route`最后。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;例子：remote target is &lt;code&gt;sip:user@remoteua&lt;/code&gt; and the route set contains:
+&lt;code&gt;&amp;lt;sip:proxy1&amp;gt;,&amp;lt;sip:proxy2&amp;gt;,&amp;lt;sip:proxy3;lr&amp;gt;,&amp;lt;sip:proxy4&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;那么请求为:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;METHOD sip:proxy1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Route: &amp;lt;sip:proxy2&amp;gt;,&amp;lt;sip:proxy3;lr&amp;gt;,&amp;lt;sip:proxy4&amp;gt;,&amp;lt;sip:user@remoteua&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;如果uac收到2xx repsonse, 那么uac 必须使用response的&lt;code&gt;Contact&lt;/code&gt; 作为remote target uri&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果uas收到request时，那么uas 必须把request的&lt;code&gt;Contact&lt;/code&gt;作为 remote target uri来发送请求&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;uac 必须生成&lt;code&gt;ACK&lt;/code&gt; request 为 2xx response, ACK的CSeq number和INVITE的CSeq number相同&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;uas 收到INVITE 没有SDP信息时，uas必须返回2xx response 带有SDP信息,这个就是（UPDATE）&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;proxy流转&#34;&gt;Proxy流转
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;注意： mermaid不支持&lt;code&gt;;&lt;/code&gt;目前使用&lt;code&gt;|&lt;/code&gt;代替&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;基础流程&#34;&gt;基础流程
+&lt;/h4&gt;&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+  actor U1 as U1&amp;lt;br/&amp;gt;u1.example.com
+  participant P1 as P1&amp;lt;br/&amp;gt;example.com
+  participant P2 as P2&amp;lt;br/&amp;gt;domain.com
+  actor U2 as U2&amp;lt;br/&amp;gt;u2.domain.com
+  U1-&amp;gt;&amp;gt;P1: INVITE sip:callee@domain.com SIP/2.0&amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com
+  P1-&amp;gt;&amp;gt;P2: INVITE sip:callee@domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.example.com|lr&amp;gt;
+  P2-&amp;gt;&amp;gt;U2: INVITE sip:callee@u2.domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p2.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p1.example.com|lr&amp;gt;
+  U2-&amp;gt;&amp;gt;P2: SIP/2.0 200 OK &amp;lt;br/&amp;gt; Contact: sip:callee@u2.domain.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p2.domain.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.example.com|lr&amp;gt;
+  P2-&amp;gt;&amp;gt;P1: SIP/2.0 200 OK &amp;lt;br/&amp;gt; Contact: sip:callee@u2.domain.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p2.domain.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.example.com|lr&amp;gt;
+  P1-&amp;gt;&amp;gt;U1: SIP/2.0 200 OK &amp;lt;br/&amp;gt; Contact: sip:callee@u2.domain.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p2.domain.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.example.com|lr&amp;gt;
+  U1-&amp;gt;&amp;gt;P1: BYE sip:callee@u2.domain.com SIP/2.0 &amp;lt;br/&amp;gt; Route: &amp;lt;sip:p1.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p2.domain.com|lr&amp;gt;
+  P1-&amp;gt;&amp;gt;P2: BYE sip:callee@u2.domain.com SIP/2.0 &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p2.domain.com|lr&amp;gt;
+  P2-&amp;gt;&amp;gt;U2: BYE sip:callee@u2.domain.com SIP/2.0
+&lt;/pre&gt;
+
+&lt;h4 id=&#34;严格路由流程&#34;&gt;严格路由流程
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;这是U1请求U2,但是经过中间P1,P2,P3,P4转发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+  actor U1 as U1&amp;lt;br/&amp;gt;u1.example.com
+  participant P1 as P1&amp;lt;br/&amp;gt;example.com
+  participant P2 as P2&amp;lt;br/&amp;gt;example.com
+  participant P3 as P3&amp;lt;br/&amp;gt;middle.com
+  participant P4 as P4&amp;lt;br/&amp;gt;domain.com
+  actor U2 as U2&amp;lt;br/&amp;gt;u2.domain.com
+  U1-&amp;gt;&amp;gt;P1: INVITE sip:callee@domain.com SIP/2.0&amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com
+  P1-&amp;gt;&amp;gt;P2: INVITE sip:callee@domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.example.com|lr&amp;gt;
+  P2-&amp;gt;&amp;gt;P3: INVITE sip:callee@domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p2.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p1.example.com|lr&amp;gt;
+  P3-&amp;gt;&amp;gt;P4: INVITE sip:callee@domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p3.middle.com&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p2.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p1.example.com|lr&amp;gt;
+  P4-&amp;gt;&amp;gt;U2: INVITE sip:callee@u2.domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: sip:caller@u1.example.com &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p4.domain.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p3.middle.com&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p2.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Record-Route:&amp;lt;sip:p1.example.com|lr&amp;gt;
+  U2-&amp;gt;&amp;gt;P4: BYE sip:caller@u1.example.com SIP/2.0 &amp;lt;br/&amp;gt; Route: &amp;lt;sip:p4.domain.com|lr&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p3.middle.com&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p2.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p1.example.com|lr&amp;gt;
+  P4-&amp;gt;&amp;gt;P3: BYE sip:p3.middle.com SIP/2.0 &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p2.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p1.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:caller@u1.example.com&amp;gt;
+  P3-&amp;gt;&amp;gt;P2: BYE sip:p2.example.com|lr SIP/2.0 &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p1.example.com|lr&amp;gt; &amp;lt;br/&amp;gt; Route:&amp;lt;sip:caller@u1.example.com&amp;gt;
+  P2-&amp;gt;&amp;gt;P1: BYE sip:caller@u1.example.com SIP/2.0 &amp;lt;br/&amp;gt; Route:&amp;lt;sip:p1.example.com|lr&amp;gt;
+  P1-&amp;gt;&amp;gt;U1: BYE sip:caller@u1.example.com SIP/2.0
+&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;U1请求P1,P1转发U2&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+  actor U1 as U1&amp;lt;br/&amp;gt;u1.example.com
+  participant P1 as P1&amp;lt;br/&amp;gt;p1.middle.com
+  actor U2 as U2&amp;lt;br/&amp;gt;u2.domain.com
+  U1-&amp;gt;&amp;gt;P1: INVITE sip:callee@middle.com SIP/2.0&amp;lt;br/&amp;gt; Contact: &amp;lt;sip:caller@u1.example.com&amp;gt;
+  P1-&amp;gt;&amp;gt;U2: INVITE sip:callee@u2.domain.com SIP/2.0 &amp;lt;br/&amp;gt; Contact: &amp;lt;sip:caller@u1.example.com&amp;gt; &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.middle.com|lr&amp;gt;
+  U2-&amp;gt;&amp;gt;P1: SIP/2.0 200 OK &amp;lt;br/&amp;gt; Contact: &amp;lt;sip:callee@u2.domain.com&amp;gt; &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.middle.com|lr&amp;gt;
+  P1-&amp;gt;&amp;gt;U1: SIP/2.0 200 OK &amp;lt;br/&amp;gt; Contact: &amp;lt;sip:callee@u2.domain.com&amp;gt; &amp;lt;br/&amp;gt; Record-Route: &amp;lt;sip:p1.middle.com|lr&amp;gt;
+  U1-&amp;gt;&amp;gt;P1: BYE sip:callee@u2.domain.com SIP/2.0 &amp;lt;br/&amp;gt; Route: &amp;lt;sip:p1.middle.com|lr&amp;gt;
+  P1-&amp;gt;&amp;gt;U2: BYE sip:callee@u2.domain.com SIP/2.0
+&lt;/pre&gt;
+
+&lt;h4 id=&#34;heading&#34;&gt;
+&lt;/h4&gt;</description>
+        </item>
+        <item>
         <title>hugo 小技巧</title>
         <link>https://QuincyGao.github.io/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/</link>
         <pubDate>Tue, 11 Feb 2025 14:54:27 +0800</pubDate>
