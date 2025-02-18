@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="b2b_logic模块介绍 b2b_logic 官方使用场景介绍:https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2\n本次测试的opensips版本为：\nopensips 3.3.10 (x86_64/linux)\nb2b_logic 实战 配置:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 loadmodule &#34;b2b_entities.so&#34; loadmodule &#34;rtp_relay.so&#34; loadmodule &#34;dialog.so&#34; loadmodule &#34;b2b_logic.so&#34; modparam(&#34;b2b_logic&#34;, &#34;hash_size&#34;, 10) modparam(&#34;b2b_logic&#34;, &#34;script_req_route&#34;, &#34;b2b_logic_request&#34;) modparam(&#34;b2b_logic&#34;, &#34;script_reply_route&#34;, &#34;b2b_logic_reply&#34;) modparam(&#34;b2b_logic&#34;, &#34;cleanup_period&#34;, 60) #modparam(&#34;b2b_logic&#34;, &#34;db_url&#34;, &#34;mysql://opensips:opensipsrw@172.16.4.111/opensips&#34;) modparam(&#34;b2b_logic&#34;, &#34;update_period&#34;, 60) modparam(&#34;b2b_logic&#34;, &#34;max_duration&#34;, 7200) #modparam(&#34;b2b_logic&#34;, &#34;contact_user&#34;, 1) modparam(&#34;b2b_logic&#34;, &#34;server_address&#34;, &#34;sip:$fU@172.16.4.111:5360&#34;) #modparam(&#34;b2b_logic&#34;, &#34;db_mode&#34;, 1) modparam(&#34;b2b_logic&#34;, &#34;b2bl_th_init_timeout&#34;, 60) modparam(&#34;b2b_logic&#34;, &#34;b2bl_early_update&#34;, 1) 在 route主请求中添加：\n">
-<title>b2b_logic模块介绍</title>
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="SDP协议版本\rsdp协议最新链接：rfc8866\n历史版本：rfc4566 rfc2327\n特性 RFC 2327 (1998) RFC 4566 (2006) RFC 8866 (2021) IP 支持 仅 IPv4 IPv4 + IPv6 IPv4 + IPv6 安全机制 无 基础（如 k=） 完善(DTLS-SRTP 等) ICE 支持 无 初步属性支持 完整规范 扩展性 有限 新增属性字段 明确的扩展规则 应用场景 传统 VoIP WebRTC 早期 现代 WebRTC/5G 本次以rfc8866为例学习\n">
+<title>SDP协议和RTP协议</title>
 
-<link rel='canonical' href='https://QuincyGao.github.io/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/'>
+<link rel='canonical' href='http://localhost:1313/p/sdp%E5%8D%8F%E8%AE%AE%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/'>
 
-<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="b2b_logic模块介绍">
-<meta property='og:description' content="b2b_logic模块介绍 b2b_logic 官方使用场景介绍:https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2\n本次测试的opensips版本为：\nopensips 3.3.10 (x86_64/linux)\nb2b_logic 实战 配置:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 loadmodule &#34;b2b_entities.so&#34; loadmodule &#34;rtp_relay.so&#34; loadmodule &#34;dialog.so&#34; loadmodule &#34;b2b_logic.so&#34; modparam(&#34;b2b_logic&#34;, &#34;hash_size&#34;, 10) modparam(&#34;b2b_logic&#34;, &#34;script_req_route&#34;, &#34;b2b_logic_request&#34;) modparam(&#34;b2b_logic&#34;, &#34;script_reply_route&#34;, &#34;b2b_logic_reply&#34;) modparam(&#34;b2b_logic&#34;, &#34;cleanup_period&#34;, 60) #modparam(&#34;b2b_logic&#34;, &#34;db_url&#34;, &#34;mysql://opensips:opensipsrw@172.16.4.111/opensips&#34;) modparam(&#34;b2b_logic&#34;, &#34;update_period&#34;, 60) modparam(&#34;b2b_logic&#34;, &#34;max_duration&#34;, 7200) #modparam(&#34;b2b_logic&#34;, &#34;contact_user&#34;, 1) modparam(&#34;b2b_logic&#34;, &#34;server_address&#34;, &#34;sip:$fU@172.16.4.111:5360&#34;) #modparam(&#34;b2b_logic&#34;, &#34;db_mode&#34;, 1) modparam(&#34;b2b_logic&#34;, &#34;b2bl_th_init_timeout&#34;, 60) modparam(&#34;b2b_logic&#34;, &#34;b2bl_early_update&#34;, 1) 在 route主请求中添加：\n">
-<meta property='og:url' content='https://QuincyGao.github.io/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/'>
+<link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="SDP协议和RTP协议">
+<meta property='og:description' content="SDP协议版本\rsdp协议最新链接：rfc8866\n历史版本：rfc4566 rfc2327\n特性 RFC 2327 (1998) RFC 4566 (2006) RFC 8866 (2021) IP 支持 仅 IPv4 IPv4 + IPv6 IPv4 + IPv6 安全机制 无 基础（如 k=） 完善(DTLS-SRTP 等) ICE 支持 无 初步属性支持 完整规范 扩展性 有限 新增属性字段 明确的扩展规则 应用场景 传统 VoIP WebRTC 早期 现代 WebRTC/5G 本次以rfc8866为例学习\n">
+<meta property='og:url' content='http://localhost:1313/p/sdp%E5%8D%8F%E8%AE%AE%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-02-11T08:49:22&#43;08:00'/><meta property='article:modified_time' content='2025-02-11T08:49:22&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2.jpg' />
-<meta name="twitter:title" content="b2b_logic模块介绍">
-<meta name="twitter:description" content="b2b_logic模块介绍 b2b_logic 官方使用场景介绍:https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2\n本次测试的opensips版本为：\nopensips 3.3.10 (x86_64/linux)\nb2b_logic 实战 配置:\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 loadmodule &#34;b2b_entities.so&#34; loadmodule &#34;rtp_relay.so&#34; loadmodule &#34;dialog.so&#34; loadmodule &#34;b2b_logic.so&#34; modparam(&#34;b2b_logic&#34;, &#34;hash_size&#34;, 10) modparam(&#34;b2b_logic&#34;, &#34;script_req_route&#34;, &#34;b2b_logic_request&#34;) modparam(&#34;b2b_logic&#34;, &#34;script_reply_route&#34;, &#34;b2b_logic_reply&#34;) modparam(&#34;b2b_logic&#34;, &#34;cleanup_period&#34;, 60) #modparam(&#34;b2b_logic&#34;, &#34;db_url&#34;, &#34;mysql://opensips:opensipsrw@172.16.4.111/opensips&#34;) modparam(&#34;b2b_logic&#34;, &#34;update_period&#34;, 60) modparam(&#34;b2b_logic&#34;, &#34;max_duration&#34;, 7200) #modparam(&#34;b2b_logic&#34;, &#34;contact_user&#34;, 1) modparam(&#34;b2b_logic&#34;, &#34;server_address&#34;, &#34;sip:$fU@172.16.4.111:5360&#34;) #modparam(&#34;b2b_logic&#34;, &#34;db_mode&#34;, 1) modparam(&#34;b2b_logic&#34;, &#34;b2bl_th_init_timeout&#34;, 60) modparam(&#34;b2b_logic&#34;, &#34;b2bl_early_update&#34;, 1) 在 route主请求中添加：\n"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://QuincyGao.github.io/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='sip' /><meta property='article:published_time' content='2025-02-13T17:03:07&#43;08:00'/><meta property='article:modified_time' content='2025-02-13T17:03:07&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/20250214/6.jpg' />
+<meta name="twitter:title" content="SDP协议和RTP协议">
+<meta name="twitter:description" content="SDP协议版本\rsdp协议最新链接：rfc8866\n历史版本：rfc4566 rfc2327\n特性 RFC 2327 (1998) RFC 4566 (2006) RFC 8866 (2021) IP 支持 仅 IPv4 IPv4 + IPv6 IPv4 + IPv6 安全机制 无 基础（如 k=） 完善(DTLS-SRTP 等) ICE 支持 无 初步属性支持 完整规范 扩展性 有限 新增属性字段 明确的扩展规则 应用场景 传统 VoIP WebRTC 早期 现代 WebRTC/5G 本次以rfc8866为例学习\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1313/p/20250214/6.jpg' />
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -343,9 +343,9 @@
 
                             <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
                                 
-                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                    <option value="http://localhost:1313/" selected>Chinese</option>
                                 
-                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                    <option value="http://localhost:1313/en/" >English</option>
                                 
                             </select>
                         </li>
@@ -400,8 +400,8 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#b2b_logic模块介绍">b2b_logic模块介绍</a></li>
-    <li><a href="#b2b_logic-实战">b2b_logic 实战</a></li>
+    <li><a href="#sdp协议版本">SDP协议版本</a></li>
+    <li><a href="#sdp-参数解析">sdp 参数解析</a></li>
   </ol>
 </nav>
         </div>
@@ -416,13 +416,13 @@
     <article class="has-image main-article">
     <header class="article-header">
         <div class="article-image">
-            <a href="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
-                <img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2_hu7726358404595286750.jpg"
-                        srcset="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2_hu7726358404595286750.jpg 800w, /p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2_hu5356988543203234356.jpg 1600w"
+            <a href="/p/sdp%E5%8D%8F%E8%AE%AE%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/">
+                <img src="/p/20250214/6_hu16868878627980447635.jpg"
+                        srcset="/p/20250214/6_hu16868878627980447635.jpg 800w, /p/20250214/6_hu17244770080744089039.jpg 1600w"
                         width="800" 
-                        height="545" 
+                        height="535" 
                         loading="lazy"
-                        alt="Featured image of post b2b_logic模块介绍" />
+                        alt="Featured image of post SDP协议和RTP协议" />
                 
             </a>
         </div>
@@ -432,8 +432,8 @@
     
     <header class="article-category">
         
-            <a href="/categories/opensips/" style="background-color: #d09daa; color: #fff;">
-                opensips
+            <a href="/categories/daily-life/" style="background-color: #d09daa; color: #fff;">
+                技术生活
             </a>
         
     </header>
@@ -441,7 +441,7 @@
 
     <div class="article-title-wrapper">
         <h2 class="article-title">
-            <a href="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">b2b_logic模块介绍</a>
+            <a href="/p/sdp%E5%8D%8F%E8%AE%AE%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/">SDP协议和RTP协议</a>
         </h2>
     
         
@@ -463,7 +463,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2025-02-11</time>
+                <time class="article-time--published">2025-02-13</time>
             </div>
         
 
@@ -478,21 +478,21 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 1 分钟,共496 字
+                    阅读时长: 2 分钟,共832 字
                 </time>
             </div>
         
         <div>
             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
             <time class="article-pageview">
-                <span class="waline-pageview-count" data-path="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">0</span> 次浏览
+                <span class="waline-pageview-count" data-path="/p/sdp%E5%8D%8F%E8%AE%AE%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/">0</span> 次浏览
             </time>
         </div>
     
         <div>
             <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
             <time class="article-comment">
-                <span class="waline-comment-count" data-path="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">0</span> 条评论
+                <span class="waline-comment-count" data-path="/p/sdp%E5%8D%8F%E8%AE%AE%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/">0</span> 条评论
             </time>
         </div>
     </footer>
@@ -506,15 +506,60 @@
     <section class="article-content">
     
     
-    <h2 id="b2b_logic模块介绍">b2b_logic模块介绍
-</h2><p>b2b_logic 官方使用场景介绍:<a class="link" href="https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2"  target="_blank" rel="noopener"
-    >https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2</a></p>
-<p>本次测试的opensips版本为：</p>
-<blockquote>
-<p>opensips 3.3.10 (x86_64/linux)</p>
-</blockquote>
-<h2 id="b2b_logic-实战">b2b_logic 实战
-</h2><p>配置:</p>
+    <h2 id="sdp协议版本">SDP协议版本
+</h2><p>sdp协议最新链接：<a class="link" href="https://datatracker.ietf.org/doc/html/rfc8866"  target="_blank" rel="noopener"
+    >rfc8866</a></p>
+<p>历史版本：<a class="link" href="https://datatracker.ietf.org/doc/html/rfc4566"  target="_blank" rel="noopener"
+    >rfc4566</a>
+<a class="link" href="https://datatracker.ietf.org/doc/html/rfc2327"  target="_blank" rel="noopener"
+    >rfc2327</a></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>RFC 2327 (1998)</th>
+          <th>RFC 4566 (2006)</th>
+          <th>RFC 8866 (2021)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>IP 支持</td>
+          <td>仅 IPv4</td>
+          <td>IPv4 + IPv6</td>
+          <td>IPv4 + IPv6</td>
+      </tr>
+      <tr>
+          <td>安全机制</td>
+          <td>无</td>
+          <td>基础（如 k=）</td>
+          <td>完善(DTLS-SRTP 等)</td>
+      </tr>
+      <tr>
+          <td>ICE 支持</td>
+          <td>无</td>
+          <td>初步属性支持</td>
+          <td>完整规范</td>
+      </tr>
+      <tr>
+          <td>扩展性</td>
+          <td>有限</td>
+          <td>新增属性字段</td>
+          <td>明确的扩展规则</td>
+      </tr>
+      <tr>
+          <td>应用场景</td>
+          <td>传统 VoIP</td>
+          <td>WebRTC 早期</td>
+          <td>现代 WebRTC/5G</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>本次以<code>rfc8866</code>为例学习</p>
+<h2 id="sdp-参数解析">sdp 参数解析
+</h2><ul>
+<li>session Description</li>
+</ul>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -532,28 +577,108 @@
 </span><span class="lnt">13
 </span><span class="lnt">14
 </span><span class="lnt">15
-</span><span class="lnt">16
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;b2b_entities.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;rtp_relay.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;dialog.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;b2b_logic.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;hash_size&#34;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;script_req_route&#34;</span><span class="p">,</span> <span class="s2">&#34;b2b_logic_request&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;script_reply_route&#34;</span><span class="p">,</span> <span class="s2">&#34;b2b_logic_reply&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;cleanup_period&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;b2b_logic&#34;, &#34;db_url&#34;, &#34;mysql://opensips:opensipsrw@172.16.4.111/opensips&#34;)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;update_period&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;max_duration&#34;</span><span class="p">,</span> <span class="mi">7200</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;b2b_logic&#34;, &#34;contact_user&#34;, 1)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;server_address&#34;</span><span class="p">,</span> <span class="s2">&#34;sip:$fU@172.16.4.111:5360&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;b2b_logic&#34;, &#34;db_mode&#34;, 1)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;b2bl_th_init_timeout&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;b2bl_early_update&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">v=  (protocol version)
+</span></span><span class="line"><span class="cl">o=  (originator and session identifier)
+</span></span><span class="line"><span class="cl">s=  (session name)
+</span></span><span class="line"><span class="cl">i=* (session information)
+</span></span><span class="line"><span class="cl">u=* (URI of description)
+</span></span><span class="line"><span class="cl">e=* (email address)
+</span></span><span class="line"><span class="cl">p=* (phone number)
+</span></span><span class="line"><span class="cl">c=* (connection information -- not required if included in
+</span></span><span class="line"><span class="cl">     all media descriptions)
+</span></span><span class="line"><span class="cl">b=* (zero or more bandwidth information lines)
+</span></span><span class="line"><span class="cl">One or more time descriptions:
+</span></span><span class="line"><span class="cl">  (&#34;t=&#34;, &#34;r=&#34; and &#34;z=&#34; lines; see below)
+</span></span><span class="line"><span class="cl">k=* (obsolete)
+</span></span><span class="line"><span class="cl">a=* (zero or more session attribute lines)
+</span></span><span class="line"><span class="cl">Zero or more media descriptions
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>在 route主请求中添加：</p>
+</div><ol>
+<li>
+<p><code>v=0</code> 版本默认是0</p>
+</li>
+<li>
+<p><code>o=&lt;username&gt; &lt;sess-id&gt; &lt;sess-version&gt; &lt;nettype&gt; &lt;addrtype&gt; &lt;unicast-address&gt;</code></p>
+</li>
+</ol>
+<p><code>username</code>: 用户登录的原始host,默认&rsquo;-'</p>
+<p><code>sess-id</code>: 会话id，具备唯一性</p>
+<p><code>sess-version</code>: 会话版本，可和<code>sess-id</code>一致</p>
+<p><code>nettype</code>: 网络类型，默认为<code>IN</code></p>
+<p><code>addrtype</code>: 地址类型，默认为<code>IP4</code> or <code>IP6</code></p>
+<p><code>unicast-address</code>: ip地址</p>
+<ol start="3">
+<li><code>s=&lt;session name&gt;</code> 必须填写,没有则为&rsquo;s=&rsquo; or &rsquo;s=-'</li>
+<li><code>i=&lt;session information&gt;</code> 描述会话信息,可选</li>
+<li><code>u=&lt;uri&gt;</code> 描述会话uri, 可选</li>
+<li><code>e=&lt;email-address&gt;  p=&lt;phone number&gt;</code>, 可选</li>
+<li><code>c=&lt;nettype&gt; &lt;addrtype&gt; &lt;connection-address&gt;</code> 连接信息，为&rsquo;IN IP4 xxxx&rsquo;, c可以有多个</li>
+<li><code>b=&lt;bwtype&gt;:&lt;bandwidth&gt;</code> 带宽信息，可选</li>
+<li><code>k=&lt;keytype&gt; &lt;key&gt;</code> 加密信息，可选</li>
+</ol>
+<ul>
+<li>Time Description</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">t=  (time the session is active)
+</span></span><span class="line"><span class="cl">r=* (zero or more repeat times)
+</span></span><span class="line"><span class="cl">z=* (optional time zone offset line)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li><code>t=&lt;start-time&gt; &lt;stop-time&gt;</code> 会话开始和结束时间戳，可多个，开始和结束时间都为0，会话视为永久</li>
+<li><code>r=&lt;repeat interval&gt; &lt;active duration&gt; &lt;offsets from start-time&gt;</code> 重复时间间隔和持续时间，可选</li>
+<li><code>z=&lt;adjustment time&gt; &lt;offset&gt; &lt;adjustment time&gt; &lt;offset&gt; ...</code> 时区偏移，可选</li>
+</ol>
+<ul>
+<li>Media Description</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">m=  (media name and transport address)
+</span></span><span class="line"><span class="cl">i=* (media title)
+</span></span><span class="line"><span class="cl">c=* (connection information -- optional if included at
+</span></span><span class="line"><span class="cl">     session level)
+</span></span><span class="line"><span class="cl">b=* (zero or more bandwidth information lines)
+</span></span><span class="line"><span class="cl">k=* (obsolete)
+</span></span><span class="line"><span class="cl">a=* (zero or more media attribute lines)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li><code>m=&lt;media&gt; &lt;port&gt;/&lt;numers of ports&gt; &lt;proto&gt; &lt;fmt&gt; ...</code> 媒体描述，必选.
+<ul>
+<li><code>media</code>: <code>audio</code>、<code>video</code>、<code>text</code>、<code>application</code>、<code>message</code></li>
+<li><code>port</code>: 端口号，0-65535，0表示不指定端口, <code>numbers of ports</code>: rtp 会话数选择</li>
+<li><code>proto</code>: 传输协议，<code>udp</code>,<code>RTP/AVP</code>,<code>RTP/SAVP</code>,<code>RTP/SAVPF</code></li>
+<li><code>fmt</code>: 媒体格式，如 <code>0</code>、<code>8</code>、<code>9</code>、<code>97</code>、<code>98</code>、<code>99</code>、<code>101</code>、<code>102</code>、<code>103</code>、<code>104</code>、<code>105</code>等</li>
+</ul>
+</li>
+<li><code>k=&lt;method&gt;  k=&lt;method&gt;:&lt;encryption key&gt;</code> 已过时，不要用</li>
+<li><code>a=&lt;aattribute-name&gt; a=&lt;attribute-name&gt;:&lt;aattribute-value&gt;</code> 扩展sdp信息，可多个
+<ul>
+<li><code>rtpmap</code>: 媒体格式的描述, 要和<code>m=</code>里<code>fmt</code>格式一致</li>
+</ul>
+</li>
+</ol>
+<p>详细示例：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -570,88 +695,25 @@
 </span><span class="lnt">12
 </span><span class="lnt">13
 </span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"> <span class="k">if</span><span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">has_totag</span><span class="p">())</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---b2b-server_new--:$rm|$rs|$tu|$socket_in(port)|$var(contact)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_server_new</span><span class="p">(</span><span class="s2">&#34;caller&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">create_dialog</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">rtp_relay_engage</span><span class="p">(</span><span class="s2">&#34;rtpengine&#34;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">#$avp(route)=&#34;Record-Route&#34;;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#$avp(route-content)=&#34;&lt;sip:172.16.4.111:5360;lr&gt;&#34;;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#b2b_client_new(&#34;callee&#34;, &#34;sip:$tU@172.16.4.114:5080&#34;,,,$ct);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_client_new</span><span class="p">(</span><span class="s2">&#34;callee&#34;</span><span class="p">,</span> <span class="s2">&#34;sip:$tU@172.16.4.114:5080&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#record_route();</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#b2b_client_new(&#34;callee&#34;, &#34;sip:$tU@172.16.4.114:5080&#34;,,,$ct,$avp(route),$avp(route-content));</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># initialize B2B session</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_init_request</span><span class="p">(</span><span class="s2">&#34;prepaid&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">b2b_logic_reply</span><span class="p">]</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Reply Received from $si:$sp User-Agent:$ua</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Reply message $rs:$rr received </span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">b2b_handle_reply</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">b2b_logic_request</span><span class="p">]</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Request Received from $si:$sp User-Agent:$ua</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Request message $rs:$rr received </span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_pass_request</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">v=0
+</span></span><span class="line"><span class="cl">o=jdoe 3724394400 3724394405 IN IP4 198.51.100.1
+</span></span><span class="line"><span class="cl">s=Call to John Smith
+</span></span><span class="line"><span class="cl">i=SDP Offer #1
+</span></span><span class="line"><span class="cl">u=http://www.jdoe.example.com/home.html
+</span></span><span class="line"><span class="cl">e=Jane Doe &lt;jane@jdoe.example.com&gt;
+</span></span><span class="line"><span class="cl">p=+1 617 555-6011
+</span></span><span class="line"><span class="cl">c=IN IP4 198.51.100.1
+</span></span><span class="line"><span class="cl">t=0 0
+</span></span><span class="line"><span class="cl">m=audio 49170 RTP/AVP 0
+</span></span><span class="line"><span class="cl">m=audio 49180 RTP/AVP 0
+</span></span><span class="line"><span class="cl">m=video 51372 RTP/AVP 99
+</span></span><span class="line"><span class="cl">c=IN IP6 2001:db8::2
+</span></span><span class="line"><span class="cl">a=rtpmap:99 h263-1998/90000
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>需要注意的是， b2b_logic中媒体服务使用的是rtp_relay,通过rtp_relay来选择媒体代理。
-通过b2b_logic 转发的INVITE的Call-ID是新生成的（例如:<code>B2B.377.4269969.1739239153</code>）和主叫的INVITE的Call-ID不同。</p>
-<p>目前发现，被叫挂断时b2b_logic会多发送一个Bye给自己，已提bug到opensips的issue.</p>
-<p>主叫挂断的sip流程图：<img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1.png"
-	width="1183"
-	height="910"
-	srcset="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu6817963574803739879.png 480w, /p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu1084654204987761059.png 1024w"
-	loading="lazy"
-	
-		alt="主叫挂断"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="130"
-		data-flex-basis="312px"
-	
-></p>
-<p>被叫挂断的sip流程图：<img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2.png"
-	width="1177"
-	height="974"
-	srcset="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu10321639498700773460.png 480w, /p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu7949677085132287903.png 1024w"
-	loading="lazy"
-	
-		alt="被叫挂断"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="120"
-		data-flex-basis="290px"
-	
-></p>
-
+</div>
 </section>
 
 
@@ -660,7 +722,7 @@
     
     <section class="article-tags">
         
-            <a href="/tags/opensips/">Opensips</a>
+            <a href="/tags/sip/">Sip</a>
         
     </section>
 
@@ -734,23 +796,23 @@
             
                 
 <article class="has-image">
-    <a href="/p/uac_registant%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+    <a href="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%BA%8C/">
         
         
             <div class="article-image">
-                <img src="/p/uac_registant%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2.deab1879cc0683c66d9a37cf0d59cbb8_hu5955713488042896076.jpg" 
+                <img src="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%BA%8C/5.b1e2772bc0c96e80cfa05b72ced316d5.b1e2772bc0c96e80cfa05b72ced316d5_hu15796380744078077592.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post uac_registant模块介绍"
+                        alt="Featured image of post sip协议(rfc2361)要点笔记(二)"
                         
-                        data-hash="md5-3qsYecwGg8ZtmjfPDVnLuA==">
+                        data-hash="md5-seJ3K8DJboDPoFtyztMW1Q==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">uac_registant模块介绍</h2>
+            <h2 class="article-title">sip协议(rfc2361)要点笔记(二)</h2>
         </div>
     </a>
 </article>
@@ -758,23 +820,47 @@
             
                 
 <article class="has-image">
-    <a href="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/">
+    <a href="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/">
         
         
             <div class="article-image">
-                <img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/backup.816e861f8811a8f8b05ce6be077eb923_hu3201127361854365491.jpg" 
+                <img src="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4.af610351028bbadc9b21771b11734217.af610351028bbadc9b21771b11734217_hu18285765752448216416.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post opensips 压测介绍"
+                        alt="Featured image of post sip协议(rfc2361)要点笔记(一)"
                         
-                        data-hash="md5-gW6GH4gRqPiwXOa&#43;B365Iw==">
+                        data-hash="md5-r2EDUQKLutybIXcbEXNCFw==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">opensips 压测介绍</h2>
+            <h2 class="article-title">sip协议(rfc2361)要点笔记(一)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/">
+        
+        
+            <div class="article-image">
+                <img src="/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/2.637e7773ce24b7b69ab37ef3f68234a7.637e7773ce24b7b69ab37ef3f68234a7_hu3552649003669076854.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post hugo 小技巧"
+                        
+                        data-hash="md5-Y353c84kt7aas37z9oI0pw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">hugo 小技巧</h2>
         </div>
     </a>
 </article>
@@ -802,7 +888,7 @@
     }
 </style><script type="module">
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8365","visitor":"true"});
 </script>
 
     
@@ -811,13 +897,13 @@
     <script type="module">
         import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
         pageviewCount({
-          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+          serverURL: "https:\/\/blog.xiaopeng.site:8365"
         });
     </script>
     <script type="module">
         import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
         commentCount({
-            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+            serverURL: "https:\/\/blog.xiaopeng.site:8365"
         });
     </script>
     
@@ -853,7 +939,7 @@
         
         
         发表了7篇文章 · 
-        总计8.90k字
+        总计8.25k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
@@ -952,7 +1038,7 @@
 
             </main>
         </div>
-        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+        <script type="text/javascript" src="/ts/main.9588b5e63ce3e1815e9dd7bd78c514d91e83e1660843be9935f0702315b11b89.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');
