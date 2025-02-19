@@ -6,7 +6,23 @@
         <description>Recent content in 标签 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 18 Feb 2025 09:03:07 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 19 Feb 2025 09:24:03 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Nat</title>
+        <link>https://QuincyGao.github.io/tags/nat/</link>
+        <pubDate>Wed, 19 Feb 2025 09:24:03 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/tags/nat/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>Opensips</title>
+        <link>https://QuincyGao.github.io/tags/opensips/</link>
+        <pubDate>Wed, 19 Feb 2025 09:24:03 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/tags/opensips/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Sip</title>
         <link>https://QuincyGao.github.io/tags/sip/</link>
         <pubDate>Tue, 18 Feb 2025 09:03:07 +0800</pubDate>
@@ -20,14 +36,6 @@
         <pubDate>Tue, 11 Feb 2025 14:54:27 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/tags/hugo/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Opensips</title>
-        <link>https://QuincyGao.github.io/tags/opensips/</link>
-        <pubDate>Tue, 11 Feb 2025 08:49:22 +0800</pubDate>
-        
-        <guid>https://QuincyGao.github.io/tags/opensips/</guid>
         <description></description>
         </item>
         

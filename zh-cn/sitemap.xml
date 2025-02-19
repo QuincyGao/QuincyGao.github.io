@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,17 +15,23 @@
                 href="https://QuincyGao.github.io/"
                 />
   </url><url>
+    <loc>https://QuincyGao.github.io/tags/nat/</loc>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/opensips/</loc>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/opensips/</loc>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
+  </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/sdp%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/</loc>
-    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/tags/sip/</loc>
-    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -38,7 +44,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
+    <lastmod>2025-02-19T09:24:03+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -49,6 +55,12 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/categories/"
                 />
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/sdp%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/</loc>
+    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/sip/</loc>
+    <lastmod>2025-02-18T09:03:07+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
     <lastmod>2025-02-18T09:03:07+08:00</lastmod>
@@ -66,12 +78,6 @@
     <lastmod>2025-02-11T14:54:27+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>
-    <lastmod>2025-02-11T08:49:22+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/categories/opensips/</loc>
-    <lastmod>2025-02-11T08:49:22+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/tags/opensips/</loc>
     <lastmod>2025-02-11T08:49:22+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/uac_registant%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>

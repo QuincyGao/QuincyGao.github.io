@@ -1,0 +1,2074 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="NAT 协议 NAT协议参考：RFC 2663\nNAT For TCP: RFC 5382\nNAT For UDP: RFC 4787\n在介绍opensips的这两个模块使用之前，我们需要先了解一下NAT相关的概念。 NAT (Network Address Translation),网络地址转换，是一种网络地址转换技术， 主要是将内部的私有IP地址转换为公共IP地址，使得外部网络能够访问到内部的私有网络。\n">
+<title>NAT_TRAVERSAL和NATHELPER模块介绍</title>
+
+<link rel='canonical' href='https://QuincyGao.github.io/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/'>
+
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="NAT_TRAVERSAL和NATHELPER模块介绍">
+<meta property='og:description' content="NAT 协议 NAT协议参考：RFC 2663\nNAT For TCP: RFC 5382\nNAT For UDP: RFC 4787\n在介绍opensips的这两个模块使用之前，我们需要先了解一下NAT相关的概念。 NAT (Network Address Translation),网络地址转换，是一种网络地址转换技术， 主要是将内部的私有IP地址转换为公共IP地址，使得外部网络能够访问到内部的私有网络。\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/'>
+<meta property='og:site_name' content='QuincyGao Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='nat' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-02-19T09:24:03&#43;08:00'/><meta property='article:modified_time' content='2025-02-19T09:24:03&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7.jpg' />
+<meta name="twitter:title" content="NAT_TRAVERSAL和NATHELPER模块介绍">
+<meta name="twitter:description" content="NAT 协议 NAT协议参考：RFC 2663\nNAT For TCP: RFC 5382\nNAT For UDP: RFC 4787\n在介绍opensips的这两个模块使用之前，我们需要先了解一下NAT相关的概念。 NAT (Network Address Translation),网络地址转换，是一种网络地址转换技术， 主要是将内部的私有IP地址转换为公共IP地址，使得外部网络能够访问到内部的私有网络。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7.jpg' />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/QuincyGao_hu9863765197253960442.jpg" width="300"
+                            height="225" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">QuincyGao Blog</a></h1>
+            <h2 class="site-description">事在人为，境由心造</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://bilibili.com'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Bilibili-Logo--Streamline-Ultimate.svg" height="24" width="24"><desc>Bilibili Logo Streamline Icon: https://streamlinehq.com</desc><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.90263 6.93445H19.0575s1.4674 0 1.4674 1.46739v9.27356s0 1.4673 -1.4674 1.4673H4.90263s-1.46739 0 -1.46739 -1.4673V8.40184s0 -1.46739 1.46739 -1.46739Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M14.7251 15.8387c-0.0599 0.2695 -0.3493 0.6189 -0.9982 0.6189 -1.1779 0 -1.707 -1.4674 -1.707 -1.4674s-0.529 1.4674 -1.7069 1.4674c-0.68879 0 -0.99824 -0.3494 -0.99824 -0.6189" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.65306 4.24927c-1.03607 0.00264 -2.02881 0.41607 -2.76049 1.14962C1.16089 6.13245 0.749997 7.12623 0.75 8.16231V17.925c0 1.0351 0.41121 2.0279 1.14318 2.7598 0.73197 0.732 1.72472 1.1432 2.75988 1.1432h0.99823v0.2196c0.0276 0.3053 0.16838 0.5892 0.39465 0.7959 0.22627 0.2067 0.52168 0.3213 0.82817 0.3213 0.30649 0 0.6019 -0.1146 0.82818 -0.3213 0.22627 -0.2067 0.36704 -0.4906 0.39465 -0.7959v-0.2495h7.80616v0.2495c0.0276 0.3053 0.1683 0.5892 0.3946 0.7959 0.2263 0.2067 0.5217 0.3213 0.8282 0.3213s0.6019 -0.1146 0.8282 -0.3213c0.2262 -0.2067 0.367 -0.4906 0.3946 -0.7959v-0.2495h0.9982c1.0352 0 2.028 -0.4112 2.7599 -1.1432 0.732 -0.732 1.1432 -1.7247 1.1432 -2.7599V8.16231c0 -1.03608 -0.4109 -2.02986 -1.1426 -2.76342 -0.7317 -0.73355 -1.7244 -1.14698 -2.7605 -1.14962H4.65306Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m5.72116 11.6761 3.84317 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m18.2389 11.6761 -3.8431 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.12045 0.835205 9.53438 4.24914" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M17.8396 0.835205 14.4257 4.24914" stroke-width="1.5"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/QuincyGao'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>github [#142]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 507.93 507.93" xml:space="preserve">
+<g>
+	<rect x="103.527" y="225.828" style="fill:#FFFFFF;" width="300.9" height="253.9"/>
+	<polygon style="fill:#FFFFFF;" points="53.427,197.528 454.427,197.528 253.927,32.428 	"/>
+</g>
+<path style="fill:#56ACE0;" d="M253.927,68.928l-20.1,16.6h12.7c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-47l-21,17.3h19.9
+	c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-53.2c-0.3,0-0.5-0.1-0.8-0.1l-12.4,10.2h243.8L253.927,68.928z"/>
+<rect x="202.427" y="337.028" style="fill:#FFC10D;" width="103" height="142.6"/>
+<path style="fill:#194F82;" d="M501.627,199.828l-238.7-196.6c-5.2-4.3-12.7-4.3-17.9,0l-239.9,197.6c-4.6,3.8-6.3,10-4.3,15.7
+	c2,5.6,7.3,9.3,13.3,9.3h61.1v268c0,7.8,6.3,14.1,14.1,14.1h329.2c7.8,0,14.1-6.3,14.1-14.1v-268h61.1c0.1,0,0.1,0,0.1,0
+	c7.8,0,14.1-6.3,14.1-14.1C508.027,206.728,505.427,202.328,501.627,199.828z M305.427,479.628h-103v-142.6h103V479.628z
+	 M404.427,479.628h-70.8v-156.7c0-7.8-6.3-14.1-14.1-14.1h-131.2c-7.8,0-14.1,6.3-14.1,14.1v156.7h-70.8v-253.8h300.9v253.8H404.427
+	z M53.427,197.528l200.5-165.1l200.5,165.2h-401V197.528z"/>
+</svg>
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M76.412,326.853h85.075c6.012,0,10.925-4.848,10.925-10.925V32.97
+	c0-6.012-4.848-10.925-10.925-10.925H76.412c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C65.487,322.004,70.4,326.853,76.412,326.853z"/>
+<path style="fill:#FFC10D;" d="M231.564,326.853h85.075c5.107,0,9.374-3.556,10.602-8.275l0.388-285.608
+	c0-6.012-4.848-10.925-10.925-10.925h-85.139c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C220.574,322.004,225.552,326.853,231.564,326.853z"/>
+<g>
+	<path style="fill:#FFFFFF;" d="M118.885,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C128.711,260.073,124.315,255.677,118.885,255.677z"/>
+	<path style="fill:#FFFFFF;" d="M274.036,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C283.863,260.073,279.467,255.677,274.036,255.677z"/>
+</g>
+<g>
+	<path style="fill:#194F82;" d="M118.885,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C87.273,282.828,101.495,296.921,118.885,296.921z M118.885,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826S113.519,255.547,118.885,255.547z"/>
+	<path style="fill:#194F82;" d="M98.198,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,82.295,92.186,87.143,98.198,87.143z"/>
+	<path style="fill:#194F82;" d="M98.198,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,136.145,92.186,140.994,98.198,140.994z"/>
+	<path style="fill:#194F82;" d="M274.036,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C242.489,282.828,256.582,296.921,274.036,296.921z M274.036,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826C264.275,259.943,268.671,255.547,274.036,255.547z"/>
+	<path style="fill:#194F82;" d="M253.35,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,82.295,247.337,87.143,253.35,87.143z"/>
+	<path style="fill:#194F82;" d="M253.35,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,136.145,247.337,140.994,253.35,140.994z"/>
+	<path style="fill:#194F82;" d="M381.737,203.378h-32.388V32.97c0-18.036-14.675-32.711-32.711-32.711h-85.075
+		c-18.036,0-32.711,14.675-32.711,32.711v282.958c0,3.879,0.711,7.499,1.939,10.925h-8.404c1.228-3.426,1.939-7.111,1.939-10.925
+		V32.97c0-18.036-14.675-32.711-32.711-32.711H76.412c-18.036,0-32.711,14.675-32.711,32.711v170.473H10.925
+		C4.913,203.442,0,208.291,0,214.368v167.046c0,6.012,4.848,10.925,10.925,10.925h370.747c6.012,0,10.925-4.848,10.925-10.925
+		V214.368C392.598,208.291,387.749,203.378,381.737,203.378z M220.574,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925l-0.388,285.608c-1.164,4.719-5.43,8.275-10.602,8.275h-84.945
+		c-6.012,0-10.925-4.848-10.925-10.925V32.97H220.574z M65.487,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925v282.958c0,6.012-4.848,10.925-10.925,10.925H76.412c-6.012,0-10.925-4.848-10.925-10.925
+		C65.487,315.992,65.487,32.97,65.487,32.97z M370.812,370.424H21.851V225.164h21.786v112.485c0,6.012,4.848,10.925,10.925,10.925
+		h283.539c6.012,0,10.925-4.848,10.925-10.925l0.388-112.485h21.463v145.261H370.812z"/>
+</g>
+<path style="fill:#56ACE0;" d="M349.026,337.778c0,6.012-4.848,10.925-10.925,10.925H54.626c-6.012,0-10.925-4.848-10.925-10.925
+	V225.293H21.851v145.261h348.962V225.228h-21.463L349.026,337.778z"/>
+</svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.609 392.609" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
+	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
+<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
+	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
+	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
+<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
+	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
+	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
+<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
+	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
+	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
+	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
+	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
+	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
+	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
+	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
+</svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#56ACE0;" d="M120.469,49.455c0,15.257-12.412,27.669-27.669,27.669c-15.192,0-27.669-12.412-27.669-27.669
+	S77.543,21.786,92.8,21.786C108.057,21.786,120.469,34.198,120.469,49.455z"/>
+<path style="fill:#FFFFFF;" d="M62.287,265.503h61.026v105.244h-19.588v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.012,0-10.925,4.849-10.925,10.925v42.861H62.287V265.503z"/>
+<path style="fill:#FFC10D;" d="M144.129,181.657v62.061H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C123.572,135.822,144.129,156.38,144.129,181.657z"/>
+<path style="fill:#FFFFFF;" d="M272.129,49.455c0-15.257,12.412-27.669,27.669-27.669c15.257,0,27.669,12.412,27.669,27.669
+	s-12.412,27.669-27.669,27.669C284.606,77.123,272.129,64.711,272.129,49.455z"/>
+<path style="fill:#FFC10D;" d="M269.156,265.503h61.026v105.244h-19.523v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653L269.156,265.503L269.156,265.503z"/>
+<path style="fill:#56ACE0;" d="M351.127,181.657v62.061H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C330.57,135.822,351.127,156.38,351.127,181.657z"/>
+<g>
+	<path style="fill:#194F82;" d="M98.295,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.877c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C165.98,144.356,135.661,113.972,98.295,113.972z M144.129,243.717
+		H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834L144.129,243.717
+		L144.129,243.717z M123.378,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.012,0-10.925,4.849-10.925,10.925
+		v42.861H62.287V265.503h61.026L123.378,370.747L123.378,370.747z"/>
+	<path style="fill:#194F82;" d="M92.8,0C65.519,0,43.281,22.174,43.281,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S120.081,0,92.8,0z M92.8,77.123c-15.192,0-27.669-12.412-27.669-27.669S77.543,21.786,92.8,21.786
+		s27.669,12.412,27.669,27.669S108.057,77.123,92.8,77.123z"/>
+	<path style="fill:#194F82;" d="M305.228,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.941c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C372.913,144.356,342.594,113.972,305.228,113.972z M351.127,243.717
+		H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834V243.717L351.127,243.717z
+		 M330.311,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653
+		V265.503h61.026v105.244H330.311z"/>
+	<path style="fill:#194F82;" d="M299.798,0c-27.281,0-49.455,22.174-49.455,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S327.014,0,299.798,0z M299.798,77.123c-15.192,0-27.669-12.412-27.669-27.669
+		s12.412-27.669,27.669-27.669s27.669,12.412,27.669,27.669S315.055,77.123,299.798,77.123z"/>
+</g>
+</svg>
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.533 392.533" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M196.267,21.851c-96.194,0-174.481,78.287-174.481,174.481s78.287,174.481,174.481,174.481
+	s174.481-78.287,174.481-174.481S292.461,21.851,196.267,21.851z"/>
+<path style="fill:#FFC10D;" d="M196.267,348.962c-84.17,0-152.695-68.461-152.695-152.695s68.525-152.63,152.695-152.63
+	s152.695,68.461,152.695,152.695S280.436,348.962,196.267,348.962z"/>
+<path style="fill:#FFFFFF;" d="M131.814,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	c8.21,0,14.933-6.723,14.933-14.933C146.747,132.267,140.024,125.543,131.814,125.543z"/>
+<path style="fill:#194F82;" d="M131.814,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+	s36.719-16.485,36.719-36.719S152.048,103.758,131.814,103.758z M131.814,155.41c-8.21,0-14.933-6.723-14.933-14.933
+	c0-8.21,6.723-14.933,14.933-14.933c8.21,0,14.933,6.723,14.933,14.933C146.747,148.752,140.024,155.41,131.814,155.41z"/>
+<path style="fill:#FFFFFF;" d="M260.719,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	s14.933-6.723,14.933-14.933S268.994,125.543,260.719,125.543z"/>
+<g>
+	<path style="fill:#194F82;" d="M260.719,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+		c20.234,0,36.719-16.485,36.719-36.719S280.954,103.758,260.719,103.758z M260.719,155.41c-8.21,0-14.933-6.723-14.933-14.933
+		c0-8.21,6.723-14.933,14.933-14.933s14.933,6.723,14.933,14.933C275.653,148.752,268.994,155.41,260.719,155.41z"/>
+	<path style="fill:#194F82;" d="M196.267,0C87.984,0,0,87.984,0,196.267s87.984,196.267,196.267,196.267
+		s196.267-87.984,196.267-196.267S304.549,0,196.267,0z M196.267,370.747c-96.194,0-174.481-78.287-174.481-174.481
+		S100.073,21.786,196.267,21.786s174.481,78.287,174.481,174.481S292.461,370.747,196.267,370.747z"/>
+	<path style="fill:#194F82;" d="M279.079,265.051c-45.64,45.64-119.984,45.64-165.689,0c-4.267-4.267-11.119-4.202-15.451,0
+		c-4.848,4.719-3.943,10.99,0,15.451c55.661,55.467,143.515,53.075,196.525,0c3.685-4.784,5.042-10.731,0-15.451
+		C290.133,260.913,283.345,260.784,279.079,265.051z"/>
+</g>
+</svg>
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#nat-协议">NAT 协议</a>
+      <ol>
+        <li><a href="#nat-类型">NAT 类型</a>
+          <ol>
+            <li><a href="#静态nat">静态NAT</a></li>
+            <li><a href="#napt">NAPT</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#nat_traversal-和-nathelper-介绍">NAT_TRAVERSAL 和 NATHELPER 介绍</a></li>
+    <li><a href="#模块使用示例">模块使用示例</a>
+      <ol>
+        <li><a href="#nat_traversal">NAT_TRAVERSAL</a></li>
+        <li><a href="#nathelper">NATHELPER</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+                <img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7_hu5890053651817777352.jpg"
+                        srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7_hu5890053651817777352.jpg 800w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7_hu8294935316032128531.jpg 1600w"
+                        width="800" 
+                        height="535" 
+                        loading="lazy"
+                        alt="Featured image of post NAT_TRAVERSAL和NATHELPER模块介绍" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/opensips/" style="background-color: #d09daa; color: #fff;">
+                opensips
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">NAT_TRAVERSAL和NATHELPER模块介绍</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-02-19</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟,共3998 字
+                </time>
+            </div>
+        
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">0</span> 次浏览
+            </time>
+        </div>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">0</span> 条评论
+            </time>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="nat-协议">NAT 协议
+</h2><p>NAT协议参考：<a class="link" href="https://datatracker.ietf.org/doc/html/rfc2663"  target="_blank" rel="noopener"
+    >RFC 2663</a></p>
+<p>NAT For TCP: <a class="link" href="https://datatracker.ietf.org/doc/html/rfc5382/"  target="_blank" rel="noopener"
+    >RFC 5382</a></p>
+<p>NAT For UDP: <a class="link" href="https://datatracker.ietf.org/doc/html/rfc4787/"  target="_blank" rel="noopener"
+    >RFC 4787</a></p>
+<p>在介绍opensips的这两个模块使用之前，我们需要先了解一下NAT相关的概念。
+NAT (Network Address Translation),网络地址转换，是一种网络地址转换技术，
+主要是将内部的私有IP地址转换为公共IP地址，使得外部网络能够访问到内部的私有网络。</p>
+<h3 id="nat-类型">NAT 类型
+</h3><h4 id="静态nat">静态NAT
+</h4><p>一个公网IP对应一个私网IP，一对一转换，仅支持地址转换，不支持端口映射。
+需要维护一个公共的地址池,目前已经不再使用。</p>
+<h4 id="napt">NAPT
+</h4><p>目前说的NAT基本上指的就是NAPT了，NAPT使用端口多路复用技术，不但要地址ip转换，还要端口映射。
+主要有以下几类：</p>
+<h5 id="full-cone-nat完全锥形nat">Full Cone NAT(完全锥形NAT)
+</h5><p>特点：ip和port都不设限. 场景：
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat1.png"
+	width="1133"
+	height="696"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat1_hu9815070208000758620.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat1_hu17795173275888438617.png 1024w"
+	loading="lazy"
+	
+		alt="完全锥形"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="162"
+		data-flex-basis="390px"
+	
+>
+client 发送数据包给server1, 通过NAT设备完成192.168.0.1:3000&lt;&ndash;&gt;1.2.3.4:6000的映射。</p>
+<p>server1收到数据包后，可以往1.2.3.4:6000发送数据包，server2也能往1.2.3.4:6000发送数据包。</p>
+<h5 id="restricted-cone-nat限制锥形nat">Restricted Cone NAT(限制锥形NAT)
+</h5><p>特点：ip设限，port不设限. 场景：
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat2.png"
+	width="1072"
+	height="598"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat2_hu8241466081092243135.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat2_hu12170883858938973554.png 1024w"
+	loading="lazy"
+	
+		alt="限制锥形"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="179"
+		data-flex-basis="430px"
+	
+>
+client 发送数据包给server1, 通过NAT设备完成192.168.0.1:3000&lt;&ndash;&gt;1.2.3.4:6000的映射。</p>
+<p>server1收到数据包后，往1.2.3.4:6000发送数据包，此时NAT允许该server1通过数据。</p>
+<p>但是client没有往server2发送数据，所以server2不能通过NAT设备1.2.3.4:6000发送数据包。</p>
+<h5 id="port-restricted-cone-nat端口限制锥形nat">Port Restricted Cone NAT(端口限制锥形NAT)
+</h5><p>特点：IP和port都受限. 场景：
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat3.png"
+	width="1201"
+	height="678"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat3_hu8593175184960227704.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat3_hu9280793775433859398.png 1024w"
+	loading="lazy"
+	
+		alt="端口限制锥形"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="177"
+		data-flex-basis="425px"
+	
+>
+client 发送数据包给server1, 通过NAT设备完成192.168.0.1:3000&lt;&ndash;&gt;1.2.3.4:6000的映射。</p>
+<p>server1收到数据包后，往1.2.3.4:6000发送数据包，此时NAT允许该server1通过数据。</p>
+<p>但是server1的其他端口(除了4000)，都不允许通过NAT设备发送数据包，server2更不允许。</p>
+<h5 id="symmetric-nat对称nat">Symmetric NAT(对称NAT)
+</h5><p>特点:对每个外部主机或端口的会话都会映射为不同的端口
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat4.png"
+	width="1314"
+	height="730"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat4_hu11326747474905028506.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/nat4_hu8366697046220369787.png 1024w"
+	loading="lazy"
+	
+		alt="对称NAT"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="180"
+		data-flex-basis="432px"
+	
+>
+client 发送数据包给server1, 通过NAT设备完成192.168.0.1:3000&lt;&ndash;&gt;1.2.3.4:6000的映射。</p>
+<p>server1的4000收到数据包后，往1.2.3.4:6000发送数据包，此时NAT允许该server1通过数据。</p>
+<p>client 发送数据包给server1, 通过NAT设备完成192.168.0.1:3000&lt;&ndash;&gt;1.2.3.4:6001的映射。</p>
+<p>server1端4001收到数据包后，往1.2.3.4:6001发送数据包，此时NAT允许该server1通过数据</p>
+<p>server端只有client发送过数据的数据包，NAT才允许通过，并且NAT的端口映射会不一样。</p>
+<h2 id="nat_traversal-和-nathelper-介绍">NAT_TRAVERSAL 和 NATHELPER 介绍
+</h2><p>这两个模块都是针对Client的NAT而设计的，一方面是让client知道自己的外网ip和port,
+另一方面记录此NAT的ip和port，用于回复信令。</p>
+<p><strong>需要注意的是这两个模块无法让client知道opensips服务端信令和媒体的外网ip和port</strong></p>
+<p><code>NATHELPER</code>的使用场景比<code>NAT_TRAVERSAL</code>要简单，但是功能更多。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>功能</th>
+          <th>NATHELPER</th>
+          <th>NAT_TRAVERSAL</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>支持设置ping间隔</td>
+          <td>√</td>
+          <td>√</td>
+      </tr>
+      <tr>
+          <td>支持设置ping方法</td>
+          <td>√</td>
+          <td>√</td>
+      </tr>
+      <tr>
+          <td>支持修改ping发出去的端口</td>
+          <td>√</td>
+          <td>x</td>
+      </tr>
+      <tr>
+          <td>支持tcp方式的ping</td>
+          <td>√</td>
+          <td>x</td>
+      </tr>
+      <tr>
+          <td>修改Register的Contact</td>
+          <td>fix_nated_register</td>
+          <td>fix_contact</td>
+      </tr>
+      <tr>
+          <td>修改Invite的Contact</td>
+          <td>fix_nated_contact</td>
+          <td>fix_contact</td>
+      </tr>
+      <tr>
+          <td>修改sdp的o=ip</td>
+          <td>fix_nated_sdp</td>
+          <td>x</td>
+      </tr>
+      <tr>
+          <td>开始执行ping方法</td>
+          <td>sipping_bflag / ping_nated_only</td>
+          <td>nat_keepalive</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>为啥需要ping? 当client通过NAT发送请求到opensips,为了保持连接，需要往NAT链路上发送ping包，
+可以是OPTIONS也可以是INFO，能够保证NAT链路一直处于活动状态。</p>
+<h2 id="模块使用示例">模块使用示例
+</h2><p>opensips版本</p>
+<blockquote>
+<p>opensips 3.3.10 (x86_64/linux)</p>
+</blockquote>
+<h3 id="nat_traversal">NAT_TRAVERSAL
+</h3><p>完整配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1">###### Global Parameters #########</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">xlog_level</span><span class="o">=</span><span class="mi">4</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#debug_mode=yes</span>
+</span></span><span class="line"><span class="cl"><span class="n">log_stderror</span><span class="o">=</span><span class="n">yes</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#stderror_enabled=yes</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#syslog_facility=LOG_LOCAL0</span>
+</span></span><span class="line"><span class="cl"><span class="n">log_facility</span><span class="o">=</span><span class="n">LOG_LOCAL0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">advertised_address</span><span class="o">=</span><span class="mf">116.198</span><span class="o">.</span><span class="mf">229.200</span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="o">=</span><span class="n">udp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">0.3</span><span class="p">:</span><span class="mi">5271</span>
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="o">=</span><span class="n">udp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">0.3</span><span class="p">:</span><span class="mi">5272</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">####### Modules Section ########</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># set module path</span>
+</span></span><span class="line"><span class="cl"><span class="n">mpath</span><span class="o">=</span><span class="s2">&#34;/usr/local/lib64/sbc/modules/&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### SIGNALING module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;signaling.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;db_mysql.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### StateLess module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;sl.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### Transaction Module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;tm.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;fr_timeout&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;fr_inv_timeout&#34;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;restart_fr_on_each_reply&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;onreply_avp_mode&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### Record Route Module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;rr.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;rr&#34;</span><span class="p">,</span> <span class="s2">&#34;append_fromtag&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### MAX ForWarD module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;maxfwd.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### SIP MSG OPerationS module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;sipmsgops.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### FIFO Management Interface</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;mi_fifo.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;mi_fifo&#34;</span><span class="p">,</span> <span class="s2">&#34;fifo_name&#34;</span><span class="p">,</span> <span class="s2">&#34;/tmp/opensips_fifo&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;mi_fifo&#34;</span><span class="p">,</span> <span class="s2">&#34;fifo_mode&#34;</span><span class="p">,</span> <span class="mi">0666</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;httpd.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;mi_http.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;httpd&#34;</span><span class="p">,</span><span class="s2">&#34;port&#34;</span><span class="p">,</span><span class="mi">9998</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### USeR LOCation module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;usrloc.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;usrloc&#34;</span><span class="p">,</span> <span class="s2">&#34;nat_bflag&#34;</span><span class="p">,</span> <span class="s2">&#34;NAT&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### REGISTRAR module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;registrar.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### RTPengine protocol</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;rtpengine.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;rtpengine&#34;</span><span class="p">,</span> <span class="s2">&#34;rtpengine_sock&#34;</span><span class="p">,</span> <span class="s2">&#34;udp:172.16.0.3:22222&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### Nathelper protocol</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#loadmodule &#34;nathelper.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;registrar|nathelper&#34;, &#34;received_avp&#34;, &#34;$avp(rcv)&#34;)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### UDP protocol</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;proto_udp.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;nat_traversal.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;dialog.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nat_traversal&#34;</span><span class="p">,</span> <span class="s2">&#34;keepalive_interval&#34;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nat_traversal&#34;</span><span class="p">,</span> <span class="s2">&#34;keepalive_method&#34;</span><span class="p">,</span> <span class="s2">&#34;OPTIONS&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nat_traversal&#34;</span><span class="p">,</span> <span class="s2">&#34;keepalive_from&#34;</span><span class="p">,</span> <span class="s2">&#34;sip:keepalive@my-domain.com&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">####### Routing Logic ########</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># main request routing logic</span>
+</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">mf_process_maxfwd_header</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">sl_send_reply</span><span class="p">(</span><span class="mi">483</span><span class="p">,</span><span class="s2">&#34;Too Many Hops&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">has_totag</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># sequential requests within a dialog should</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># take the path determined by record-routing</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">loose_route</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="c1"># even if in most of the cases is useless, do RR for</span>
+</span></span><span class="line"><span class="cl">				<span class="c1"># re-INVITEs alos, as some buggy clients do change route set</span>
+</span></span><span class="line"><span class="cl">				<span class="c1"># during the dialog.</span>
+</span></span><span class="line"><span class="cl">				<span class="n">record_route</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">			<span class="c1"># route it out to whatever destination was set by loose_route()</span>
+</span></span><span class="line"><span class="cl">			<span class="c1"># in $du (destination URI).</span>
+</span></span><span class="line"><span class="cl">			<span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span> <span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;ACK&#34;</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="k">if</span> <span class="p">(</span> <span class="n">t_check_trans</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="c1"># non loose-route, but stateful ACK; must be an ACK after</span>
+</span></span><span class="line"><span class="cl">					<span class="c1"># a 487 or e.g. 404 from upstream server</span>
+</span></span><span class="line"><span class="cl">					<span class="n">t_relay</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">					<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					<span class="c1"># ACK without matching transaction -&gt;</span>
+</span></span><span class="line"><span class="cl">					<span class="c1"># ignore and discard</span>
+</span></span><span class="line"><span class="cl">					<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sl_send_reply</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span><span class="s2">&#34;Not here&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># CANCEL processing</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;CANCEL&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">t_check_trans</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">			<span class="n">t_relay</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">t_check_trans</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">#if (!is_method(&#34;REGISTER&#34;)) {</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#	if (is_myself(&#34;$fd&#34;)) {</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#		# if caller is not local, then called number must be local</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#		if (!is_myself(&#34;$rd&#34;)) {</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#			send_reply(403,&#34;Rely forbidden&#34;);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#			exit;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#		}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#	}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># preloaded route checking</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">loose_route</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_ERR&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">		<span class="s2">&#34;Attempt to route with preloaded Route&#39;s [$fu/$tu/$ru/$ci]&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;ACK&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sl_send_reply</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span><span class="s2">&#34;Preload Route denied&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># record routing</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER|MESSAGE&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">		<span class="n">record_route</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_myself</span><span class="p">(</span><span class="s2">&#34;$rd&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">append_hf</span><span class="p">(</span><span class="s2">&#34;P-hint: outbound</span><span class="se">\r\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># requests for my domain</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;PUBLISH|SUBSCRIBE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">sl_send_reply</span><span class="p">(</span><span class="mi">503</span><span class="p">,</span> <span class="s2">&#34;Service Unavailable&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># check if the clients are using WebSockets or WebSocketSecure</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span> <span class="o">$</span><span class="n">socket_in</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&#34;WS&#34;</span><span class="o">||</span> <span class="o">$</span><span class="n">socket_in</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&#34;WSS&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">		<span class="n">setflag</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># consider the client is behind NAT - always fix the contact</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">#fix_nated_contact();</span>
+</span></span><span class="line"><span class="cl">	<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main-1-:$rm|$rs|$tu|$socket_in(port)|$var(contact)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1"># indicate that the client supports DTLS</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># so we know when he is called</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="n">setbflag</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1">#fix_nated_register();</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">save</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="n">sl_reply_error</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main--:$rm|$rs|$tu|$socket_in(port)|$var(contact)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">rU</span><span class="o">==</span><span class="n">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># request with no Username in RURI</span>
+</span></span><span class="line"><span class="cl">		<span class="n">sl_send_reply</span><span class="p">(</span><span class="mi">484</span><span class="p">,</span><span class="s2">&#34;Address Incomplete&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># do lookup with method filtering</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">,</span><span class="s2">&#34;m&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_newtran</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_reply</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s2">&#34;Not Found&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">relay</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># for INVITEs enable some additional helper routes</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_on_branch</span><span class="p">(</span><span class="s2">&#34;handle_nat&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_on_reply</span><span class="p">(</span><span class="s2">&#34;handle_nat&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;BYE|CANCEL&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">rtpengine_delete</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">t_relay</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="s2">&#34;Internal Error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">};</span>
+</span></span><span class="line"><span class="cl">	<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">branch_route</span><span class="p">[</span><span class="n">handle_nat</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span><span class="n">has_body</span><span class="p">(</span><span class="s2">&#34;application/sdp&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="s2">&#34;replace-origin &#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="p">{</span> <span class="c1">#web-&gt;web</span>
+</span></span><span class="line"><span class="cl">            <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34; ICE=force-relay DTLS=passive&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">)){</span> <span class="c1">#web-&gt;sip</span>
+</span></span><span class="line"><span class="cl">            <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34; codec-strip-G722 codec-strip-CN codec-strip-red strip-extmap rtcp-mux-demux DTLS=off SDES-off ICE=remove RTP/AVP&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="p">{</span><span class="c1">#sip-&gt;web</span>
+</span></span><span class="line"><span class="cl">            <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34; rtcp-mux-offer generate-mid DTLS=passive SDES-off ICE=force RTP/SAVPF&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="c1">#sip-&gt;sip</span>
+</span></span><span class="line"><span class="cl">            <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;  DTLS=off SDES-off ICE=remove RTP/AVP&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="n">rtpengine_offer</span><span class="p">(</span><span class="s2">&#34;$var(rtp_flag)&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">onreply_route</span><span class="p">[</span><span class="n">handle_nat</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1">#fix_nated_contact();</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">has_body</span><span class="p">(</span><span class="s2">&#34;application/sdp&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">		<span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="s2">&#34;replace-origin &#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="c1">#web-&gt;web</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34; ICE=force-relay DTLS=passive&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="c1">#web-&gt;sip</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34; codec-strip-G722 codec-strip-CN codec-strip-red codec-strip-opus rtcp-mux-offer generate-mid DTLS=passive SDES-off ICE=force&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="c1">#sip-&gt;web</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34; rtcp-mux-offer generate-mid DTLS=passive SDES-off ICE=remove RTP/AVP&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isbflagset</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">))</span> <span class="c1">#sip-&gt;sip</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">=</span> <span class="o">$</span><span class="k">var</span><span class="p">(</span><span class="n">rtp_flag</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&#34;  DTLS=off SDES-off ICE=remove RTP/AVP&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="n">rtpengine_answer</span><span class="p">(</span><span class="s2">&#34;$var(rtp_flag)&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>以上的配置并没有开启NAT的<code>ping</code>和<code>fix_contact</code>,它的效果就是：</p>
+<p>使用MicroSIP软电话通过<code>udp:116.198.229.200:5271</code>注册用户<code>1001</code>, 通过opensips-cli客户端执行<code>mi ul_dump</code>,
+能够看到注册信息为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    &#34;Domains&#34;: [
+</span></span><span class="line"><span class="cl">        {
+</span></span><span class="line"><span class="cl">            &#34;name&#34;: &#34;location&#34;,
+</span></span><span class="line"><span class="cl">            &#34;hash_size&#34;: 512,
+</span></span><span class="line"><span class="cl">            &#34;AORs&#34;: [
+</span></span><span class="line"><span class="cl">                {
+</span></span><span class="line"><span class="cl">                    &#34;AOR&#34;: &#34;1007&#34;,
+</span></span><span class="line"><span class="cl">                    &#34;Contacts&#34;: [
+</span></span><span class="line"><span class="cl">                        {
+</span></span><span class="line"><span class="cl">                            &#34;Contact&#34;: &#34;sip:1007@172.16.80.21:58364;ob&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;ContactID&#34;: &#34;3784571799363132468&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Expires&#34;: 299,
+</span></span><span class="line"><span class="cl">                            &#34;Q&#34;: &#34;&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Callid&#34;: &#34;f3c3991a65404450959d7f899fae1d80&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Cseq&#34;: 30781,
+</span></span><span class="line"><span class="cl">                            &#34;User-agent&#34;: &#34;MicroSIP/3.21.6&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;State&#34;: &#34;CS_NEW&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Flags&#34;: 0,
+</span></span><span class="line"><span class="cl">                            &#34;Cflags&#34;: &#34;&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Socket&#34;: &#34;udp:172.16.0.3:5271&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Methods&#34;: 8063
+</span></span><span class="line"><span class="cl">                        }
+</span></span><span class="line"><span class="cl">                    ]
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">            ]
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">    ]
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注册的sip为：
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1.png"
+	width="1693"
+	height="520"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu16244267973904926806.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu6488135839995626790.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="325"
+		data-flex-basis="781px"
+	
+></p>
+<p>可以看到client的NAT是<code>113.104.238.248:2717</code>, 但是opensips保存的contact为<code>sip:1007@172.16.80.21:58364;ob</code>,
+这个是软电话的内网<code>ip</code>, 两个不同内网的软电话通过opensips相互拨打，会不通。</p>
+<ul>
+<li>fix_contact()</li>
+</ul>
+<p>那么如何修改呢？在<code>save</code>之前，收到Register信令就调用<code>fix_contact()</code>, 具体为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">if (is_method(&#34;REGISTER&#34;)) {
+</span></span><span class="line"><span class="cl">    # indicate that the client supports DTLS
+</span></span><span class="line"><span class="cl">    # so we know when he is called
+</span></span><span class="line"><span class="cl">    if (isflagset(&#34;SRC_WS&#34;))
+</span></span><span class="line"><span class="cl">        setbflag(&#34;DST_WS&#34;);
+</span></span><span class="line"><span class="cl">    fix_contact();
+</span></span><span class="line"><span class="cl">    #fix_nated_register();
+</span></span><span class="line"><span class="cl">    if (!save(&#34;location&#34;))
+</span></span><span class="line"><span class="cl">        sl_reply_error();
+</span></span><span class="line"><span class="cl">    exit;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>此时，opensips-cli执行<code>mi ul_dump</code>, opensips保存的<code>location</code>为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">{
+</span></span><span class="line"><span class="cl">    &#34;Domains&#34;: [
+</span></span><span class="line"><span class="cl">        {
+</span></span><span class="line"><span class="cl">            &#34;name&#34;: &#34;location&#34;,
+</span></span><span class="line"><span class="cl">            &#34;hash_size&#34;: 512,
+</span></span><span class="line"><span class="cl">            &#34;AORs&#34;: [
+</span></span><span class="line"><span class="cl">                {
+</span></span><span class="line"><span class="cl">                    &#34;AOR&#34;: &#34;1007&#34;,
+</span></span><span class="line"><span class="cl">                    &#34;Contacts&#34;: [
+</span></span><span class="line"><span class="cl">                        {
+</span></span><span class="line"><span class="cl">                            &#34;Contact&#34;: &#34;sip:1007@113.104.238.248:2717;ob&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;ContactID&#34;: &#34;3784571799363126326&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Expires&#34;: 297,
+</span></span><span class="line"><span class="cl">                            &#34;Q&#34;: &#34;&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Callid&#34;: &#34;62ec515e2ece4564b3388035343fee32&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Cseq&#34;: 16774,
+</span></span><span class="line"><span class="cl">                            &#34;User-agent&#34;: &#34;MicroSIP/3.21.6&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;State&#34;: &#34;CS_NEW&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Flags&#34;: 0,
+</span></span><span class="line"><span class="cl">                            &#34;Cflags&#34;: &#34;&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Socket&#34;: &#34;udp:172.16.0.3:5271&#34;,
+</span></span><span class="line"><span class="cl">                            &#34;Methods&#34;: 8063
+</span></span><span class="line"><span class="cl">                        }
+</span></span><span class="line"><span class="cl">                    ]
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">            ]
+</span></span><span class="line"><span class="cl">        }
+</span></span><span class="line"><span class="cl">    ]
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>能够看到<code>Contact</code>信息改为了<code>NAT的IP地址和port</code></p>
+<ul>
+<li>nat_keepalive</li>
+</ul>
+<p>在<code>fix_contact</code>位置添加<code>nat_keepalive();</code>，配置如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">if (is_method(&#34;REGISTER&#34;)) {
+</span></span><span class="line"><span class="cl">    # indicate that the client supports DTLS
+</span></span><span class="line"><span class="cl">    # so we know when he is called
+</span></span><span class="line"><span class="cl">    if (isflagset(&#34;SRC_WS&#34;))
+</span></span><span class="line"><span class="cl">        setbflag(&#34;DST_WS&#34;);
+</span></span><span class="line"><span class="cl">    fix_contact();
+</span></span><span class="line"><span class="cl">    nat_keepalive();
+</span></span><span class="line"><span class="cl">    #fix_nated_register();
+</span></span><span class="line"><span class="cl">    if (!save(&#34;location&#34;))
+</span></span><span class="line"><span class="cl">        sl_reply_error();
+</span></span><span class="line"><span class="cl">    exit;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>重启服务后，能够看到每10s会往client的NAT 发送<code>OPTIONS</code>信令。
+本地发出端口用的是.cfg里第一个默认的<code>socket=</code>协议，这块不能更改.
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2.png"
+	width="1319"
+	height="219"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu2951806537496494826.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu12348769079119304378.png 1024w"
+	loading="lazy"
+	
+		alt="ping"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="602"
+		data-flex-basis="1445px"
+	
+></p>
+<p>软电话坐席退出，ping还会执行的次数为：<code>4min/keepalive_interval</code>。
+这个<code>4分钟</code> 目前没找到哪里配置，是实际测试的结果。</p>
+<h3 id="nathelper">NATHELPER
+</h3><p>配置：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;nathelper.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;registrar|nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;received_avp&#34;</span><span class="p">,</span> <span class="s2">&#34;$avp(rcv)&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;natping_interval&#34;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;ping_threshold&#34;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;max_pings_lost&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;natping_partitions&#34;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;natping_socket&#34;</span><span class="p">,</span> <span class="s2">&#34;172.16.0.3:5272&#34;</span><span class="p">)</span> <span class="c1">#修改发送ping的本地端口</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;sipping_bflag&#34;</span><span class="p">,</span> <span class="s2">&#34;SIPPING_ENABLE&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;sipping_from&#34;</span><span class="p">,</span> <span class="s2">&#34;sip:pinger@siphub.net&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;nathelper&#34;</span><span class="p">,</span> <span class="s2">&#34;sipping_method&#34;</span><span class="p">,</span> <span class="s2">&#34;OPTIONS&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>fix_nated_register()</li>
+</ul>
+<p>以<code>Register</code>信令为例, 想要修改<code>Register</code>的<code>Contact</code>信息，在<code>save</code>之前,调用<code>fix_nated_register()</code>, 具体为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">if (is_method(&#34;REGISTER&#34;)) {
+</span></span><span class="line"><span class="cl">	# indicate that the client supports DTLS
+</span></span><span class="line"><span class="cl">	# so we know when he is called
+</span></span><span class="line"><span class="cl">	if (isflagset(&#34;SRC_WS&#34;))
+</span></span><span class="line"><span class="cl">	        setbflag(&#34;DST_WS&#34;);	
+</span></span><span class="line"><span class="cl">	fix_nated_register();
+</span></span><span class="line"><span class="cl">	if (!save(&#34;location&#34;))
+</span></span><span class="line"><span class="cl">	        sl_reply_error();	
+</span></span><span class="line"><span class="cl">	exit;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>具体效果为：</p>
+<ol>
+<li>保存的用户信息中新增了<code>Received</code>字段存储NAT信息,使用opensips-cli 里的<code>mi ul_dump</code>查看：
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip3.png"
+	width="1116"
+	height="812"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip3_hu2121585197292237056.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip3_hu6112180289746390842.png 1024w"
+	loading="lazy"
+	
+		alt="ping"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="137"
+		data-flex-basis="329px"
+	
+>
+contact信息并未变化</li>
+<li>在给客户端返回<code>200OK</code>的<code>Contact</code>字段中增加<code>received</code>字段，
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip4.png"
+	width="1718"
+	height="337"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip4_hu3006317309290846588.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip4_hu709798421511729024.png 1024w"
+	loading="lazy"
+	
+		alt="ping"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="509"
+		data-flex-basis="1223px"
+	
+></li>
+</ol>
+<ul>
+<li>fix_nated_contact()</li>
+</ul>
+<p>此时opensips保存的Register里的<code>Contact</code>会被修改成NAT的ip和port.
+<img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip5.png"
+	width="1160"
+	height="823"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip5_hu2404199646340749046.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip5_hu16881016989622516796.png 1024w"
+	loading="lazy"
+	
+		alt="ping"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="140"
+		data-flex-basis="338px"
+	
+></p>
+<ul>
+<li>如何开启ping?</li>
+</ul>
+<p>nathelper有两种方式：</p>
+<ol>
+<li>ping_nated_only</li>
+</ol>
+<p>这个参数是：Contact里带有<code>behind_NAT</code>标志，才会ping.
+2. sipping_bflag</p>
+<p>以本配置为例,设置的标志为：SIPPING_ENABLE, 那么在<code>Register</code>信令处, 要设置<code>SIPPING_ENABLE</code>标志。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">if (is_method(&#34;REGISTER&#34;)) {
+</span></span><span class="line"><span class="cl">	# indicate that the client supports DTLS
+</span></span><span class="line"><span class="cl">	# so we know when he is called
+</span></span><span class="line"><span class="cl">	if (isflagset(&#34;SRC_WS&#34;))
+</span></span><span class="line"><span class="cl">	        setbflag(&#34;DST_WS&#34;);	
+</span></span><span class="line"><span class="cl">	setbflag(&#34;SIPPING_ENABLE&#34;);
+</span></span><span class="line"><span class="cl">	fix_nated_register();
+</span></span><span class="line"><span class="cl">	fix_nated_contact();
+</span></span><span class="line"><span class="cl">	if (!save(&#34;location&#34;))
+</span></span><span class="line"><span class="cl">	        sl_reply_error();	
+</span></span><span class="line"><span class="cl">	exit;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>效果为：</p>
+<p><img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip6.png"
+	width="1683"
+	height="226"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip6_hu2671181520884207493.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip6_hu6112094699538568110.png 1024w"
+	loading="lazy"
+	
+		alt="ping"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="744"
+		data-flex-basis="1787px"
+	
+></p>
+<p>如果坐席注销，nathelper立即就停止ping,比nat_traversal效果要好。</p>
+<ul>
+<li>fix_nated_sdp() 参数</li>
+</ul>
+<ol>
+<li>0x01 - adds “a=direction:active” SDP line;</li>
+<li>0x02 - 重写sdp中的<code>c=ip</code>地址为NAT的ip地址;</li>
+<li>0x04 -  adds “a=nortpproxy:yes” SDP line;</li>
+<li>0x08 - 重写sdp中的<code>o=ip</code>地址为NAT的ip地址;</li>
+<li>0x10 - 重写所有的媒体ip</li>
+</ol>
+<p>在需要修改sdp的Route里，执行此函数即可，sdp参数例子为：</p>
+<p><img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip7.png"
+	width="641"
+	height="381"
+	srcset="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip7_hu8698036110236591605.png 480w, /p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip7_hu12921245791979784041.png 1024w"
+	loading="lazy"
+	
+		alt="sdp"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="168"
+		data-flex-basis="403px"
+	
+></p>
+
+</section>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/nat/">Nat</a>
+        
+            <a href="/tags/opensips/">Opensips</a>
+        
+    </section>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2.d5d77bd43b1a818a3035ec6de60c4ea9_hu4922339176031200865.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post b2b_logic模块介绍"
+                        
+                        data-hash="md5-1dd71DsagYowNext5gxOqQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">b2b_logic模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/uac_registant%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/uac_registant%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2.deab1879cc0683c66d9a37cf0d59cbb8_hu5955713488042896076.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post uac_registant模块介绍"
+                        
+                        data-hash="md5-3qsYecwGg8ZtmjfPDVnLuA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">uac_registant模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/backup.816e861f8811a8f8b05ce6be077eb923_hu3201127361854365491.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post opensips 压测介绍"
+                        
+                        data-hash="md5-gW6GH4gRqPiwXOa&#43;B365Iw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">opensips 压测介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <script type="module">
+        import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
+        pageviewCount({
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    <script type="module">
+        import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+        commentCount({
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        发表了8篇文章 · 
+        总计12.90k字
+    </section>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
+    <span id="busuanzi_container_site_uv">您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者</span>
+    <section class="copyright">
+        &copy; 
+        
+        2025 QuincyGao Blog
+    </section>
+    
+    <section class="powerby">
+        
+        <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025368587号-1| </a>使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script>
+    let s1 = '2025-01-10'; 
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let timeDifference = s2.getTime() - s1.getTime();
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = days + "天" + hours + "小时" + minutes + "分钟";
+    document.getElementById('runningdays').innerHTML = result;
+</script>
+
+
+
+<a href="#" id="back-to-top" title="返回顶部"></a>
+
+
+<style>
+  #back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    width: 55px;
+    height: 55px;
+    border-radius: 7px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: var(--shadow-l2);
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+  }
+
+  #back-to-top:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    height: 10px;
+    width: 10px;
+    border-width: 0 0 2px 2px;
+    border-color: var(--back-to-top-color);
+    border-style: solid;
+  }
+
+  #back-to-top:hover:before {
+    border-color: #2674e0;
+  }
+
+   
+  @media screen and (max-width: 768px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1024px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1280px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 55px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1536px) {
+    #back-to-top {
+      visibility: hidden;
+    }
+  }
+</style>
+
+
+<script>
+  function backToTop() {
+    document.documentElement.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+
+  window.onload = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop > 0) {
+      totopBtn.style.display = 'inline'
+    } else {
+      totopBtn.style.display = 'none'
+    }
+  }
+
+  window.onscroll = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop < 200) {
+      totopBtn.style.display = 'none'
+    } else {
+      totopBtn.style.display = 'inline'
+      totopBtn.addEventListener('click', backToTop, false)
+    }
+  }
+</script>
+
+    </body>
+</html>
