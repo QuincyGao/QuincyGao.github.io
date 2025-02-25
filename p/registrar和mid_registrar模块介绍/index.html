@@ -493,7 +493,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 4 分钟,共1742 字
+                    阅读时长: 4 分钟,共1756 字
                 </time>
             </div>
         
@@ -578,6 +578,9 @@
 </span><span class="lnt">36
 </span><span class="lnt">37
 </span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">socket</span><span class="o">=</span><span class="n">udp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="p">:</span><span class="mi">5360</span>
@@ -591,33 +594,36 @@
 </span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;registrar&#34;</span><span class="p">,</span> <span class="s2">&#34;default_expires&#34;</span><span class="p">,</span> <span class="mi">1800</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;registrar&#34;</span><span class="p">,</span> <span class="s2">&#34;tcp_persistent_flag&#34;</span><span class="p">,</span> <span class="s2">&#34;TCP_PERSIST_DURATION&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># indicate that the client supports DTLS</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># so we know when he is called</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">            <span class="n">setbflag</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">);</span> 
-</span></span><span class="line"><span class="cl">    <span class="n">fix_nated_register</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">save</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">,</span><span class="s2">&#34;rfc1&#34;</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">            <span class="n">sl_reply_error</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">socket_in</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&#34;tcp&#34;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">setflag</span><span class="p">(</span><span class="s2">&#34;TCP_PERSIST_DURATION&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">            <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main-1-:$rm|$tu|$socket_in(port)|$socket_in(proto)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="n">route</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># indicate that the client supports DTLS</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># so we know when he is called</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">                <span class="n">setbflag</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">        <span class="n">fix_nated_register</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">save</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">,</span><span class="s2">&#34;rfc1&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sl_reply_error</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">socket_in</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&#34;tcp&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">setflag</span><span class="p">(</span><span class="s2">&#34;TCP_PERSIST_DURATION&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main-1-:$rm|$tu|$socket_in(port)|$socket_in(proto)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="n">socket_out</span> <span class="o">=</span> <span class="s2">&#34;udp:172.16.4.111:5361&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sethostport</span><span class="p">(</span><span class="s2">&#34;172.16.4.114:5060&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">t_relay</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s2">&#34;Internal Error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="o">$</span><span class="n">socket_out</span> <span class="o">=</span> <span class="s2">&#34;udp:172.16.4.111:5361&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="n">sethostport</span><span class="p">(</span><span class="s2">&#34;172.16.4.114:5060&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">t_relay</span><span class="p">())</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s2">&#34;Internal Error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">,</span><span class="s2">&#34;m&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">t_newtran</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">t_reply</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s2">&#34;Not Found&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">,</span><span class="s2">&#34;m&#34;</span><span class="p">))</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">t_newtran</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">t_reply</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s2">&#34;Not Found&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>坐席的信令图：
@@ -683,6 +689,9 @@
 </span><span class="lnt">40
 </span><span class="lnt">41
 </span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">socket</span><span class="o">=</span><span class="n">udp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="p">:</span><span class="mi">5326</span>
@@ -698,34 +707,37 @@
 </span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;mid_registrar&#34;</span><span class="p">,</span> <span class="s2">&#34;max_expires&#34;</span><span class="p">,</span> <span class="mi">130</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;mid_registrar&#34;</span><span class="p">,</span> <span class="s2">&#34;attr_avp&#34;</span><span class="p">,</span> <span class="s2">&#34;$avp(attr)&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="n">route</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1"># indicate that the client supports DTLS</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># so we know when he is called</span>
-</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">))</span>
-</span></span><span class="line"><span class="cl">        <span class="n">setbflag</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">);</span> 
-</span></span><span class="line"><span class="cl">    <span class="c1">#fix_nated_register();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">mid_registrar_save</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="k">switch</span> <span class="p">(</span><span class="o">$</span><span class="n">retcode</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">socket_in</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&#34;tcp&#34;</span><span class="p">)</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">setflag</span><span class="p">(</span><span class="s2">&#34;TCP_PERSIST_REGISTRATIONS&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">            <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main-1-:$rm|$tu|$socket_in(port)|$socket_in(proto)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># indicate that the client supports DTLS</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># so we know when he is called</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="s2">&#34;SRC_WS&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="n">setbflag</span><span class="p">(</span><span class="s2">&#34;DST_WS&#34;</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">        <span class="c1">#fix_nated_register();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mid_registrar_save</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">switch</span> <span class="p">(</span><span class="o">$</span><span class="n">retcode</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">socket_in</span><span class="p">(</span><span class="n">proto</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&#34;tcp&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">setflag</span><span class="p">(</span><span class="s2">&#34;TCP_PERSIST_REGISTRATIONS&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main-1-:$rm|$tu|$socket_in(port)|$socket_in(proto)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">$</span><span class="n">socket_out</span> <span class="o">=</span> <span class="s2">&#34;udp:172.16.4.111:5361&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">$</span><span class="n">ru</span> <span class="o">=</span> <span class="s2">&#34;sip:172.16.4.114:5060&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">t_relay</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s2">&#34;Internal Error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span> <span class="s2">&#34;REGISTER has been absorbed!</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="k">break</span><span class="p">;</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">default</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_ERR&#34;</span><span class="p">,</span> <span class="s2">&#34;mid-registrar error!</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">                <span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s2">&#34;Server Internal Error 2&#34;</span><span class="p">);</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="n">socket_out</span> <span class="o">=</span> <span class="s2">&#34;udp:172.16.4.111:5361&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="n">ru</span> <span class="o">=</span> <span class="s2">&#34;sip:172.16.4.114:5060&#34;</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">t_relay</span><span class="p">())</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">            <span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s2">&#34;Internal Error&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="p">}</span>
-</span></span><span class="line"><span class="cl">        <span class="k">break</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl">    <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span> <span class="s2">&#34;REGISTER has been absorbed!</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">            <span class="k">break</span><span class="p">;</span>  
-</span></span><span class="line"><span class="cl">    <span class="n">default</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_ERR&#34;</span><span class="p">,</span> <span class="s2">&#34;mid-registrar error!</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">            <span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s2">&#34;Server Internal Error 2&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></td></tr></table>
 </div>
@@ -1163,7 +1175,7 @@ sip信息：
         
         
         发表了10篇文章 · 
-        总计15.92k字
+        总计15.93k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
