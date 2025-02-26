@@ -478,7 +478,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 1 分钟,共496 字
+                    阅读时长: 2 分钟,共508 字
                 </time>
             </div>
         
@@ -622,7 +622,7 @@
 </div>
 </div><p>需要注意的是， b2b_logic中媒体服务使用的是rtp_relay,通过rtp_relay来选择媒体代理。
 通过b2b_logic 转发的INVITE的Call-ID是新生成的（例如:<code>B2B.377.4269969.1739239153</code>）和主叫的INVITE的Call-ID不同。</p>
-<p>目前发现，被叫挂断时b2b_logic会多发送一个Bye给自己，已提bug到opensips的issue.</p>
+<p>目前发现，被叫挂断时b2b_logic会多发送一个Bye给自己，这个应该是invite的<code>Contact</code>被修改成了111机器的缘故。</p>
 <p>主叫挂断的sip流程图：<img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1.png"
 	width="1183"
 	height="910"
@@ -734,6 +734,30 @@
             
                 
 <article class="has-image">
+    <a href="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/11.3ffb9c9b8b8063b3e32b685b311dbbc1_hu4057854913553884513.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post topology_hiding模块介绍"
+                        
+                        data-hash="md5-P/ucm4uAY7PjK2hbMR27wQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">topology_hiding模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
         
         
@@ -828,30 +852,6 @@
 </article>
 
             
-                
-<article class="has-image">
-    <a href="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/">
-        
-        
-            <div class="article-image">
-                <img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/backup.816e861f8811a8f8b05ce6be077eb923_hu3201127361854365491.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post opensips 压测介绍"
-                        
-                        data-hash="md5-gW6GH4gRqPiwXOa&#43;B365Iw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">opensips 压测介绍</h2>
-        </div>
-    </a>
-</article>
-
-            
         </div>
     </div>
 </aside>
@@ -929,9 +929,11 @@
         
             
         
+            
         
-        发表了10篇文章 · 
-        总计15.93k字
+        
+        发表了11篇文章 · 
+        总计18.71k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
