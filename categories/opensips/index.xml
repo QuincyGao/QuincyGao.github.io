@@ -6,7 +6,228 @@
         <description>Recent content in opensips on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 26 Feb 2025 10:15:32 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 27 Feb 2025 14:12:33 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>opensips和kamailio比较(持续更新中···)</title>
+        <link>https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/</link>
+        <pubDate>Thu, 27 Feb 2025 14:12:33 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/</guid>
+        <description>&lt;h2 id=&#34;对比的版本&#34;&gt;对比的版本
+&lt;/h2&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;&lt;/th&gt;
+          &lt;th&gt;opensips&lt;/th&gt;
+          &lt;th&gt;kamailio&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;版本信息&lt;/td&gt;
+          &lt;td&gt;3.3.10&lt;/td&gt;
+          &lt;td&gt;5.8.5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;官方文档地址&lt;/td&gt;
+          &lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.opensips.org/Documentation/Manuals&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.opensips.org/Documentation/Manuals&lt;/a&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;a class=&#34;link&#34; href=&#34;https://www.kamailio.org/w/documentation/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://www.kamailio.org/w/documentation/&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;支持的route类型&#34;&gt;支持的route类型
+&lt;/h2&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;序号&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;opensips&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;kamailio&lt;/th&gt;
+          &lt;th&gt;说明&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;route&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;request_route&lt;/td&gt;
+          &lt;td&gt;请求入口&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;branch_route[a]&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;branch_route[a]&lt;/td&gt;
+          &lt;td&gt;分支路由,a为自定义变量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;3&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;failure_route[a]&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;failure_route[a]&lt;/td&gt;
+          &lt;td&gt;失败路由,a为自定义变量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;onreply_route&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;reply_route &lt;br&gt;onreply_route{}&lt;br&gt; onreply_route[0]{}&lt;/td&gt;
+          &lt;td&gt;主返回路由&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;5&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;onreply_route[a]&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;onreply_route[a]&lt;/td&gt;
+          &lt;td&gt;子返回路由,a为自定义变量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;6&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;event_route[a]&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;event_route[a]&lt;/td&gt;
+          &lt;td&gt;事件路由,a为自定义变量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;7&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;error_route&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;-&lt;/td&gt;
+          &lt;td&gt;出错路由&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;local_route&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;-&lt;/td&gt;
+          &lt;td&gt;本地路由&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;9&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;startup_route&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;-&lt;/td&gt;
+          &lt;td&gt;服务启动时执行的路由&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;10&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;timer_route[a]&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;RTimer模块&lt;/td&gt;
+          &lt;td&gt;定时执行的路由, a为自定义变量&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;11&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;-&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;onsend_route&lt;/td&gt;
+          &lt;td&gt;请求发出去前执行的路由&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;监控管理端&#34;&gt;监控管理端
+&lt;/h2&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;差异&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;opensips&lt;/th&gt;
+          &lt;th&gt;kamailio&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;运行命令&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;opensips-cli&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;kamctl&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;独立编译&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;是,仓库地址:&lt;br&gt;&lt;a class=&#34;link&#34; href=&#34;https://github.com/OpenSIPS/opensips-cli.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/OpenSIPS/opensips-cli.git&lt;/a&gt;&lt;/td&gt;
+          &lt;td&gt;否&lt;br&gt;没有单独仓库，和kamailio一起编译生成&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;编写语言&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;Python&lt;/td&gt;
+          &lt;td&gt;c&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;配置文件&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;~/.opensips-cli.cfg&lt;/td&gt;
+          &lt;td&gt;kamctlrc&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;创建数据库&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;opensips-cli -f ~/.opensips-cli.cfg -x database create&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;kamdbctl create kamailio&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;和服务端连接方式&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;&lt;code&gt;fifo/http/udp&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;fifo&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;说明:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;opensips-cli因为是Python编写，在做opensips容器时，如果把opensips-cli打包进去，整个包会较大。
+可以把opensips-cli单独制作镜像，opensips-cli使用&lt;code&gt;http&lt;/code&gt;方式和opensips服务端进行通信。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;使用体验&#34;&gt;使用体验
+&lt;/h2&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;维度&lt;/th&gt;
+          &lt;th&gt;opensips&lt;/th&gt;
+          &lt;th&gt;kamailio&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;上手难度&lt;/td&gt;
+          &lt;td&gt;简单&lt;/td&gt;
+          &lt;td&gt;较高&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;star(截止20250227)&lt;/td&gt;
+          &lt;td&gt;1.3k&lt;/td&gt;
+          &lt;td&gt;2.4k&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;模块功能&lt;/td&gt;
+          &lt;td&gt;能满足日常需求&lt;/td&gt;
+          &lt;td&gt;较丰富，还有KEMI脚本语言实现(没有示例，上手难度大)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;官方文档&lt;/td&gt;
+          &lt;td&gt;文档层次分明,模块清楚&lt;/td&gt;
+          &lt;td&gt;文档基本完整，但是缺少基本函数检索文档&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;网络教程&lt;/td&gt;
+          &lt;td&gt;大部分是2.x版本的，3.x文档不全&lt;/td&gt;
+          &lt;td&gt;国内教程少&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;迭代变化&lt;/td&gt;
+          &lt;td&gt;2.x和3.x版本配置参数区别较大&lt;/td&gt;
+          &lt;td&gt;版本迭代配置参数变化不大&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;bug修复进度&lt;/td&gt;
+          &lt;td&gt;较慢,起步一个月&lt;/td&gt;
+          &lt;td&gt;较快，一周左右反馈&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;社区&lt;/td&gt;
+          &lt;td&gt;没有&lt;/td&gt;
+          &lt;td&gt;有,社区地址:&lt;br&gt;&lt;a class=&#34;link&#34; href=&#34;https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/&lt;/a&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;补充：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;opensips&lt;/code&gt; 适合快速上手,负载均衡，sip代理转发等基本能满足日常需求。
+&lt;code&gt;kamailio&lt;/code&gt; 可以作为进阶版本，后期完全可以不写.cfg配置，用&lt;code&gt;KEMI&lt;/code&gt;脚本来写。&lt;/li&gt;
+&lt;li&gt;两个产品bug的&lt;code&gt;issue&lt;/code&gt;都设置了定时删除，没有修复的话，需要自己回复一下才能不被删。&lt;/li&gt;
+&lt;li&gt;关于并发上，目前线上使用的&lt;code&gt;opensips&lt;/code&gt;并未有崩溃的记录，8c8G的机器性能很高，具体可以查看我的&lt;code&gt;opensips 压测介绍&lt;/code&gt;文章，
+&lt;code&gt;kamailio&lt;/code&gt;目前还未压测，应该稳定性不差。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;opensips&lt;/code&gt;没有社区，遇到问题只能提&lt;code&gt;issue&lt;/code&gt;，&lt;code&gt;kamailio&lt;/code&gt;可以先在社区提问，如果问题没有解决，再提&lt;code&gt;issue&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>topology_hiding模块介绍</title>
         <link>https://QuincyGao.github.io/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</link>
         <pubDate>Wed, 26 Feb 2025 10:15:32 +0800</pubDate>

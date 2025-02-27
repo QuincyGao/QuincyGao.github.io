@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="事在人为，境由心造">
-<title>Category: opensips - QuincyGao Blog</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route - 出错路由 8 local_route - 本地路由 9 startup_route - 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
+<title>opensips和kamailio比较(持续更新中···)</title>
 
-<link rel='canonical' href='https://QuincyGao.github.io/categories/opensips/'>
+<link rel='canonical' href='https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/'>
 
-<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="Category: opensips - QuincyGao Blog">
-<meta property='og:description' content="事在人为，境由心造">
-<meta property='og:url' content='https://QuincyGao.github.io/categories/opensips/'>
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="opensips和kamailio比较(持续更新中···)">
+<meta property='og:description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route - 出错路由 8 local_route - 本地路由 9 startup_route - 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2025-02-27T14:12:33&#43;08:00 '/><meta property='og:image' content='https://QuincyGao.github.io/categories/opensips/opensips.jpg' />
-<meta name="twitter:title" content="Category: opensips - QuincyGao Blog">
-<meta name="twitter:description" content="事在人为，境由心造"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://QuincyGao.github.io/categories/opensips/opensips.jpg' /><link rel="alternate" type="application/rss&#43;xml" href="https://QuincyGao.github.io/categories/opensips/index.xml">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-02-27T14:12:33&#43;08:00'/><meta property='article:modified_time' content='2025-02-27T14:12:33&#43;08:00'/>
+<meta name="twitter:title" content="opensips和kamailio比较(持续更新中···)">
+<meta name="twitter:description" content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route - 出错路由 8 local_route - 本地路由 9 startup_route - 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
-    <body class="">
+    <body class="
+    article-page
+    ">
     <script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
@@ -379,74 +380,10 @@
     <aside class="sidebar right-sidebar sticky">
         
             
-                <form action="/search/" class="search-form widget" >
-        <p>
-            <label>搜索</label>
-            <input name="keyword" required placeholder="输入关键词..." />
-        
-            <button title="搜索">
-                <?xml version="1.0" encoding="iso-8859-1"?>
-<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
-	 viewBox="0 0 392.609 392.609" xml:space="preserve">
-<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
-	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
-<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
-	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
-	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
-<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
-	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
-	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
-<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
-	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
-	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
-	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
-	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
-	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
-	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
-	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
-</svg>
-            </button>
-        </p>
-    </form>
-            
-        
-            
-                <section class="widget archives">
+                
+    <section class="widget archives">
         <div class="widget-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-infinity" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M9.828 9.172a4 4 0 1 0 0 5.656 a10 10 0 0 0 2.172 -2.828a10 10 0 0 1 2.172 -2.828 a4 4 0 1 1 0 5.656a10 10 0 0 1 -2.172 -2.828a10 10 0 0 0 -2.172 -2.828" />
-</svg>
-
-
-
-        </div>
-        <h2 class="widget-title section-title">归档</h2>
-
-        
-        
-        
-        
-        
-        <div class="widget-archive--list">
-            <div class="archives-year">
-                    <a href="/archives/#2025">
-                        
-                            <span class="year">2025</span>
-                            <span class="count">12</span>
-                        
-                    </a> 
-                </div>
-            
-        </div>
-    </section>
-            
-        
-            
-                <section class="widget tagCloud">
-    <div class="widget-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
   <line x1="5" y1="9" x2="19" y2="9" />
   <line x1="5" y1="15" x2="19" y2="15" />
@@ -456,202 +393,550 @@
 
 
 
-    </div>
-    <h2 class="widget-title section-title">分类</h2>
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#对比的版本">对比的版本</a></li>
+    <li><a href="#支持的route类型">支持的route类型</a></li>
+    <li><a href="#监控管理端">监控管理端</a></li>
+    <li><a href="#使用体验">使用体验</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
 
-    <div class="tagCloud-tags">
-        
-            <a href="/categories/opensips/" class="font_size_8">
-                opensips <span class="category-count">8</span>
-            </a>
-        
-            <a href="/categories/daily-life/" class="font_size_4">
-                技术生活 <span class="category-count">4</span>
-            </a>
-        
-    </div>
-</section>
-
-            
-        
-            
-                <section class="widget tagCloud">
-    <div class="widget-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
-  <circle cx="9" cy="9" r="2" />
-</svg>
-
-
-
-    </div>
-    <h2 class="widget-title section-title">标签云</h2>
-
-    <div class="tagCloud-tags">
-        
-            <a href="/tags/opensips/" class="font_size_8">
-                Opensips
-            </a>
-        
-            <a href="/tags/sip/" class="font_size_3">
-                Sip
-            </a>
-        
-            <a href="/tags/hugo/" class="font_size_1">
-                Hugo
-            </a>
-        
-            <a href="/tags/nat/" class="font_size_1">
-                Nat
-            </a>
-        
-            <a href="/tags/webrtc/" class="font_size_1">
-                Webrtc
-            </a>
-        
-    </div>
-</section>
             
         
     </aside>
 
 
             <main class="main full-width">
-    <header>
-        <h3 class="section-title">
-            
-                分类
-            
-        </h3>
+    <article class="main-article">
+    <header class="article-header">
 
-        <div class="section-card">
-            <div class="section-details">
-                <h3 class="section-count">8 个页面</h3>
-                <h1 class="section-term">opensips</h1>
-                
-            </div>
-                <div class="section-image">
-                    <img src="/categories/opensips/opensips_hu8286702378594654811.jpg" 
-                            width="120"
-                            height="120" 
-                            loading="lazy">
-                    
-                </div>
-            
-        </div>
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/opensips/" style="background-color: #d09daa; color: #fff;">
+                opensips
+            </a>
+        
     </header>
     
-    <section class="article-list--compact">
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/">opensips和kamailio比较(持续更新中···)</a>
+        </h2>
+    
         
-            <article>
-    <a href="/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/">
-        <div class="article-details">
-            <h2 class="article-title">opensips和kamailio比较(持续更新中···)</h2>
-            <footer class="article-time">
-                <time datetime='2025-02-27T14:12:33&#43;08:00'>2025-02-27</time>
-            </footer>
-        </div>
-    </a>
-</article>
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
         
-            <article>
-    <a href="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
-        <div class="article-details">
-            <h2 class="article-title">topology_hiding模块介绍</h2>
-            <footer class="article-time">
-                <time datetime='2025-02-26T10:15:32&#43;08:00'>2025-02-26</time>
-            </footer>
-        </div>
-            <div class="article-image">
-                <img src="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/11_hu8978428634062723750.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="topology_hiding模块介绍"
-                        loading="lazy">
-                
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-02-27</time>
             </div>
         
-    </a>
-</article>
+
         
-            <article>
-    <a href="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
-        <div class="article-details">
-            <h2 class="article-title">registrar和mid_registrar模块介绍</h2>
-            <footer class="article-time">
-                <time datetime='2025-02-24T11:34:47&#43;08:00'>2025-02-24</time>
-            </footer>
-        </div>
-            <div class="article-image">
-                <img src="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/9_hu12160269104167841556.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="registrar和mid_registrar模块介绍"
-                        loading="lazy">
-                
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 2 分钟,共857 字
+                </time>
             </div>
         
-    </a>
-</article>
-        
-            <article>
-    <a href="/p/tracer%E6%A8%A1%E5%9D%97/">
-        <div class="article-details">
-            <h2 class="article-title">tracer模块</h2>
-            <footer class="article-time">
-                <time datetime='2025-02-21T11:33:22&#43;08:00'>2025-02-21</time>
-            </footer>
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/">0</span> 次浏览
+            </time>
         </div>
-            <div class="article-image">
-                <img src="/p/tracer%E6%A8%A1%E5%9D%97/8_hu14940933373703095982.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="tracer模块"
-                        loading="lazy">
-                
-            </div>
-        
-    </a>
-</article>
-        
-            <article>
-    <a href="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
-        <div class="article-details">
-            <h2 class="article-title">NAT_TRAVERSAL和NATHELPER模块介绍</h2>
-            <footer class="article-time">
-                <time datetime='2025-02-19T09:24:03&#43;08:00'>2025-02-19</time>
-            </footer>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/">0</span> 条评论
+            </time>
         </div>
-            <div class="article-image">
-                <img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7_hu9058017268728565075.jpg" 
-                        width="120"
-                        height="120" 
-                        alt="NAT_TRAVERSAL和NATHELPER模块介绍"
-                        loading="lazy">
-                
-            </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="对比的版本">对比的版本
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>版本信息</td>
+          <td>3.3.10</td>
+          <td>5.8.5</td>
+      </tr>
+      <tr>
+          <td>官方文档地址</td>
+          <td><a class="link" href="https://www.opensips.org/Documentation/Manuals"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Manuals</a></td>
+          <td><a class="link" href="https://www.kamailio.org/w/documentation/"  target="_blank" rel="noopener"
+    >https://www.kamailio.org/w/documentation/</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="支持的route类型">支持的route类型
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>序号</th>
+          <th style="text-align: center">opensips</th>
+          <th style="text-align: center">kamailio</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td style="text-align: center">route</td>
+          <td style="text-align: center">request_route</td>
+          <td>请求入口</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td style="text-align: center">branch_route[a]</td>
+          <td style="text-align: center">branch_route[a]</td>
+          <td>分支路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td style="text-align: center">failure_route[a]</td>
+          <td style="text-align: center">failure_route[a]</td>
+          <td>失败路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td style="text-align: center">onreply_route</td>
+          <td style="text-align: center">reply_route <br>onreply_route{}<br> onreply_route[0]{}</td>
+          <td>主返回路由</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td style="text-align: center">onreply_route[a]</td>
+          <td style="text-align: center">onreply_route[a]</td>
+          <td>子返回路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td style="text-align: center">event_route[a]</td>
+          <td style="text-align: center">event_route[a]</td>
+          <td>事件路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td style="text-align: center">error_route</td>
+          <td style="text-align: center">-</td>
+          <td>出错路由</td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td style="text-align: center">local_route</td>
+          <td style="text-align: center">-</td>
+          <td>本地路由</td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td style="text-align: center">startup_route</td>
+          <td style="text-align: center">-</td>
+          <td>服务启动时执行的路由</td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td style="text-align: center">timer_route[a]</td>
+          <td style="text-align: center">RTimer模块</td>
+          <td>定时执行的路由, a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">onsend_route</td>
+          <td>请求发出去前执行的路由</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="监控管理端">监控管理端
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>差异</th>
+          <th style="text-align: center">opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>运行命令</td>
+          <td style="text-align: center"><code>opensips-cli</code></td>
+          <td><code>kamctl</code></td>
+      </tr>
+      <tr>
+          <td>独立编译</td>
+          <td style="text-align: center">是,仓库地址:<br><a class="link" href="https://github.com/OpenSIPS/opensips-cli.git"  target="_blank" rel="noopener"
+    >https://github.com/OpenSIPS/opensips-cli.git</a></td>
+          <td>否<br>没有单独仓库，和kamailio一起编译生成</td>
+      </tr>
+      <tr>
+          <td>编写语言</td>
+          <td style="text-align: center">Python</td>
+          <td>c</td>
+      </tr>
+      <tr>
+          <td>配置文件</td>
+          <td style="text-align: center">~/.opensips-cli.cfg</td>
+          <td>kamctlrc</td>
+      </tr>
+      <tr>
+          <td>创建数据库</td>
+          <td style="text-align: center"><code>opensips-cli -f ~/.opensips-cli.cfg -x database create</code></td>
+          <td><code>kamdbctl create kamailio</code></td>
+      </tr>
+      <tr>
+          <td>和服务端连接方式</td>
+          <td style="text-align: center"><code>fifo/http/udp</code></td>
+          <td><code>fifo</code></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>说明:</p>
+<ol>
+<li>opensips-cli因为是Python编写，在做opensips容器时，如果把opensips-cli打包进去，整个包会较大。
+可以把opensips-cli单独制作镜像，opensips-cli使用<code>http</code>方式和opensips服务端进行通信。</li>
+</ol>
+<h2 id="使用体验">使用体验
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>上手难度</td>
+          <td>简单</td>
+          <td>较高</td>
+      </tr>
+      <tr>
+          <td>star(截止20250227)</td>
+          <td>1.3k</td>
+          <td>2.4k</td>
+      </tr>
+      <tr>
+          <td>模块功能</td>
+          <td>能满足日常需求</td>
+          <td>较丰富，还有KEMI脚本语言实现(没有示例，上手难度大)</td>
+      </tr>
+      <tr>
+          <td>官方文档</td>
+          <td>文档层次分明,模块清楚</td>
+          <td>文档基本完整，但是缺少基本函数检索文档</td>
+      </tr>
+      <tr>
+          <td>网络教程</td>
+          <td>大部分是2.x版本的，3.x文档不全</td>
+          <td>国内教程少</td>
+      </tr>
+      <tr>
+          <td>迭代变化</td>
+          <td>2.x和3.x版本配置参数区别较大</td>
+          <td>版本迭代配置参数变化不大</td>
+      </tr>
+      <tr>
+          <td>bug修复进度</td>
+          <td>较慢,起步一个月</td>
+          <td>较快，一周左右反馈</td>
+      </tr>
+      <tr>
+          <td>社区</td>
+          <td>没有</td>
+          <td>有,社区地址:<br><a class="link" href="https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/"  target="_blank" rel="noopener"
+    >https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>补充：</p>
+<ol>
+<li><code>opensips</code> 适合快速上手,负载均衡，sip代理转发等基本能满足日常需求。
+<code>kamailio</code> 可以作为进阶版本，后期完全可以不写.cfg配置，用<code>KEMI</code>脚本来写。</li>
+<li>两个产品bug的<code>issue</code>都设置了定时删除，没有修复的话，需要自己回复一下才能不被删。</li>
+<li>关于并发上，目前线上使用的<code>opensips</code>并未有崩溃的记录，8c8G的机器性能很高，具体可以查看我的<code>opensips 压测介绍</code>文章，
+<code>kamailio</code>目前还未压测，应该稳定性不差。</li>
+<li><code>opensips</code>没有社区，遇到问题只能提<code>issue</code>，<code>kamailio</code>可以先在社区提问，如果问题没有解决，再提<code>issue</code>。</li>
+</ol>
+
+</section>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
         
-    </a>
-</article>
+            <a href="/tags/opensips/">Opensips</a>
         
     </section>
-    <nav class='pagination'>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
         
+        
+            <div class="article-image">
+                <img src="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/11.3ffb9c9b8b8063b3e32b685b311dbbc1_hu4057854913553884513.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post topology_hiding模块介绍"
+                        
+                        data-hash="md5-P/ucm4uAY7PjK2hbMR27wQ==">
+                
+            </div>
         
 
-        
-            
-                <span class='page-link current'>1</span>
-                
-            
-            
-                    <a class='page-link' href='/categories/opensips/page/2/'>2</a>
-                
-            
-    </nav>
+        <div class="article-details">
+            <h2 class="article-title">topology_hiding模块介绍</h2>
+        </div>
+    </a>
+</article>
 
-<footer class="site-footer">
+            
+                
+<article class="has-image">
+    <a href="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/9.6791e9f7d4174ba8950564f4026448fa_hu12827902533016567927.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post registrar和mid_registrar模块介绍"
+                        
+                        data-hash="md5-Z5Hp99QXS6iVBWT0AmRI&#43;g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">registrar和mid_registrar模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/tracer%E6%A8%A1%E5%9D%97/">
+        
+        
+            <div class="article-image">
+                <img src="/p/tracer%E6%A8%A1%E5%9D%97/8.2085021b22fbfed95d9c0a34bbde5364_hu15311640070674681633.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post tracer模块"
+                        
+                        data-hash="md5-IIUCGyL7/tldnAo0u95TZA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">tracer模块</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/nat_traversal%E5%92%8Cnathelper%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/7.44f6cc3bf34d935f7e7e2b22dd10c2b1_hu1141170888612522145.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post NAT_TRAVERSAL和NATHELPER模块介绍"
+                        
+                        data-hash="md5-RPbMO/NNk19&#43;fisi3RDCsQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">NAT_TRAVERSAL和NATHELPER模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/2.d5d77bd43b1a818a3035ec6de60c4ea9_hu4922339176031200865.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post b2b_logic模块介绍"
+                        
+                        data-hash="md5-1dd71DsagYowNext5gxOqQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">b2b_logic模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
     <script type="module">
         import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
         pageviewCount({
@@ -725,6 +1010,84 @@
     </section>
 </footer>
 
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
 
             </main>
         </div>
