@@ -402,6 +402,7 @@
     <li><a href="#对比的版本">对比的版本</a></li>
     <li><a href="#支持的route类型">支持的route类型</a></li>
     <li><a href="#监控管理端">监控管理端</a></li>
+    <li><a href="#web管理服务">web管理服务</a></li>
     <li><a href="#使用体验">使用体验</a></li>
   </ol>
 </nav>
@@ -467,7 +468,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟,共857 字
+                    阅读时长: 2 分钟,共917 字
                 </time>
             </div>
         
@@ -646,6 +647,26 @@
 <li>opensips-cli因为是Python编写，在做opensips容器时，如果把opensips-cli打包进去，整个包会较大。
 可以把opensips-cli单独制作镜像，opensips-cli使用<code>http</code>方式和opensips服务端进行通信。</li>
 </ol>
+<h2 id="web管理服务">web管理服务
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: center">opensips</th>
+          <th style="text-align: center">kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">仓库地址</td>
+          <td style="text-align: center"><a class="link" href="https://github.com/OpenSIPS/opensips-cp.git"  target="_blank" rel="noopener"
+    >https://github.com/OpenSIPS/opensips-cp.git</a></td>
+          <td style="text-align: center"><a class="link" href="https://github.com/asipto/siremis-php.git"  target="_blank" rel="noopener"
+    >https://github.com/asipto/siremis-php.git</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>两个服务都是php的，不太好用，页面样式不好看，中文支持度不好,正在考虑使用Vue3重写。</p>
 <h2 id="使用体验">使用体验
 </h2><div class="table-wrapper"><table>
   <thead>
@@ -992,7 +1013,7 @@
         
         
         发表了12篇文章 · 
-        总计19.57k字
+        总计19.63k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
