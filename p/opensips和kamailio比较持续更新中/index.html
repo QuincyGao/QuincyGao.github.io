@@ -10,7 +10,7 @@
 <meta property='og:description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route - 出错路由 8 local_route - 本地路由 9 startup_route - 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
 <meta property='og:url' content='https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-02-27T14:12:33&#43;08:00'/><meta property='article:modified_time' content='2025-02-27T14:12:33&#43;08:00'/>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-02-28T14:12:33&#43;08:00'/><meta property='article:modified_time' content='2025-02-28T14:12:33&#43;08:00'/>
 <meta name="twitter:title" content="opensips和kamailio比较(持续更新中···)">
 <meta name="twitter:description" content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route - 出错路由 8 local_route - 本地路由 9 startup_route - 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
     <link rel="shortcut icon" href="/favicon.png" />
@@ -403,6 +403,7 @@
     <li><a href="#支持的route类型">支持的route类型</a></li>
     <li><a href="#监控管理端">监控管理端</a></li>
     <li><a href="#web管理服务">web管理服务</a></li>
+    <li><a href="#功能差异">功能差异</a></li>
     <li><a href="#使用体验">使用体验</a></li>
   </ol>
 </nav>
@@ -453,7 +454,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2025-02-27</time>
+                <time class="article-time--published">2025-02-28</time>
             </div>
         
 
@@ -468,7 +469,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟,共917 字
+                    阅读时长: 2 分钟,共938 字
                 </time>
             </div>
         
@@ -667,6 +668,23 @@
   </tbody>
 </table></div>
 <p>两个服务都是php的，不太好用，页面样式不好看，中文支持度不好,正在考虑使用Vue3重写。</p>
+<h2 id="功能差异">功能差异
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">模块</th>
+          <th style="text-align: center">opensips</th>
+          <th style="text-align: center">kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">日志</td>
+          <td style="text-align: center">日志带时间</td>
+          <td style="text-align: center">日志不带时间</td>
+      </tr>
+  </tbody>
+</table></div>
 <h2 id="使用体验">使用体验
 </h2><div class="table-wrapper"><table>
   <thead>
@@ -1011,9 +1029,11 @@
         
             
         
+            
         
-        发表了12篇文章 · 
-        总计19.63k字
+        
+        发表了13篇文章 · 
+        总计20.64k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>

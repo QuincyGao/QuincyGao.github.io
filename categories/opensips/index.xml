@@ -6,10 +6,10 @@
         <description>Recent content in opensips on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Thu, 27 Feb 2025 14:12:33 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 28 Feb 2025 14:12:33 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>opensips和kamailio比较(持续更新中···)</title>
         <link>https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/</link>
-        <pubDate>Thu, 27 Feb 2025 14:12:33 +0800</pubDate>
+        <pubDate>Fri, 28 Feb 2025 14:12:33 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/</guid>
         <description>&lt;h2 id=&#34;对比的版本&#34;&gt;对比的版本
@@ -183,6 +183,23 @@
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;两个服务都是php的，不太好用，页面样式不好看，中文支持度不好,正在考虑使用Vue3重写。&lt;/p&gt;
+&lt;h2 id=&#34;功能差异&#34;&gt;功能差异
+&lt;/h2&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;模块&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;opensips&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;kamailio&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;日志&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;日志带时间&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;日志不带时间&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 &lt;h2 id=&#34;使用体验&#34;&gt;使用体验
 &lt;/h2&gt;&lt;table&gt;
   &lt;thead&gt;

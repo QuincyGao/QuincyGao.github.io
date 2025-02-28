@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -16,19 +16,19 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/opensips/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/opensips/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +41,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-02-27T14:12:33+08:00</lastmod>
+    <lastmod>2025-02-28T14:12:33+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -52,6 +52,15 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/categories/"
                 />
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
+    <lastmod>2025-02-27T15:53:07+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
+    <lastmod>2025-02-27T15:53:07+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/kamailio%E5%85%A5%E9%97%A8%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2025-02-27T15:53:07+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2025-02-26T10:15:32+08:00</lastmod>
@@ -139,8 +148,6 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/archives/"
                 />
-  </url><url>
-    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
   </url><url>
     <loc>https://QuincyGao.github.io/categories/good-tools/</loc>
   </url><url>
