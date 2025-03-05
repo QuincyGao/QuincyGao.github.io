@@ -6,7 +6,266 @@
         <description>Recent content on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 28 Feb 2025 14:12:33 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 05 Mar 2025 09:06:55 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>registrar模块介绍</title>
+        <link>https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</link>
+        <pubDate>Wed, 05 Mar 2025 09:06:55 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup.jpg" alt="Featured image of post registrar模块介绍" /&gt;&lt;h2 id=&#34;registrar模块简介&#34;&gt;registrar模块简介
+&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;version: kamailio 5.8.5 (x86_64/linux)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本文主要是通过实战来展示参数的用法，让您有个比较清晰的认识。官方文档地址：&lt;a class=&#34;link&#34; href=&#34;https://kamailio.org/docs/modules/5.8.x/modules/registrar.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;kamailio.org&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;重要参数介绍&#34;&gt;重要参数介绍
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;default_expires&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;默认过期时间3600s,此参数只有在&lt;code&gt;REGISTER&lt;/code&gt;信令中没有&lt;code&gt;Expires&lt;/code&gt;或者&lt;code&gt;contact&lt;/code&gt;中没有&lt;code&gt;expires&lt;/code&gt;时生效,如果有这些参数，此变量不生效。
+软电话都带有&lt;code&gt;Expires&lt;/code&gt;,目前无法模拟.&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;default_exipires_range&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;默认过期时间变化范围(0-100),[default_expires - default_expires_range%, default_expires]&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;expires_range&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;作用在&lt;code&gt;expires&lt;/code&gt;上，范围(0-100), 例如:30,那么expires的范围为 [0.7*expires, expires]&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;registrar&amp;#34;, &amp;#34;expires_range&amp;#34;, 30)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;REGISTER&lt;/code&gt;的&lt;code&gt;Expires&lt;/code&gt;为300 ,usrloc中存储的过期时间为&lt;code&gt;210~300&lt;/code&gt;之间,此时返回的&lt;code&gt;200OK&lt;/code&gt;的&lt;code&gt;Contact&lt;/code&gt;里的&lt;code&gt;expires&lt;/code&gt;也是此随机值
+&lt;img src=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip.png&#34;
+	width=&#34;945&#34;
+	height=&#34;585&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip_hu5327185803530125126.png 480w, https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip_hu6620447317815299813.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;REGISTER&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;161&#34;
+		data-flex-basis=&#34;387px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;code&gt;min_expires&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_expires_mode&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;最小的过期时间，如果&lt;code&gt;REGISTER&lt;/code&gt;里的&lt;code&gt;Expires&lt;/code&gt;大于此值，此值不起作用,过期时间按照&lt;code&gt;Expires&lt;/code&gt;。
+&lt;code&gt;REGISTER&lt;/code&gt;里&lt;code&gt;Expires&lt;/code&gt;(70)时间小于&lt;code&gt;min_expires&lt;/code&gt;(100):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;min_expires_mode&lt;/code&gt;为&lt;code&gt;0&lt;/code&gt;时, 设置usrloc里坐席过期时间为&lt;code&gt;min_expires&lt;/code&gt;,&lt;code&gt;200OK&lt;/code&gt;返里的&lt;code&gt;Contact&lt;/code&gt;的&lt;code&gt;expires&lt;/code&gt;为&lt;code&gt;min_expires&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_expires_mode&lt;/code&gt;为&lt;code&gt;1&lt;/code&gt;时, &lt;code&gt;kamailio&lt;/code&gt;会返回&lt;code&gt;423 Interval Too Brief&lt;/code&gt;,并带有&lt;code&gt;Min-Expires&lt;/code&gt;时间，
+软电话收到此错误，会自动重试，重试的&lt;code&gt;Expires&lt;/code&gt;为&lt;code&gt;min_expires&lt;/code&gt;,此时注册成功。
+&lt;img src=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1.png&#34;
+	width=&#34;1361&#34;
+	height=&#34;415&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu1274514951897960657.png 480w, https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu145178363227918806.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;REGISTER&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;327&#34;
+		data-flex-basis=&#34;787px&#34;
+	
+&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;&lt;code&gt;max_expires&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;最大过期时间，&lt;code&gt;REGISTER&lt;/code&gt;的&lt;code&gt;Expires&lt;/code&gt;过期时间高过此值，坐席过期时间以此值为准；
+比此值低，则按照&lt;code&gt;REGISTER&lt;/code&gt;的&lt;code&gt;Expires&lt;/code&gt;过期。&lt;/p&gt;
+&lt;ol start=&#34;7&#34;&gt;
+&lt;li&gt;&lt;code&gt;append_branches&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;默认是1, 当一个用户有多个Contacts时(比如:同一个账号使用不同的软电话注册),在&lt;code&gt;lookup&lt;/code&gt;查找坐席时：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;append_branches&lt;/code&gt;为&lt;code&gt;1&lt;/code&gt;时,会给所有的&lt;code&gt;Contact&lt;/code&gt;发送请求&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;append_branches&lt;/code&gt;为&lt;code&gt;0&lt;/code&gt;时,只给第一个&lt;code&gt;Contact&lt;/code&gt;发送请求&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;8&#34;&gt;
+&lt;li&gt;&lt;code&gt;received_avp&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;registrar&amp;#34;, &amp;#34;received_avp&amp;#34;, &amp;#34;$avp(s:rcv)&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;存储&lt;code&gt;REGISTER&lt;/code&gt;的&lt;code&gt;Received&lt;/code&gt;地址到&lt;code&gt;s:rcv&lt;/code&gt;变量中。&lt;/p&gt;
+&lt;ol start=&#34;9&#34;&gt;
+&lt;li&gt;&lt;code&gt;received_param&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;默认&lt;code&gt;received&lt;/code&gt;, 返回&lt;code&gt;200OK&lt;/code&gt;的&lt;code&gt;Contact&lt;/code&gt;里带&lt;code&gt;received&lt;/code&gt;变量:
+&lt;img src=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2.png&#34;
+	width=&#34;1662&#34;
+	height=&#34;423&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu13642539165087030896.png 480w, https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu7648899027832435052.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;REGISTER&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;392&#34;
+		data-flex-basis=&#34;942px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;10&#34;&gt;
+&lt;li&gt;&lt;code&gt;max_contacts&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;能接受的最大&lt;code&gt;Contact&lt;/code&gt;个数,超过会报错503,设置&lt;code&gt;max_contacts&lt;/code&gt;为1,
+使用两个软电话注册同一个账号,第二个报错：
+&lt;img src=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip3.png&#34;
+	width=&#34;1642&#34;
+	height=&#34;404&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip3_hu9578482171575192203.png 480w, https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip3_hu4564623562570377940.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;REGISTER&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;406&#34;
+		data-flex-basis=&#34;975px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;11&#34;&gt;
+&lt;li&gt;&lt;code&gt;retry_after&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;REGISTER&lt;/code&gt;返回&lt;code&gt;5xx&lt;/code&gt;错误之后，重新尝试注册的间隔。&lt;code&gt;5xx&lt;/code&gt;的返回头带此参数&lt;code&gt;Retry-After&lt;/code&gt;&lt;/p&gt;
+&lt;ol start=&#34;12&#34;&gt;
+&lt;li&gt;&lt;code&gt;method_filtering&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;lookup&lt;/code&gt; 查找用户时，&lt;code&gt;contact&lt;/code&gt;是否支持&lt;code&gt;method&lt;/code&gt;过滤,0不支持,其他为支持。&lt;/p&gt;
+&lt;ol start=&#34;13&#34;&gt;
+&lt;li&gt;&lt;code&gt;outbound_mode&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;默认是0,接受不带&lt;code&gt;Supported&lt;/code&gt;的&lt;code&gt;REGISTER&lt;/code&gt;,返回的&lt;code&gt;200OK&lt;/code&gt;不带&lt;code&gt;Require&lt;/code&gt;
+如果&lt;code&gt;REGISTER&lt;/code&gt;带&lt;code&gt;Require&lt;/code&gt;, 报错返回&lt;code&gt;420 Bad Extension&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;1,接受带&lt;code&gt;Supported&lt;/code&gt;的&lt;code&gt;REGISTER&lt;/code&gt;,返回的&lt;code&gt;200OK&lt;/code&gt;带&lt;code&gt;Require&lt;/code&gt;或者&lt;code&gt;Supported&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;2,拒绝不带&lt;code&gt;Supported&lt;/code&gt;的&lt;code&gt;REGISTER&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;14&#34;&gt;
+&lt;li&gt;&lt;code&gt;contact_max_size&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;设置&lt;code&gt;contact&lt;/code&gt;的最大长度,默认为512&lt;/p&gt;
+&lt;ol start=&#34;15&#34;&gt;
+&lt;li&gt;&lt;code&gt;use_expired_contacts&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;是否使用过期的&lt;code&gt;contacts&lt;/code&gt;,默认0不用,1使用&lt;/p&gt;
+&lt;h2 id=&#34;重要函数介绍&#34;&gt;重要函数介绍
+&lt;/h2&gt;&lt;h3 id=&#34;savedomain-flag-uri&#34;&gt;save(domain, [,flag [,uri]])
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;domain为:&lt;code&gt;location&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;flag:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;0x01: 不存DB,只缓存&lt;/li&gt;
+&lt;li&gt;0x02: 不生成&lt;code&gt;SIP reply&lt;/code&gt;,不能用在&lt;code&gt;ONREPLY_ROUTE&lt;/code&gt;上, 可以用在转发注册上&lt;/li&gt;
+&lt;li&gt;0x04: 只保存一个&lt;code&gt;contact&lt;/code&gt;,同一个账号有多个软电话注册时,只会保存最新的一个&lt;code&gt;contact&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;0x08: 使&lt;code&gt;expires_range&lt;/code&gt;or&lt;code&gt;default_expires_range&lt;/code&gt;失效&lt;/li&gt;
+&lt;li&gt;0x10: 准备reply的Headers,要和0x02一起使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;url: flag必须先设置,自定义&lt;code&gt;contact&lt;/code&gt;的&lt;code&gt;uri&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;返回值:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;-2: 错误, 太多contact&lt;/li&gt;
+&lt;li&gt;-1: 错误&lt;/li&gt;
+&lt;li&gt;1: contact保存成功&lt;/li&gt;
+&lt;li&gt;2: contact更新成功&lt;/li&gt;
+&lt;li&gt;3: contact删除成功&lt;/li&gt;
+&lt;li&gt;4: contact 返回&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;代理转发示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;route[REGISTRAR] {
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        if (!is_method(&amp;#34;REGISTER&amp;#34;)) return;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        if(isflagset(FLT_NATS)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                setbflag(FLB_NATB);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#!ifdef WITH_NATSIPPING
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                # do SIP NAT pinging
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                setbflag(FLB_NATSIPPING);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#!endif
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        if (!save(&amp;#34;location&amp;#34;,&amp;#34;0x12&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                sl_reply_error();
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        }
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        $fs=&amp;#34;tcp:172.16.4.111:5461&amp;#34;;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        $du=&amp;#34;sip:172.16.4.114:5060;transport=tcp&amp;#34;;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        route(RELAY);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        exit;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;$fs&lt;/code&gt; 为本地出去的地址, &lt;code&gt;$du&lt;/code&gt; 为代理方的地址:
+&lt;img src=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip4.png&#34;
+	width=&#34;1584&#34;
+	height=&#34;554&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip4_hu8923157200306592982.png 480w, https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip4_hu8579117307864618930.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;REGISTER&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;285&#34;
+		data-flex-basis=&#34;686px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从信令可以看出,如果转发的sip协议是&lt;code&gt;tcp&lt;/code&gt;,那么出去的端口不是&lt;code&gt;5461&lt;/code&gt;,是随机生成的。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;flag&lt;/code&gt;可以多个叠加，十六进制直接相加即可。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;lookupdomain--uri&#34;&gt;lookup(domain [, uri])
+&lt;/h3&gt;&lt;p&gt;查找contact, 把&lt;code&gt;Contact&lt;/code&gt;放在&lt;code&gt;Request-URI&lt;/code&gt;上,转发请求。&lt;/p&gt;
+&lt;h3 id=&#34;registereddomain--uri--match_option--match_action&#34;&gt;registered(domain [, uri [, match_option [, match_action]]])
+&lt;/h3&gt;&lt;p&gt;判断坐席是否已经注册&lt;/p&gt;
+&lt;h3 id=&#34;unregisterdomain-uri-ruid&#34;&gt;unregister(domain, uri[, ruid])
+&lt;/h3&gt;&lt;p&gt;注销&lt;code&gt;AOR&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;p&gt;registrar模块还有一些其他的参数和函数未提到,目前场景中还未用到，重要的主要是注册，查找，注销功能。&lt;/p&gt;
+&lt;p&gt;registrar需要和&lt;code&gt;usrloc&lt;/code&gt;一起使用。&lt;code&gt;usrloc&lt;/code&gt;决定是否使用&lt;code&gt;DB&lt;/code&gt;存储用户信息。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>opensips和kamailio比较(持续更新中···)</title>
         <link>https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/</link>
         <pubDate>Fri, 28 Feb 2025 14:12:33 +0800</pubDate>

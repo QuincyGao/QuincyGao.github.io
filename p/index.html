@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" +++ date = &lsquo;2025-02-11T08:49:22+08:00&rsquo; draft = false title = &lsquo;b2b_logic模块介绍&rsquo; lastmod = 2025-02-11T08:49:22+08:00 comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;] image = &lsquo;2.jpg&rsquo; +++\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" +++ date = &lsquo;2025-02-28T14:12:33+08:00&rsquo; draft = false title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo; lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo; comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;]\n">
 <title></title>
 
 <link rel='canonical' href='http://localhost:1313/p/'>
 
 <link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="">
-<meta property='og:description' content=" +++ date = &lsquo;2025-02-11T08:49:22+08:00&rsquo; draft = false title = &lsquo;b2b_logic模块介绍&rsquo; lastmod = 2025-02-11T08:49:22+08:00 comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;] image = &lsquo;2.jpg&rsquo; +++\n">
+<meta property='og:description' content=" +++ date = &lsquo;2025-02-28T14:12:33+08:00&rsquo; draft = false title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo; lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo; comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;]\n">
 <meta property='og:url' content='http://localhost:1313/p/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' />
 <meta name="twitter:title" content="">
-<meta name="twitter:description" content=" +++ date = &lsquo;2025-02-11T08:49:22+08:00&rsquo; draft = false title = &lsquo;b2b_logic模块介绍&rsquo; lastmod = 2025-02-11T08:49:22+08:00 comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;] image = &lsquo;2.jpg&rsquo; +++\n">
+<meta name="twitter:description" content=" +++ date = &lsquo;2025-02-28T14:12:33+08:00&rsquo; draft = false title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo; lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo; comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;]\n">
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -399,8 +399,12 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#b2b_logic模块介绍">b2b_logic模块介绍</a></li>
-    <li><a href="#b2b_logic-实战">b2b_logic 实战</a></li>
+    <li><a href="#对比的版本">对比的版本</a></li>
+    <li><a href="#支持的route类型">支持的route类型</a></li>
+    <li><a href="#监控管理端">监控管理端</a></li>
+    <li><a href="#web管理服务">web管理服务</a></li>
+    <li><a href="#功能差异">功能差异</a></li>
+    <li><a href="#使用体验">使用体验</a></li>
   </ol>
 </nav>
         </div>
@@ -444,7 +448,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟,共547 字
+                    阅读时长: 3 分钟,共1003 字
                 </time>
             </div>
         
@@ -474,168 +478,272 @@
     
     <!--
  * @Author: gao114882@gmail.com
- * @Date: 2025-02-08 14:49:22
+ * @Date: 2025-02-26 17:12:33
  * @LastEditors: gao114882@gmail.com
- * @LastEditTime: 2025-02-26 10:34:02
+ * @LastEditTime: 2025-03-03 10:55:14
  * @Description: 
  * 
  * Copyright (c) 2025 by netinfo, All Rights Reserved. 
 -->
 <p>+++
-date = &lsquo;2025-02-11T08:49:22+08:00&rsquo;
+date = &lsquo;2025-02-28T14:12:33+08:00&rsquo;
 draft = false
-title = &lsquo;b2b_logic模块介绍&rsquo;
-lastmod = 2025-02-11T08:49:22+08:00
+title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo;
+lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo;
 comments = true
 categories = [&lsquo;opensips&rsquo;]
-tags = [&lsquo;opensips&rsquo;]
-image = &lsquo;2.jpg&rsquo;
-+++</p>
-<h2 id="b2b_logic模块介绍">b2b_logic模块介绍
-</h2><p>b2b_logic 官方使用场景介绍:<a class="link" href="https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2"  target="_blank" rel="noopener"
-    >https://www.opensips.org/Documentation/Tutorials-B2BUA-3-2</a></p>
-<p>本次测试的opensips版本为：</p>
-<blockquote>
-<p>opensips 3.3.10 (x86_64/linux)</p>
-</blockquote>
-<h2 id="b2b_logic-实战">b2b_logic 实战
-</h2><p>配置:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;b2b_entities.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;rtp_relay.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;dialog.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;b2b_logic.so&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;hash_size&#34;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;script_req_route&#34;</span><span class="p">,</span> <span class="s2">&#34;b2b_logic_request&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;script_reply_route&#34;</span><span class="p">,</span> <span class="s2">&#34;b2b_logic_reply&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;cleanup_period&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;b2b_logic&#34;, &#34;db_url&#34;, &#34;mysql://opensips:opensipsrw@172.16.4.111/opensips&#34;)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;update_period&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;max_duration&#34;</span><span class="p">,</span> <span class="mi">7200</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;b2b_logic&#34;, &#34;contact_user&#34;, 1)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;server_address&#34;</span><span class="p">,</span> <span class="s2">&#34;sip:$fU@172.16.4.111:5360&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;b2b_logic&#34;, &#34;db_mode&#34;, 1)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;b2bl_th_init_timeout&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;b2b_logic&#34;</span><span class="p">,</span> <span class="s2">&#34;b2bl_early_update&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>在 route主请求中添加：</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
-</span><span class="lnt"> 2
-</span><span class="lnt"> 3
-</span><span class="lnt"> 4
-</span><span class="lnt"> 5
-</span><span class="lnt"> 6
-</span><span class="lnt"> 7
-</span><span class="lnt"> 8
-</span><span class="lnt"> 9
-</span><span class="lnt">10
-</span><span class="lnt">11
-</span><span class="lnt">12
-</span><span class="lnt">13
-</span><span class="lnt">14
-</span><span class="lnt">15
-</span><span class="lnt">16
-</span><span class="lnt">17
-</span><span class="lnt">18
-</span><span class="lnt">19
-</span><span class="lnt">20
-</span><span class="lnt">21
-</span><span class="lnt">22
-</span><span class="lnt">23
-</span><span class="lnt">24
-</span><span class="lnt">25
-</span><span class="lnt">26
-</span><span class="lnt">27
-</span><span class="lnt">28
-</span><span class="lnt">29
-</span><span class="lnt">30
-</span></code></pre></td>
-<td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"> <span class="k">if</span><span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">has_totag</span><span class="p">())</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---b2b-server_new--:$rm|$rs|$tu|$socket_in(port)|$var(contact)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_server_new</span><span class="p">(</span><span class="s2">&#34;caller&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">create_dialog</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">rtp_relay_engage</span><span class="p">(</span><span class="s2">&#34;rtpengine&#34;</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="c1">#$avp(route)=&#34;Record-Route&#34;;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#$avp(route-content)=&#34;&lt;sip:172.16.4.111:5360;lr&gt;&#34;;</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#b2b_client_new(&#34;callee&#34;, &#34;sip:$tU@172.16.4.114:5080&#34;,,,$ct);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_client_new</span><span class="p">(</span><span class="s2">&#34;callee&#34;</span><span class="p">,</span> <span class="s2">&#34;sip:$tU@172.16.4.114:5080&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#record_route();</span>
-</span></span><span class="line"><span class="cl">    <span class="c1">#b2b_client_new(&#34;callee&#34;, &#34;sip:$tU@172.16.4.114:5080&#34;,,,$ct,$avp(route),$avp(route-content));</span>
-</span></span><span class="line"><span class="cl">    <span class="c1"># initialize B2B session</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_init_request</span><span class="p">(</span><span class="s2">&#34;prepaid&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">b2b_logic_reply</span><span class="p">]</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Reply Received from $si:$sp User-Agent:$ua</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Reply message $rs:$rr received </span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">        <span class="n">b2b_handle_reply</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">        <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">b2b_logic_request</span><span class="p">]</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Request Received from $si:$sp User-Agent:$ua</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_INFO&#34;</span><span class="p">,</span><span class="s2">&#34;[$fU $tU $ci $rm] B2B_Request message $rs:$rr received </span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
-</span></span><span class="line"><span class="cl">    <span class="n">b2b_pass_request</span><span class="p">();</span>
-</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">;</span>
-</span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></td></tr></table>
-</div>
-</div><p>需要注意的是， b2b_logic中媒体服务使用的是rtp_relay,通过rtp_relay来选择媒体代理。
-通过b2b_logic 转发的INVITE的Call-ID是新生成的（例如:<code>B2B.377.4269969.1739239153</code>）和主叫的INVITE的Call-ID不同。</p>
-<p>目前发现，被叫挂断时b2b_logic会多发送一个Bye给自己，这个应该是invite的Contact被</p>
-<p>主叫挂断的sip流程图：<img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1.png"
-	width="1183"
-	height="910"
-	srcset="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu6817963574803739879.png 480w, /p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu1084654204987761059.png 1024w"
-	loading="lazy"
-	
-		alt="主叫挂断"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="130"
-		data-flex-basis="312px"
-	
-></p>
-<p>被叫挂断的sip流程图：<img src="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2.png"
-	width="1177"
-	height="974"
-	srcset="/p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu10321639498700773460.png 480w, /p/b2b_logic%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu7949677085132287903.png 1024w"
-	loading="lazy"
-	
-		alt="被叫挂断"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="120"
-		data-flex-basis="290px"
-	
-></p>
+tags = [&lsquo;opensips&rsquo;]</p>
+<p>+++</p>
+<h2 id="对比的版本">对比的版本
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>版本信息</td>
+          <td>3.3.10</td>
+          <td>5.8.5</td>
+      </tr>
+      <tr>
+          <td>官方文档地址</td>
+          <td><a class="link" href="https://www.opensips.org/Documentation/Manuals"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Manuals</a></td>
+          <td><a class="link" href="https://www.kamailio.org/w/documentation/"  target="_blank" rel="noopener"
+    >https://www.kamailio.org/w/documentation/</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="支持的route类型">支持的route类型
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>序号</th>
+          <th style="text-align: center">opensips</th>
+          <th style="text-align: center">kamailio</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td style="text-align: center">route</td>
+          <td style="text-align: center">request_route</td>
+          <td>请求入口</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td style="text-align: center">branch_route[a]</td>
+          <td style="text-align: center">branch_route[a]</td>
+          <td>分支路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td style="text-align: center">failure_route[a]</td>
+          <td style="text-align: center">failure_route[a]</td>
+          <td>失败路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td style="text-align: center">onreply_route</td>
+          <td style="text-align: center">reply_route <br>onreply_route{}<br> onreply_route[0]{}</td>
+          <td>主返回路由</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td style="text-align: center">onreply_route[a]</td>
+          <td style="text-align: center">onreply_route[a]</td>
+          <td>子返回路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>6</td>
+          <td style="text-align: center">event_route[a]</td>
+          <td style="text-align: center">event_route[a]</td>
+          <td>事件路由,a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>7</td>
+          <td style="text-align: center">error_route</td>
+          <td style="text-align: center">-</td>
+          <td>出错路由</td>
+      </tr>
+      <tr>
+          <td>8</td>
+          <td style="text-align: center">local_route</td>
+          <td style="text-align: center">-</td>
+          <td>本地路由</td>
+      </tr>
+      <tr>
+          <td>9</td>
+          <td style="text-align: center">startup_route</td>
+          <td style="text-align: center">-</td>
+          <td>服务启动时执行的路由</td>
+      </tr>
+      <tr>
+          <td>10</td>
+          <td style="text-align: center">timer_route[a]</td>
+          <td style="text-align: center">RTimer模块</td>
+          <td>定时执行的路由, a为自定义变量</td>
+      </tr>
+      <tr>
+          <td>11</td>
+          <td style="text-align: center">-</td>
+          <td style="text-align: center">onsend_route</td>
+          <td>请求发出去前执行的路由</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="监控管理端">监控管理端
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>差异</th>
+          <th style="text-align: center">opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>运行命令</td>
+          <td style="text-align: center"><code>opensips-cli</code></td>
+          <td><code>kamctl</code></td>
+      </tr>
+      <tr>
+          <td>独立编译</td>
+          <td style="text-align: center">是,仓库地址:<br><a class="link" href="https://github.com/OpenSIPS/opensips-cli.git"  target="_blank" rel="noopener"
+    >https://github.com/OpenSIPS/opensips-cli.git</a></td>
+          <td>否<br>没有单独仓库，和kamailio一起编译生成</td>
+      </tr>
+      <tr>
+          <td>编写语言</td>
+          <td style="text-align: center">Python</td>
+          <td>c</td>
+      </tr>
+      <tr>
+          <td>配置文件</td>
+          <td style="text-align: center">~/.opensips-cli.cfg</td>
+          <td>kamctlrc</td>
+      </tr>
+      <tr>
+          <td>创建数据库</td>
+          <td style="text-align: center"><code>opensips-cli -f ~/.opensips-cli.cfg -x database create</code></td>
+          <td><code>kamdbctl create kamailio</code></td>
+      </tr>
+      <tr>
+          <td>和服务端连接方式</td>
+          <td style="text-align: center"><code>fifo/http/udp</code></td>
+          <td><code>fifo</code></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>说明:</p>
+<ol>
+<li>opensips-cli因为是Python编写，在做opensips容器时，如果把opensips-cli打包进去，整个包会较大。
+可以把opensips-cli单独制作镜像，opensips-cli使用<code>http</code>方式和opensips服务端进行通信。</li>
+</ol>
+<h2 id="web管理服务">web管理服务
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left"></th>
+          <th style="text-align: center">opensips</th>
+          <th style="text-align: center">kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">仓库地址</td>
+          <td style="text-align: center"><a class="link" href="https://github.com/OpenSIPS/opensips-cp.git"  target="_blank" rel="noopener"
+    >https://github.com/OpenSIPS/opensips-cp.git</a></td>
+          <td style="text-align: center"><a class="link" href="https://github.com/asipto/siremis-php.git"  target="_blank" rel="noopener"
+    >https://github.com/asipto/siremis-php.git</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>两个服务都是php的，不太好用，页面样式不好看，中文支持度不好,正在考虑使用Vue3重写。</p>
+<h2 id="功能差异">功能差异
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">模块</th>
+          <th style="text-align: center">opensips</th>
+          <th style="text-align: center">kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">日志</td>
+          <td style="text-align: center">日志带时间</td>
+          <td style="text-align: center">日志不带时间</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="使用体验">使用体验
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>上手难度</td>
+          <td>简单</td>
+          <td>较高</td>
+      </tr>
+      <tr>
+          <td>star(截止20250227)</td>
+          <td>1.3k</td>
+          <td>2.4k</td>
+      </tr>
+      <tr>
+          <td>模块功能</td>
+          <td>能满足日常需求</td>
+          <td>较丰富，还有KEMI脚本语言实现(没有示例，上手难度大)</td>
+      </tr>
+      <tr>
+          <td>官方文档</td>
+          <td>文档层次分明,模块清楚</td>
+          <td>文档基本完整，但是缺少基本函数检索文档</td>
+      </tr>
+      <tr>
+          <td>网络教程</td>
+          <td>大部分是2.x版本的，3.x文档不全</td>
+          <td>国内教程少</td>
+      </tr>
+      <tr>
+          <td>迭代变化</td>
+          <td>2.x和3.x版本配置参数区别较大</td>
+          <td>版本迭代配置参数变化不大</td>
+      </tr>
+      <tr>
+          <td>bug修复进度</td>
+          <td>较慢,起步一个月</td>
+          <td>较快，一周左右反馈</td>
+      </tr>
+      <tr>
+          <td>社区</td>
+          <td>没有</td>
+          <td>有,社区地址:<br><a class="link" href="https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/"  target="_blank" rel="noopener"
+    >https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>补充：</p>
+<ol>
+<li><code>opensips</code> 适合快速上手,负载均衡，sip代理转发等基本能满足日常需求。
+<code>kamailio</code> 可以作为进阶版本，后期完全可以不写.cfg配置，用<code>KEMI</code>脚本来写。</li>
+<li>两个产品bug的<code>issue</code>都设置了定时删除，没有修复的话，需要自己回复一下才能不被删。</li>
+<li>关于并发上，目前线上使用的<code>opensips</code>并未有崩溃的记录，8c8G的机器性能很高，具体可以查看我的<code>opensips 压测介绍</code>文章，
+<code>kamailio</code>目前还未压测，应该稳定性不差。</li>
+<li><code>opensips</code>没有社区，遇到问题只能提<code>issue</code>，<code>kamailio</code>可以先在社区提问，如果问题没有解决，再提<code>issue</code>。</li>
+</ol>
 
 </section>
 
@@ -781,9 +889,13 @@ image = &lsquo;2.jpg&rsquo;
         
             
         
+            
         
-        发表了11篇文章 · 
-        总计16.02k字
+            
+        
+        
+        发表了13篇文章 · 
+        总计20.70k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
