@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -16,19 +16,19 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
   </url><url>
-    <loc>https://QuincyGao.github.io/p/kamailio%E7%9A%84http%E5%8A%9F%E8%83%BD-/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/p/kamailio%E7%9A%84http%E5%8A%9F%E8%83%BD%E4%BA%8C/</loc>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +41,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
+    <lastmod>2025-03-10T14:05:22+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -52,6 +52,9 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/categories/"
                 />
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/kamailio%E7%9A%84http%E5%8A%9F%E8%83%BD%E4%B8%80/</loc>
+    <lastmod>2025-03-05T17:23:39+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2025-03-05T09:06:55+08:00</lastmod>
