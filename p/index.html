@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" +++ date = &lsquo;2025-02-28T14:12:33+08:00&rsquo; draft = false title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo; lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo; comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;]\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="golang 生成动态库问题\r">
 <title></title>
 
 <link rel='canonical' href='http://localhost:1313/p/'>
 
 <link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="">
-<meta property='og:description' content=" +++ date = &lsquo;2025-02-28T14:12:33+08:00&rsquo; draft = false title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo; lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo; comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;]\n">
+<meta property='og:description' content="golang 生成动态库问题\r">
 <meta property='og:url' content='http://localhost:1313/p/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='golang' /><meta property='article:tag' content='cgo' /><meta property='article:published_time' content='2025-03-13T16:19:59&#43;08:00'/><meta property='article:modified_time' content='2025-03-13T16:19:59&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/backup.jpg' />
 <meta name="twitter:title" content="">
-<meta name="twitter:description" content=" +++ date = &lsquo;2025-02-28T14:12:33+08:00&rsquo; draft = false title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo; lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo; comments = true categories = [&lsquo;opensips&rsquo;] tags = [&lsquo;opensips&rsquo;]\n">
+<meta name="twitter:description" content="golang 生成动态库问题\r"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1313/p/backup.jpg' />
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -399,12 +400,7 @@
         <div class="widget--toc">
             <nav id="TableOfContents">
   <ol>
-    <li><a href="#对比的版本">对比的版本</a></li>
-    <li><a href="#支持的route类型">支持的route类型</a></li>
-    <li><a href="#监控管理端">监控管理端</a></li>
-    <li><a href="#web管理服务">web管理服务</a></li>
-    <li><a href="#功能差异">功能差异</a></li>
-    <li><a href="#使用体验">使用体验</a></li>
+    <li><a href="#golang-生成动态库问题">golang 生成动态库问题</a></li>
   </ol>
 </nav>
         </div>
@@ -416,10 +412,30 @@
 
 
             <main class="main full-width">
-    <article class="main-article">
+    <article class="has-image main-article">
     <header class="article-header">
+        <div class="article-image">
+            <a href="/p/">
+                <img src="/p/backup_hu2980635765957575221.jpg"
+                        srcset="/p/backup_hu2980635765957575221.jpg 800w, /p/backup_hu11228811593438512501.jpg 1600w"
+                        width="800" 
+                        height="533" 
+                        loading="lazy"
+                        alt="Featured image of post " />
+                
+            </a>
+        </div>
+    
 
     <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/daily-life/" style="background-color: #d09daa; color: #fff;">
+                技术生活
+            </a>
+        
+    </header>
     
 
     <div class="article-title-wrapper">
@@ -436,6 +452,19 @@
     
     <footer class="article-time">
         
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-03-13</time>
+            </div>
+        
 
         
             <div>
@@ -448,7 +477,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 3 分钟,共1003 字
+                    阅读时长: 1 分钟,共8 字
                 </time>
             </div>
         
@@ -476,281 +505,22 @@
     <section class="article-content">
     
     
-    <!--
- * @Author: gao114882@gmail.com
- * @Date: 2025-02-26 17:12:33
- * @LastEditors: gao114882@gmail.com
- * @LastEditTime: 2025-03-03 10:55:14
- * @Description: 
- * 
- * Copyright (c) 2025 by netinfo, All Rights Reserved. 
--->
-<p>+++
-date = &lsquo;2025-02-28T14:12:33+08:00&rsquo;
-draft = false
-title = &lsquo;opensips和kamailio比较(持续更新中···)&rsquo;
-lastmod = &lsquo;2025-02-28T14:12:33+08:00&rsquo;
-comments = true
-categories = [&lsquo;opensips&rsquo;]
-tags = [&lsquo;opensips&rsquo;]</p>
-<p>+++</p>
-<h2 id="对比的版本">对比的版本
-</h2><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th></th>
-          <th>opensips</th>
-          <th>kamailio</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>版本信息</td>
-          <td>3.3.10</td>
-          <td>5.8.5</td>
-      </tr>
-      <tr>
-          <td>官方文档地址</td>
-          <td><a class="link" href="https://www.opensips.org/Documentation/Manuals"  target="_blank" rel="noopener"
-    >https://www.opensips.org/Documentation/Manuals</a></td>
-          <td><a class="link" href="https://www.kamailio.org/w/documentation/"  target="_blank" rel="noopener"
-    >https://www.kamailio.org/w/documentation/</a></td>
-      </tr>
-  </tbody>
-</table></div>
-<h2 id="支持的route类型">支持的route类型
-</h2><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>序号</th>
-          <th style="text-align: center">opensips</th>
-          <th style="text-align: center">kamailio</th>
-          <th>说明</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>1</td>
-          <td style="text-align: center">route</td>
-          <td style="text-align: center">request_route</td>
-          <td>请求入口</td>
-      </tr>
-      <tr>
-          <td>2</td>
-          <td style="text-align: center">branch_route[a]</td>
-          <td style="text-align: center">branch_route[a]</td>
-          <td>分支路由,a为自定义变量</td>
-      </tr>
-      <tr>
-          <td>3</td>
-          <td style="text-align: center">failure_route[a]</td>
-          <td style="text-align: center">failure_route[a]</td>
-          <td>失败路由,a为自定义变量</td>
-      </tr>
-      <tr>
-          <td>4</td>
-          <td style="text-align: center">onreply_route</td>
-          <td style="text-align: center">reply_route <br>onreply_route{}<br> onreply_route[0]{}</td>
-          <td>主返回路由</td>
-      </tr>
-      <tr>
-          <td>5</td>
-          <td style="text-align: center">onreply_route[a]</td>
-          <td style="text-align: center">onreply_route[a]</td>
-          <td>子返回路由,a为自定义变量</td>
-      </tr>
-      <tr>
-          <td>6</td>
-          <td style="text-align: center">event_route[a]</td>
-          <td style="text-align: center">event_route[a]</td>
-          <td>事件路由,a为自定义变量</td>
-      </tr>
-      <tr>
-          <td>7</td>
-          <td style="text-align: center">error_route</td>
-          <td style="text-align: center">-</td>
-          <td>出错路由</td>
-      </tr>
-      <tr>
-          <td>8</td>
-          <td style="text-align: center">local_route</td>
-          <td style="text-align: center">-</td>
-          <td>本地路由</td>
-      </tr>
-      <tr>
-          <td>9</td>
-          <td style="text-align: center">startup_route</td>
-          <td style="text-align: center">-</td>
-          <td>服务启动时执行的路由</td>
-      </tr>
-      <tr>
-          <td>10</td>
-          <td style="text-align: center">timer_route[a]</td>
-          <td style="text-align: center">RTimer模块</td>
-          <td>定时执行的路由, a为自定义变量</td>
-      </tr>
-      <tr>
-          <td>11</td>
-          <td style="text-align: center">-</td>
-          <td style="text-align: center">onsend_route</td>
-          <td>请求发出去前执行的路由</td>
-      </tr>
-  </tbody>
-</table></div>
-<h2 id="监控管理端">监控管理端
-</h2><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>差异</th>
-          <th style="text-align: center">opensips</th>
-          <th>kamailio</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>运行命令</td>
-          <td style="text-align: center"><code>opensips-cli</code></td>
-          <td><code>kamctl</code></td>
-      </tr>
-      <tr>
-          <td>独立编译</td>
-          <td style="text-align: center">是,仓库地址:<br><a class="link" href="https://github.com/OpenSIPS/opensips-cli.git"  target="_blank" rel="noopener"
-    >https://github.com/OpenSIPS/opensips-cli.git</a></td>
-          <td>否<br>没有单独仓库，和kamailio一起编译生成</td>
-      </tr>
-      <tr>
-          <td>编写语言</td>
-          <td style="text-align: center">Python</td>
-          <td>c</td>
-      </tr>
-      <tr>
-          <td>配置文件</td>
-          <td style="text-align: center">~/.opensips-cli.cfg</td>
-          <td>kamctlrc</td>
-      </tr>
-      <tr>
-          <td>创建数据库</td>
-          <td style="text-align: center"><code>opensips-cli -f ~/.opensips-cli.cfg -x database create</code></td>
-          <td><code>kamdbctl create kamailio</code></td>
-      </tr>
-      <tr>
-          <td>和服务端连接方式</td>
-          <td style="text-align: center"><code>fifo/http/udp</code></td>
-          <td><code>fifo</code></td>
-      </tr>
-  </tbody>
-</table></div>
-<p>说明:</p>
-<ol>
-<li>opensips-cli因为是Python编写，在做opensips容器时，如果把opensips-cli打包进去，整个包会较大。
-可以把opensips-cli单独制作镜像，opensips-cli使用<code>http</code>方式和opensips服务端进行通信。</li>
-</ol>
-<h2 id="web管理服务">web管理服务
-</h2><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th style="text-align: left"></th>
-          <th style="text-align: center">opensips</th>
-          <th style="text-align: center">kamailio</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: left">仓库地址</td>
-          <td style="text-align: center"><a class="link" href="https://github.com/OpenSIPS/opensips-cp.git"  target="_blank" rel="noopener"
-    >https://github.com/OpenSIPS/opensips-cp.git</a></td>
-          <td style="text-align: center"><a class="link" href="https://github.com/asipto/siremis-php.git"  target="_blank" rel="noopener"
-    >https://github.com/asipto/siremis-php.git</a></td>
-      </tr>
-  </tbody>
-</table></div>
-<p>两个服务都是php的，不太好用，页面样式不好看，中文支持度不好,正在考虑使用Vue3重写。</p>
-<h2 id="功能差异">功能差异
-</h2><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th style="text-align: left">模块</th>
-          <th style="text-align: center">opensips</th>
-          <th style="text-align: center">kamailio</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: left">日志</td>
-          <td style="text-align: center">日志带时间</td>
-          <td style="text-align: center">日志不带时间</td>
-      </tr>
-  </tbody>
-</table></div>
-<h2 id="使用体验">使用体验
-</h2><div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>维度</th>
-          <th>opensips</th>
-          <th>kamailio</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>上手难度</td>
-          <td>简单</td>
-          <td>较高</td>
-      </tr>
-      <tr>
-          <td>star(截止20250227)</td>
-          <td>1.3k</td>
-          <td>2.4k</td>
-      </tr>
-      <tr>
-          <td>模块功能</td>
-          <td>能满足日常需求</td>
-          <td>较丰富，还有KEMI脚本语言实现(没有示例，上手难度大)</td>
-      </tr>
-      <tr>
-          <td>官方文档</td>
-          <td>文档层次分明,模块清楚</td>
-          <td>文档基本完整，但是缺少基本函数检索文档</td>
-      </tr>
-      <tr>
-          <td>网络教程</td>
-          <td>大部分是2.x版本的，3.x文档不全</td>
-          <td>国内教程少</td>
-      </tr>
-      <tr>
-          <td>迭代变化</td>
-          <td>2.x和3.x版本配置参数区别较大</td>
-          <td>版本迭代配置参数变化不大</td>
-      </tr>
-      <tr>
-          <td>bug修复进度</td>
-          <td>较慢,起步一个月</td>
-          <td>较快，一周左右反馈</td>
-      </tr>
-      <tr>
-          <td>社区</td>
-          <td>没有</td>
-          <td>有,社区地址:<br><a class="link" href="https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/"  target="_blank" rel="noopener"
-    >https://lists.kamailio.org/mailman3/hyperkitty/list/sr-users@lists.kamailio.org/</a></td>
-      </tr>
-  </tbody>
-</table></div>
-<p>补充：</p>
-<ol>
-<li><code>opensips</code> 适合快速上手,负载均衡，sip代理转发等基本能满足日常需求。
-<code>kamailio</code> 可以作为进阶版本，后期完全可以不写.cfg配置，用<code>KEMI</code>脚本来写。</li>
-<li>两个产品bug的<code>issue</code>都设置了定时删除，没有修复的话，需要自己回复一下才能不被删。</li>
-<li>关于并发上，目前线上使用的<code>opensips</code>并未有崩溃的记录，8c8G的机器性能很高，具体可以查看我的<code>opensips 压测介绍</code>文章，
-<code>kamailio</code>目前还未压测，应该稳定性不差。</li>
-<li><code>opensips</code>没有社区，遇到问题只能提<code>issue</code>，<code>kamailio</code>可以先在社区提问，如果问题没有解决，再提<code>issue</code>。</li>
-</ol>
-
+    <h2 id="golang-生成动态库问题">golang 生成动态库问题
+</h2>
 </section>
 
 
     
 <footer class="article-footer">
     
+    <section class="article-tags">
+        
+            <a href="/tags/golang/">Golang</a>
+        
+            <a href="/tags/cgo/">Cgo</a>
+        
+    </section>
+
     
     
 		
@@ -813,6 +583,111 @@ tags = [&lsquo;opensips&rsquo;]</p>
     
 
     
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/sdp%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/">
+        
+        
+            <div class="article-image">
+                <img src="/p/sdp%E5%92%8Crtp%E5%8D%8F%E8%AE%AE/6.af8b7fe7b20f986f9a9ec021ec45941c_hu13523851252023170553.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post SDP和RTP协议"
+                        
+                        data-hash="md5-r4t/57IPmG&#43;ansAh7EWUHA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SDP和RTP协议</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%BA%8C/">
+        
+        
+            <div class="article-image">
+                <img src="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%BA%8C/5.b1e2772bc0c96e80cfa05b72ced316d5_hu15796380744078077592.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post sip协议(rfc2361)要点笔记(二)"
+                        
+                        data-hash="md5-seJ3K8DJboDPoFtyztMW1Q==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">sip协议(rfc2361)要点笔记(二)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/">
+        
+        
+            <div class="article-image">
+                <img src="/p/sip%E5%8D%8F%E8%AE%AErfc2361%E8%A6%81%E7%82%B9%E7%AC%94%E8%AE%B0%E4%B8%80/4.af610351028bbadc9b21771b11734217_hu18285765752448216416.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post sip协议(rfc2361)要点笔记(一)"
+                        
+                        data-hash="md5-r2EDUQKLutybIXcbEXNCFw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">sip协议(rfc2361)要点笔记(一)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/">
+        
+        
+            <div class="article-image">
+                <img src="/p/hugo-%E5%B0%8F%E6%8A%80%E5%B7%A7/2.637e7773ce24b7b69ab37ef3f68234a7_hu3552649003669076854.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post hugo 小技巧"
+                        
+                        data-hash="md5-Y353c84kt7aas37z9oI0pw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">hugo 小技巧</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
 
      
     
@@ -893,9 +768,17 @@ tags = [&lsquo;opensips&rsquo;]</p>
         
             
         
+            
         
-        发表了13篇文章 · 
-        总计20.70k字
+            
+        
+            
+        
+            
+        
+        
+        发表了17篇文章 · 
+        总计25.82k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>

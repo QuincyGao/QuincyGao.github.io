@@ -200,7 +200,7 @@
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;这块测试出现没有响应的问题, kamailio的版本是&lt;code&gt;kamailio 5.8.5 (x86_64/linux)&lt;/code&gt;已提bug到github。&lt;/p&gt;
+&lt;/div&gt;&lt;p&gt;这块测试&lt;code&gt;post&lt;/code&gt;请求带&lt;code&gt;body&lt;/code&gt;出现没有响应的问题, kamailio的版本是&lt;code&gt;kamailio 5.8.5 (x86_64/linux)&lt;/code&gt;已提bug到github。&lt;/p&gt;
 &lt;h2 id=&#34;xhttp-模块&#34;&gt;XHTTP 模块
 &lt;/h2&gt;&lt;p&gt;此模块通常和&lt;code&gt;jsonrpcs&lt;/code&gt;一起使用，具体的使用示例，参考&lt;code&gt;jsonrpcs&lt;/code&gt;模块。新增配置参数：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
