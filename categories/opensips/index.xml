@@ -1209,7 +1209,7 @@
 本次由于只用来展示opensips的数据,所以&lt;code&gt;node-exporter&lt;/code&gt;就不安装了，只安装&lt;code&gt;prometheus&lt;/code&gt;和&lt;code&gt;grafana&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;prometheus部署的机器系统时间一定要和你电脑时间一致,否则无法收集到数据&lt;/strong&gt;。&lt;/p&gt;
 &lt;h3 id=&#34;prometheus-docker运行&#34;&gt;prometheus docker运行
-&lt;/h3&gt;&lt;p&gt;prometheus.yml 配置：&lt;/p&gt;
+&lt;/h3&gt;&lt;p&gt;prometheus.yaml 配置：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
