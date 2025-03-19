@@ -491,7 +491,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟,共891 字
+                    阅读时长: 2 分钟,共898 字
                 </time>
             </div>
         
@@ -555,6 +555,8 @@
 </span><span class="lnt">22
 </span><span class="lnt">23
 </span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1">#!define WITH_JSONRPC</span>
@@ -562,6 +564,8 @@
 </span></span><span class="line"><span class="cl"><span class="n">listen</span><span class="o">=</span><span class="n">udp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="p">:</span><span class="mi">5060</span>
 </span></span><span class="line"><span class="cl"><span class="n">listen</span><span class="o">=</span><span class="n">tcp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="p">:</span><span class="mi">5461</span>
 </span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;dialog.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;dialog&#34;</span><span class="p">,</span> <span class="s2">&#34;enable_stats&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;xhttp_prom.so&#34;</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># 设置构建http Reponse 的缓冲区最大的大小,默认为0,自动设置成pkg mem的1/3</span>
 </span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;xhttp_prom&#34;</span><span class="p">,</span> <span class="s2">&#34;xhttp_prom_buf_size&#34;</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>
