@@ -1560,6 +1560,11 @@
           &lt;td style=&#34;text-align: center&#34;&gt;日志带时间&lt;/td&gt;
           &lt;td style=&#34;text-align: center&#34;&gt;日志不带时间&lt;/td&gt;
       &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;websocket&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;-&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;支持跨域设置&lt;/td&gt;
+      &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id=&#34;使用体验&#34;&gt;使用体验
