@@ -7,20 +7,19 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Wed, 26 Mar 2025 09:16:36 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>kamailio 集群介绍</title>
-        <link>https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/</link>
+        <title>kamailio 集群(DMQ)介绍</title>
+        <link>https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/</link>
         <pubDate>Wed, 26 Mar 2025 09:16:36 +0800</pubDate>
         
-        <guid>https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/backup.jpg" alt="Featured image of post kamailio 集群介绍" /&gt;&lt;h2 id=&#34;背景介绍&#34;&gt;背景介绍
+        <guid>https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/backup.jpg" alt="Featured image of post kamailio 集群(DMQ)介绍" /&gt;&lt;h2 id=&#34;背景介绍&#34;&gt;背景介绍
 &lt;/h2&gt;&lt;p&gt;当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;DMQ_USRLOC&lt;/code&gt;用来对&lt;code&gt;注册用户信息&lt;/code&gt;做同步&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;DMQ&lt;/code&gt;用来实现数据同步的方式。&lt;/li&gt;
-&lt;li&gt;还要一个重要的同步指标&lt;code&gt;Dialog&lt;/code&gt;,
-这个设置同步的方式是&lt;code&gt;modparam(&amp;quot;dialog&amp;quot;, &amp;quot;enable_dmq&amp;quot;, 1)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;DMQ&lt;/code&gt;用来实现数据同步的方式&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Dialog&lt;/code&gt;会话信息&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。&lt;/p&gt;
+&lt;p&gt;本次以常见的两个节点方式为例介绍,&lt;code&gt;kamailio&lt;/code&gt;的节点并没有&lt;code&gt;主备&lt;/code&gt;的概念,这点和&lt;code&gt;opensips&lt;/code&gt;有点不一样。&lt;/p&gt;
 &lt;table&gt;
   &lt;thead&gt;
       &lt;tr&gt;
@@ -227,10 +226,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;172.16.4.111 发送请求的sip信令图如下:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip.png&#34;
 	width=&#34;1444&#34;
 	height=&#34;468&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip_hu8973878954115745226.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip_hu10623664575983360283.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip_hu8973878954115745226.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip_hu10623664575983360283.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;111&#34;
@@ -243,10 +242,10 @@
 &gt;&lt;/p&gt;
 &lt;p&gt;可以看到&lt;code&gt;KDMQ&lt;/code&gt;消息发送是通过&lt;code&gt;server_socket&lt;/code&gt;发出的,其中的sip信令填充了&lt;code&gt;server_address&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;172.16.4.113 发送请求的sip信令图如下:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip1.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip1.png&#34;
 	width=&#34;1418&#34;
 	height=&#34;471&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip1_hu3514980995651187805.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip1_hu16568512598592538315.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip1_hu3514980995651187805.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip1_hu16568512598592538315.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;113&#34;
@@ -260,10 +259,10 @@
 &lt;p&gt;同理,和111的情况一致。&lt;/p&gt;
 &lt;p&gt;所以为避免占用较多的端口, 可以把&lt;code&gt;server_socket&lt;/code&gt;和&lt;code&gt;server_address&lt;/code&gt;设置为同一个端口。&lt;/p&gt;
 &lt;p&gt;当节点2服务停掉之后,得到的信令图:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip2.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip2.png&#34;
 	width=&#34;1417&#34;
 	height=&#34;648&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip2_hu15577517012367918637.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip2_hu5612777894243601331.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip2_hu15577517012367918637.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip2_hu5612777894243601331.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;111&#34;
@@ -437,10 +436,10 @@
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
 &lt;/div&gt;&lt;p&gt;使用软电话注册到&lt;code&gt;172.16.4.111:5460&lt;/code&gt;,sip信令图如下:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip3.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip3.png&#34;
 	width=&#34;1397&#34;
 	height=&#34;470&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip3_hu10761731510050041583.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip3_hu12275246998459020520.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip3_hu10761731510050041583.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip3_hu12275246998459020520.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;111&#34;
@@ -452,10 +451,10 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;172.16.4.111同步注册数据到172.16.4.113的信令图如下:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip4.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip4.png&#34;
 	width=&#34;1676&#34;
 	height=&#34;615&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip4_hu10624096684545337114.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip4_hu13745391874610541187.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip4_hu10624096684545337114.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip4_hu13745391874610541187.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;111&#34;
@@ -469,10 +468,10 @@
 &lt;p&gt;通过&lt;code&gt;kamctl ul show&lt;/code&gt;分别查看111和113机器上存储的usrloc数据:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;172.16.4.111机器:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip5.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip5.png&#34;
 	width=&#34;964&#34;
 	height=&#34;1091&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip5_hu3969754937334494307.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip5_hu5287480650223879994.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip5_hu3969754937334494307.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip5_hu5287480650223879994.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;111&#34;
@@ -484,10 +483,10 @@
 	
 &gt;&lt;/li&gt;
 &lt;li&gt;172.16.4.113机器:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip6.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip6.png&#34;
 	width=&#34;1039&#34;
 	height=&#34;1088&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip6_hu1473877685224351454.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip6_hu3424605253467823469.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip6_hu1473877685224351454.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip6_hu3424605253467823469.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;113&#34;
@@ -522,10 +521,10 @@
 &lt;/h3&gt;&lt;p&gt;使用两个软电话1003,1008注册到&lt;code&gt;172.16.4.111:5460&lt;/code&gt;机器上,1003拨打1008,
 然后使用&lt;code&gt;kamctl dialog show&lt;/code&gt;分别查看两台机器上的dialog信息。&lt;/p&gt;
 &lt;p&gt;DMQ发送的sip同步信令:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip7.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip7.png&#34;
 	width=&#34;1679&#34;
 	height=&#34;590&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip7_hu9417968033358683436.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip7_hu11787845177713319341.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip7_hu9417968033358683436.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip7_hu11787845177713319341.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;dialog&#34;
@@ -539,10 +538,10 @@
 &lt;p&gt;查看两台机器上的dialog信息:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;172.16.4.111机器:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip8.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip8.png&#34;
 	width=&#34;1088&#34;
 	height=&#34;1146&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip8_hu1922913468608442845.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip8_hu9614245251689731127.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip8_hu1922913468608442845.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip8_hu9614245251689731127.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;111&#34;
@@ -554,10 +553,10 @@
 	
 &gt;&lt;/li&gt;
 &lt;li&gt;172.16.4.113机器:
-&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip9.png&#34;
+&lt;img src=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip9.png&#34;
 	width=&#34;1061&#34;
 	height=&#34;1155&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip9_hu14200588719909348060.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/sip9_hu676373149315000429.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip9_hu14200588719909348060.png 480w, https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/sip9_hu676373149315000429.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;113&#34;

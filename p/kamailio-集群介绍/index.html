@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景介绍 当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。\nDMQ_USRLOC用来对注册用户信息做同步 DMQ用来实现数据同步的方式。 还要一个重要的同步指标Dialog, 这个设置同步的方式是modparam(&quot;dialog&quot;, &quot;enable_dmq&quot;, 1) 本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。\n">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景介绍\r当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。\nDMQ_USRLOC用来对注册用户信息做同步 DMQ用来实现数据同步的方式。 还要一个重要的同步指标Dialog, 这个设置同步的方式是modparam(&quot;dialog&quot;, &quot;enable_dmq&quot;, 1) 本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。\n">
 <title>kamailio 集群介绍</title>
 
-<link rel='canonical' href='https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/'>
+<link rel='canonical' href='http://localhost:1313/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/'>
 
-<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="kamailio 集群介绍">
-<meta property='og:description' content="背景介绍 当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。\nDMQ_USRLOC用来对注册用户信息做同步 DMQ用来实现数据同步的方式。 还要一个重要的同步指标Dialog, 这个设置同步的方式是modparam(&quot;dialog&quot;, &quot;enable_dmq&quot;, 1) 本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。\n">
-<meta property='og:url' content='https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/'>
+<link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="kamailio 集群介绍">
+<meta property='og:description' content="背景介绍\r当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。\nDMQ_USRLOC用来对注册用户信息做同步 DMQ用来实现数据同步的方式。 还要一个重要的同步指标Dialog, 这个设置同步的方式是modparam(&quot;dialog&quot;, &quot;enable_dmq&quot;, 1) 本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。\n">
+<meta property='og:url' content='http://localhost:1313/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='kamailio' /><meta property='article:published_time' content='2025-03-26T09:16:36&#43;08:00'/><meta property='article:modified_time' content='2025-03-26T09:16:36&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/backup.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='kamailio' /><meta property='article:published_time' content='2025-03-26T09:16:36&#43;08:00'/><meta property='article:modified_time' content='2025-03-26T09:16:36&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/backup.jpg' />
 <meta name="twitter:title" content="kamailio 集群介绍">
-<meta name="twitter:description" content="背景介绍 当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。\nDMQ_USRLOC用来对注册用户信息做同步 DMQ用来实现数据同步的方式。 还要一个重要的同步指标Dialog, 这个设置同步的方式是modparam(&quot;dialog&quot;, &quot;enable_dmq&quot;, 1) 本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。\n"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://QuincyGao.github.io/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/backup.jpg' />
+<meta name="twitter:description" content="背景介绍\r当kamailio需要做集群或者主备时, 需要对集群节点做数据同步。\nDMQ_USRLOC用来对注册用户信息做同步 DMQ用来实现数据同步的方式。 还要一个重要的同步指标Dialog, 这个设置同步的方式是modparam(&quot;dialog&quot;, &quot;enable_dmq&quot;, 1) 本次以常见的两个节点方式为例介绍,kamailio的节点并没有主备的概念,这点和opensips有点不一样。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='http://localhost:1313/p/kamailio-%E9%9B%86%E7%BE%A4%E4%BB%8B%E7%BB%8D/backup.jpg' />
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -343,9 +343,9 @@
 
                             <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
                                 
-                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                    <option value="http://localhost:1313/" selected>Chinese</option>
                                 
-                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                    <option value="http://localhost:1313/en/" >English</option>
                                 
                             </select>
                         </li>
@@ -1321,7 +1321,7 @@
     }
 </style><script type="module">
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8365","visitor":"true"});
 </script>
 
     
@@ -1330,13 +1330,13 @@
     <script type="module">
         import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
         pageviewCount({
-          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+          serverURL: "https:\/\/blog.xiaopeng.site:8365"
         });
     </script>
     <script type="module">
         import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
         commentCount({
-            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+            serverURL: "https:\/\/blog.xiaopeng.site:8365"
         });
     </script>
     
@@ -1499,7 +1499,7 @@
 
             </main>
         </div>
-        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+        <script type="text/javascript" src="/ts/main.9588b5e63ce3e1815e9dd7bd78c514d91e83e1660843be9935f0702315b11b89.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');
