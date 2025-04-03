@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景 上章我们介绍了siptrace模块,可以把sip信令存储到数据库或者发送给第三方的Hep server中, 本章sipdump模块,可以记录sip信令到文件。\n">
+<title>kamailio sipdump介绍</title>
+
+<link rel='canonical' href='https://QuincyGao.github.io/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/'>
+
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="kamailio sipdump介绍">
+<meta property='og:description' content="背景 上章我们介绍了siptrace模块,可以把sip信令存储到数据库或者发送给第三方的Hep server中, 本章sipdump模块,可以记录sip信令到文件。\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/'>
+<meta property='og:site_name' content='QuincyGao Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='kamailio' /><meta property='article:published_time' content='2025-04-03T09:25:15&#43;08:00'/><meta property='article:modified_time' content='2025-04-03T09:25:15&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/backup.jpg' />
+<meta name="twitter:title" content="kamailio sipdump介绍">
+<meta name="twitter:description" content="背景 上章我们介绍了siptrace模块,可以把sip信令存储到数据库或者发送给第三方的Hep server中, 本章sipdump模块,可以记录sip信令到文件。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/backup.jpg' />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/QuincyGao_hu9863765197253960442.jpg" width="300"
+                            height="225" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">QuincyGao Blog</a></h1>
+            <h2 class="site-description">事在人为，境由心造</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://bilibili.com'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Bilibili-Logo--Streamline-Ultimate.svg" height="24" width="24"><desc>Bilibili Logo Streamline Icon: https://streamlinehq.com</desc><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.90263 6.93445H19.0575s1.4674 0 1.4674 1.46739v9.27356s0 1.4673 -1.4674 1.4673H4.90263s-1.46739 0 -1.46739 -1.4673V8.40184s0 -1.46739 1.46739 -1.46739Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M14.7251 15.8387c-0.0599 0.2695 -0.3493 0.6189 -0.9982 0.6189 -1.1779 0 -1.707 -1.4674 -1.707 -1.4674s-0.529 1.4674 -1.7069 1.4674c-0.68879 0 -0.99824 -0.3494 -0.99824 -0.6189" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.65306 4.24927c-1.03607 0.00264 -2.02881 0.41607 -2.76049 1.14962C1.16089 6.13245 0.749997 7.12623 0.75 8.16231V17.925c0 1.0351 0.41121 2.0279 1.14318 2.7598 0.73197 0.732 1.72472 1.1432 2.75988 1.1432h0.99823v0.2196c0.0276 0.3053 0.16838 0.5892 0.39465 0.7959 0.22627 0.2067 0.52168 0.3213 0.82817 0.3213 0.30649 0 0.6019 -0.1146 0.82818 -0.3213 0.22627 -0.2067 0.36704 -0.4906 0.39465 -0.7959v-0.2495h7.80616v0.2495c0.0276 0.3053 0.1683 0.5892 0.3946 0.7959 0.2263 0.2067 0.5217 0.3213 0.8282 0.3213s0.6019 -0.1146 0.8282 -0.3213c0.2262 -0.2067 0.367 -0.4906 0.3946 -0.7959v-0.2495h0.9982c1.0352 0 2.028 -0.4112 2.7599 -1.1432 0.732 -0.732 1.1432 -1.7247 1.1432 -2.7599V8.16231c0 -1.03608 -0.4109 -2.02986 -1.1426 -2.76342 -0.7317 -0.73355 -1.7244 -1.14698 -2.7605 -1.14962H4.65306Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m5.72116 11.6761 3.84317 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m18.2389 11.6761 -3.8431 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.12045 0.835205 9.53438 4.24914" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M17.8396 0.835205 14.4257 4.24914" stroke-width="1.5"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/QuincyGao'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>github [#142]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 507.93 507.93" xml:space="preserve">
+<g>
+	<rect x="103.527" y="225.828" style="fill:#FFFFFF;" width="300.9" height="253.9"/>
+	<polygon style="fill:#FFFFFF;" points="53.427,197.528 454.427,197.528 253.927,32.428 	"/>
+</g>
+<path style="fill:#56ACE0;" d="M253.927,68.928l-20.1,16.6h12.7c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-47l-21,17.3h19.9
+	c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-53.2c-0.3,0-0.5-0.1-0.8-0.1l-12.4,10.2h243.8L253.927,68.928z"/>
+<rect x="202.427" y="337.028" style="fill:#FFC10D;" width="103" height="142.6"/>
+<path style="fill:#194F82;" d="M501.627,199.828l-238.7-196.6c-5.2-4.3-12.7-4.3-17.9,0l-239.9,197.6c-4.6,3.8-6.3,10-4.3,15.7
+	c2,5.6,7.3,9.3,13.3,9.3h61.1v268c0,7.8,6.3,14.1,14.1,14.1h329.2c7.8,0,14.1-6.3,14.1-14.1v-268h61.1c0.1,0,0.1,0,0.1,0
+	c7.8,0,14.1-6.3,14.1-14.1C508.027,206.728,505.427,202.328,501.627,199.828z M305.427,479.628h-103v-142.6h103V479.628z
+	 M404.427,479.628h-70.8v-156.7c0-7.8-6.3-14.1-14.1-14.1h-131.2c-7.8,0-14.1,6.3-14.1,14.1v156.7h-70.8v-253.8h300.9v253.8H404.427
+	z M53.427,197.528l200.5-165.1l200.5,165.2h-401V197.528z"/>
+</svg>
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M76.412,326.853h85.075c6.012,0,10.925-4.848,10.925-10.925V32.97
+	c0-6.012-4.848-10.925-10.925-10.925H76.412c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C65.487,322.004,70.4,326.853,76.412,326.853z"/>
+<path style="fill:#FFC10D;" d="M231.564,326.853h85.075c5.107,0,9.374-3.556,10.602-8.275l0.388-285.608
+	c0-6.012-4.848-10.925-10.925-10.925h-85.139c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C220.574,322.004,225.552,326.853,231.564,326.853z"/>
+<g>
+	<path style="fill:#FFFFFF;" d="M118.885,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C128.711,260.073,124.315,255.677,118.885,255.677z"/>
+	<path style="fill:#FFFFFF;" d="M274.036,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C283.863,260.073,279.467,255.677,274.036,255.677z"/>
+</g>
+<g>
+	<path style="fill:#194F82;" d="M118.885,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C87.273,282.828,101.495,296.921,118.885,296.921z M118.885,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826S113.519,255.547,118.885,255.547z"/>
+	<path style="fill:#194F82;" d="M98.198,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,82.295,92.186,87.143,98.198,87.143z"/>
+	<path style="fill:#194F82;" d="M98.198,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,136.145,92.186,140.994,98.198,140.994z"/>
+	<path style="fill:#194F82;" d="M274.036,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C242.489,282.828,256.582,296.921,274.036,296.921z M274.036,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826C264.275,259.943,268.671,255.547,274.036,255.547z"/>
+	<path style="fill:#194F82;" d="M253.35,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,82.295,247.337,87.143,253.35,87.143z"/>
+	<path style="fill:#194F82;" d="M253.35,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,136.145,247.337,140.994,253.35,140.994z"/>
+	<path style="fill:#194F82;" d="M381.737,203.378h-32.388V32.97c0-18.036-14.675-32.711-32.711-32.711h-85.075
+		c-18.036,0-32.711,14.675-32.711,32.711v282.958c0,3.879,0.711,7.499,1.939,10.925h-8.404c1.228-3.426,1.939-7.111,1.939-10.925
+		V32.97c0-18.036-14.675-32.711-32.711-32.711H76.412c-18.036,0-32.711,14.675-32.711,32.711v170.473H10.925
+		C4.913,203.442,0,208.291,0,214.368v167.046c0,6.012,4.848,10.925,10.925,10.925h370.747c6.012,0,10.925-4.848,10.925-10.925
+		V214.368C392.598,208.291,387.749,203.378,381.737,203.378z M220.574,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925l-0.388,285.608c-1.164,4.719-5.43,8.275-10.602,8.275h-84.945
+		c-6.012,0-10.925-4.848-10.925-10.925V32.97H220.574z M65.487,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925v282.958c0,6.012-4.848,10.925-10.925,10.925H76.412c-6.012,0-10.925-4.848-10.925-10.925
+		C65.487,315.992,65.487,32.97,65.487,32.97z M370.812,370.424H21.851V225.164h21.786v112.485c0,6.012,4.848,10.925,10.925,10.925
+		h283.539c6.012,0,10.925-4.848,10.925-10.925l0.388-112.485h21.463v145.261H370.812z"/>
+</g>
+<path style="fill:#56ACE0;" d="M349.026,337.778c0,6.012-4.848,10.925-10.925,10.925H54.626c-6.012,0-10.925-4.848-10.925-10.925
+	V225.293H21.851v145.261h348.962V225.228h-21.463L349.026,337.778z"/>
+</svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.609 392.609" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
+	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
+<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
+	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
+	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
+<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
+	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
+	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
+<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
+	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
+	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
+	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
+	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
+	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
+	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
+	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
+</svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#56ACE0;" d="M120.469,49.455c0,15.257-12.412,27.669-27.669,27.669c-15.192,0-27.669-12.412-27.669-27.669
+	S77.543,21.786,92.8,21.786C108.057,21.786,120.469,34.198,120.469,49.455z"/>
+<path style="fill:#FFFFFF;" d="M62.287,265.503h61.026v105.244h-19.588v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.012,0-10.925,4.849-10.925,10.925v42.861H62.287V265.503z"/>
+<path style="fill:#FFC10D;" d="M144.129,181.657v62.061H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C123.572,135.822,144.129,156.38,144.129,181.657z"/>
+<path style="fill:#FFFFFF;" d="M272.129,49.455c0-15.257,12.412-27.669,27.669-27.669c15.257,0,27.669,12.412,27.669,27.669
+	s-12.412,27.669-27.669,27.669C284.606,77.123,272.129,64.711,272.129,49.455z"/>
+<path style="fill:#FFC10D;" d="M269.156,265.503h61.026v105.244h-19.523v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653L269.156,265.503L269.156,265.503z"/>
+<path style="fill:#56ACE0;" d="M351.127,181.657v62.061H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C330.57,135.822,351.127,156.38,351.127,181.657z"/>
+<g>
+	<path style="fill:#194F82;" d="M98.295,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.877c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C165.98,144.356,135.661,113.972,98.295,113.972z M144.129,243.717
+		H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834L144.129,243.717
+		L144.129,243.717z M123.378,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.012,0-10.925,4.849-10.925,10.925
+		v42.861H62.287V265.503h61.026L123.378,370.747L123.378,370.747z"/>
+	<path style="fill:#194F82;" d="M92.8,0C65.519,0,43.281,22.174,43.281,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S120.081,0,92.8,0z M92.8,77.123c-15.192,0-27.669-12.412-27.669-27.669S77.543,21.786,92.8,21.786
+		s27.669,12.412,27.669,27.669S108.057,77.123,92.8,77.123z"/>
+	<path style="fill:#194F82;" d="M305.228,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.941c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C372.913,144.356,342.594,113.972,305.228,113.972z M351.127,243.717
+		H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834V243.717L351.127,243.717z
+		 M330.311,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653
+		V265.503h61.026v105.244H330.311z"/>
+	<path style="fill:#194F82;" d="M299.798,0c-27.281,0-49.455,22.174-49.455,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S327.014,0,299.798,0z M299.798,77.123c-15.192,0-27.669-12.412-27.669-27.669
+		s12.412-27.669,27.669-27.669s27.669,12.412,27.669,27.669S315.055,77.123,299.798,77.123z"/>
+</g>
+</svg>
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.533 392.533" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M196.267,21.851c-96.194,0-174.481,78.287-174.481,174.481s78.287,174.481,174.481,174.481
+	s174.481-78.287,174.481-174.481S292.461,21.851,196.267,21.851z"/>
+<path style="fill:#FFC10D;" d="M196.267,348.962c-84.17,0-152.695-68.461-152.695-152.695s68.525-152.63,152.695-152.63
+	s152.695,68.461,152.695,152.695S280.436,348.962,196.267,348.962z"/>
+<path style="fill:#FFFFFF;" d="M131.814,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	c8.21,0,14.933-6.723,14.933-14.933C146.747,132.267,140.024,125.543,131.814,125.543z"/>
+<path style="fill:#194F82;" d="M131.814,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+	s36.719-16.485,36.719-36.719S152.048,103.758,131.814,103.758z M131.814,155.41c-8.21,0-14.933-6.723-14.933-14.933
+	c0-8.21,6.723-14.933,14.933-14.933c8.21,0,14.933,6.723,14.933,14.933C146.747,148.752,140.024,155.41,131.814,155.41z"/>
+<path style="fill:#FFFFFF;" d="M260.719,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	s14.933-6.723,14.933-14.933S268.994,125.543,260.719,125.543z"/>
+<g>
+	<path style="fill:#194F82;" d="M260.719,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+		c20.234,0,36.719-16.485,36.719-36.719S280.954,103.758,260.719,103.758z M260.719,155.41c-8.21,0-14.933-6.723-14.933-14.933
+		c0-8.21,6.723-14.933,14.933-14.933s14.933,6.723,14.933,14.933C275.653,148.752,268.994,155.41,260.719,155.41z"/>
+	<path style="fill:#194F82;" d="M196.267,0C87.984,0,0,87.984,0,196.267s87.984,196.267,196.267,196.267
+		s196.267-87.984,196.267-196.267S304.549,0,196.267,0z M196.267,370.747c-96.194,0-174.481-78.287-174.481-174.481
+		S100.073,21.786,196.267,21.786s174.481,78.287,174.481,174.481S292.461,370.747,196.267,370.747z"/>
+	<path style="fill:#194F82;" d="M279.079,265.051c-45.64,45.64-119.984,45.64-165.689,0c-4.267-4.267-11.119-4.202-15.451,0
+		c-4.848,4.719-3.943,10.99,0,15.451c55.661,55.467,143.515,53.075,196.525,0c3.685-4.784,5.042-10.731,0-15.451
+		C290.133,260.913,283.345,260.784,279.079,265.051z"/>
+</g>
+</svg>
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#配置参数分析">配置参数分析</a></li>
+    <li><a href="#函数">函数</a>
+      <ol>
+        <li><a href="#sipdump_sendtag">sipdump_send(tag)</a></li>
+      </ol>
+    </li>
+    <li><a href="#实战">实战</a>
+      <ol>
+        <li><a href="#配置示例">配置示例</a></li>
+        <li><a href="#效果">效果</a>
+          <ol>
+            <li><a href="#mode--3">mode = 3</a></li>
+            <li><a href="#mode--4">mode = 4</a></li>
+            <li><a href="#mode--12">mode = 12</a></li>
+          </ol>
+        </li>
+        <li><a href="#使用sipdump_send">使用sipdump_send</a></li>
+        <li><a href="#总结">总结</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/">
+                <img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/backup_hu3659595887824898620.jpg"
+                        srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/backup_hu3659595887824898620.jpg 800w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/backup_hu16282210825242286255.jpg 1600w"
+                        width="800" 
+                        height="533" 
+                        loading="lazy"
+                        alt="Featured image of post kamailio sipdump介绍" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/kamailio/" style="background-color: #d09daa; color: #fff;">
+                kamailio
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/">kamailio sipdump介绍</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-04-03</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟,共2849 字
+                </time>
+            </div>
+        
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/">0</span> 次浏览
+            </time>
+        </div>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/">0</span> 条评论
+            </time>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="背景">背景
+</h2><p>上章我们介绍了<code>siptrace</code>模块,可以把sip信令<code>存储到数据库</code>或者<code>发送给第三方的Hep server中</code>,
+本章<code>sipdump</code>模块,可以记录sip信令到<code>文件</code>。</p>
+<p>kamailio的<code>siptrace</code>+<code>sipdump</code>= opensips的<code>tracer</code>模块, opensips的<code>tracer</code>之前的章节有介绍，可以查看。
+但是在存文件的功能上, <code>opensips</code>比较单一,<code>kamailio</code>可以自动回滚文件，删除过期文件,多种文件类型。</p>
+<p>kamailio的官方推荐:</p>
+<ol>
+<li>开发环境使用<code>sipdump</code></li>
+<li>生产环境使用<code>siptrace</code>或者<code>sipcapture</code> 发送给<code>Homer</code></li>
+</ol>
+<p>sipdump的官方文档地址:<a class="link" href="https://kamailio.org/docs/modules/5.8.x/modules/sipdump.html"  target="_blank" rel="noopener"
+    >sipdump</a>, 本次测试的kamailio版本是:</p>
+<blockquote>
+<p>version: kamailio 5.8.5 (x86_64/linux)</p>
+</blockquote>
+<h2 id="配置参数分析">配置参数分析
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 是否开启,默认0
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;enable&#34;, 1)
+</span></span><span class="line"><span class="cl"># bit位置: 0,写到text文件;1,产生event route;2,写到pcap文件;3, 添加`P-KSR-SIPDump`头到SIP消息,然后写到pcap文件
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;mode&#34;, 3)
+</span></span><span class="line"><span class="cl"># 当没有sip消息到时等待多少毫秒,默认100
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;wait&#34;, 2000)
+</span></span><span class="line"><span class="cl"># 文件回滚的时间间隔,默认7200秒
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;rotate&#34;, 3600)
+</span></span><span class="line"><span class="cl"># 文件保存路径
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;folder&#34;, &#34;/run/kamailio&#34;)
+</span></span><span class="line"><span class="cl"># 文件名前缀,默认kamailio-sipdump-, yyyy-mm-dd-hh-mm-ss会追加到前缀后面
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;fprefix&#34;, &#34;ksipdump-&#34;)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 创建多久的文件被删除,单位s, 清除的定时器每10分钟执行一次,默认0,不删除。
+</span></span><span class="line"><span class="cl">modparam(&#34;sipdump&#34;, &#34;fage&#34;, 172800) # 2days
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>mode</code> 是按位算的,二进制<code>1</code>: 写text文件, <code>10</code> 执行event route, <code>100</code>: 写pcap文件, <code>1000</code>: 添加<code>P-KSR-SIPDump</code>头到SIP消息,然后写到pcap文件
+<code>modparam(&quot;sipdump&quot;, &quot;mode&quot;, 3)</code> <code>3</code>就是<code>11</code>,</p>
+<h2 id="函数">函数
+</h2><h3 id="sipdump_sendtag">sipdump_send(tag)
+</h3><p>发送当前的SIP消息到写进程,然后存文件. <code>tag</code>可以是任何字符串。</p>
+<h2 id="实战">实战
+</h2><h3 id="配置示例">配置示例
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;sipdump.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;enable&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;mode&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;wait&#34;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;rotate&#34;</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;folder&#34;</span><span class="p">,</span> <span class="s2">&#34;/run/kamailio&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;fage&#34;</span><span class="p">,</span> <span class="mi">172800</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">event_route</span><span class="p">[</span><span class="n">sipdump</span><span class="p">:</span><span class="n">msg</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">xinfo</span><span class="p">(</span><span class="s2">&#34;[$sipdump(tag)] [[$sipdump(buf)]]</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="效果">效果
+</h3><h4 id="mode--3">mode = 3
+</h4><ol>
+<li>注册</li>
+</ol>
+<ul>
+<li>
+<p>event_route[sipdump:msg]会打印出注册的SIP消息。
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip.png"
+	width="1597"
+	height="726"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip_hu7538382388050911575.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip_hu17058601825281293614.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="219"
+		data-flex-basis="527px"
+	
+>
+<code>rev</code>: 收到SIP消息, <code>snd</code>: 发送SIP消息</p>
+</li>
+<li>
+<p>保存的文件<code>/run/kamailio/</code>
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip1.png"
+	width="1151"
+	height="252"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip1_hu4651680686839763435.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip1_hu2431559382980540498.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="456"
+		data-flex-basis="1096px"
+	
+></p>
+<p>如果设置<code>modparam(&quot;sipdump&quot;, &quot;rotate&quot;, 60)</code>, 60s的效果:
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip2.png"
+	width="1228"
+	height="278"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip2_hu6778883347542963203.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip2_hu9206720391138056127.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="441"
+		data-flex-basis="1060px"
+	
+></p>
+<p>可以看到如果在<code>60s</code>之后,有新的sip信息产生,那么会记录到新的文件。</p>
+</li>
+<li>
+<p>kamailio-sipdump-2025-04-03&ndash;10-49-15.data 数据内容：</p>
+</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span><span class="lnt">84
+</span><span class="lnt">85
+</span><span class="lnt">86
+</span><span class="lnt">87
+</span><span class="lnt">88
+</span><span class="lnt">89
+</span><span class="lnt">90
+</span><span class="lnt">91
+</span><span class="lnt">92
+</span><span class="lnt">93
+</span><span class="lnt">94
+</span><span class="lnt">95
+</span><span class="lnt">96
+</span><span class="lnt">97
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: rcv
+</span></span><span class="line"><span class="cl">pid: 5744
+</span></span><span class="line"><span class="cl">process: 2
+</span></span><span class="line"><span class="cl">time: 1743648555.167981
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 10:49:15 2025
+</span></span><span class="line"><span class="cl">proto: udp ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 65398
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5460
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">REGISTER sip:172.16.4.113:5460 SIP/2.0
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/UDP 172.16.80.3:65398;rport;branch=z9hG4bKPj220c0fe63bb746879d404a28e02066c4
+</span></span><span class="line"><span class="cl">Max-Forwards: 70
+</span></span><span class="line"><span class="cl">From: &lt;sip:1002@172.16.4.113&gt;;tag=ffd48e15af3642fb91df63ee47130c6a
+</span></span><span class="line"><span class="cl">To: &lt;sip:1002@172.16.4.113&gt;
+</span></span><span class="line"><span class="cl">Call-ID: 958acb18b530498191314703f7abbf88
+</span></span><span class="line"><span class="cl">CSeq: 28845 REGISTER
+</span></span><span class="line"><span class="cl">User-Agent: MicroSIP/3.21.6
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1002@172.16.80.3:65398;ob&gt;
+</span></span><span class="line"><span class="cl">Expires: 0
+</span></span><span class="line"><span class="cl">Content-Length:  0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: snd
+</span></span><span class="line"><span class="cl">pid: 5744
+</span></span><span class="line"><span class="cl">process: 2
+</span></span><span class="line"><span class="cl">time: 1743648555.168626
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 10:49:15 2025
+</span></span><span class="line"><span class="cl">proto: udp ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.4.113
+</span></span><span class="line"><span class="cl">srcport: 5460
+</span></span><span class="line"><span class="cl">dstip: 172.16.80.3
+</span></span><span class="line"><span class="cl">dstport: 65398
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">SIP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/UDP 172.16.80.3:65398;rport=65398;received=172.16.80.3;branch=z9hG4bKPj220c0fe63bb746879d404a28e02066c4
+</span></span><span class="line"><span class="cl">From: &lt;sip:1002@172.16.4.113&gt;;tag=ffd48e15af3642fb91df63ee47130c6a
+</span></span><span class="line"><span class="cl">To: &lt;sip:1002@172.16.4.113&gt;;tag=ca36158e07626139fe33104dfec02b96.6776fc32
+</span></span><span class="line"><span class="cl">Call-ID: 958acb18b530498191314703f7abbf88
+</span></span><span class="line"><span class="cl">CSeq: 28845 REGISTER
+</span></span><span class="line"><span class="cl">Server: kamailio (5.8.5 (x86_64/linux))
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: rcv
+</span></span><span class="line"><span class="cl">pid: 5745
+</span></span><span class="line"><span class="cl">process: 3
+</span></span><span class="line"><span class="cl">time: 1743648555.947732
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 10:49:15 2025
+</span></span><span class="line"><span class="cl">proto: udp ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 65398
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5460
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">REGISTER sip:172.16.4.113:5460 SIP/2.0
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/UDP 172.16.80.3:65398;rport;branch=z9hG4bKPj8da8a9dd97df4c5581fe1001cf637b49
+</span></span><span class="line"><span class="cl">Max-Forwards: 70
+</span></span><span class="line"><span class="cl">From: &lt;sip:1002@172.16.4.113&gt;;tag=543412e2b3e74c24a73c619373266378
+</span></span><span class="line"><span class="cl">To: &lt;sip:1002@172.16.4.113&gt;
+</span></span><span class="line"><span class="cl">Call-ID: a7bf0e550c074020b45c2f304f8d6c9b
+</span></span><span class="line"><span class="cl">CSeq: 10448 REGISTER
+</span></span><span class="line"><span class="cl">User-Agent: MicroSIP/3.21.6
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1002@172.16.80.3:65398;ob&gt;
+</span></span><span class="line"><span class="cl">Expires: 200
+</span></span><span class="line"><span class="cl">Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS
+</span></span><span class="line"><span class="cl">Content-Length:  0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: snd
+</span></span><span class="line"><span class="cl">pid: 5745
+</span></span><span class="line"><span class="cl">process: 3
+</span></span><span class="line"><span class="cl">time: 1743648555.948576
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 10:49:15 2025
+</span></span><span class="line"><span class="cl">proto: udp ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.4.113
+</span></span><span class="line"><span class="cl">srcport: 5460
+</span></span><span class="line"><span class="cl">dstip: 172.16.80.3
+</span></span><span class="line"><span class="cl">dstport: 65398
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">SIP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/UDP 172.16.80.3:65398;rport=65398;received=172.16.80.3;branch=z9hG4bKPj8da8a9dd97df4c5581fe1001cf637b49
+</span></span><span class="line"><span class="cl">From: &lt;sip:1002@172.16.4.113&gt;;tag=543412e2b3e74c24a73c619373266378
+</span></span><span class="line"><span class="cl">To: &lt;sip:1002@172.16.4.113&gt;;tag=ca36158e07626139fe33104dfec02b96.f2184574
+</span></span><span class="line"><span class="cl">Call-ID: a7bf0e550c074020b45c2f304f8d6c9b
+</span></span><span class="line"><span class="cl">CSeq: 10448 REGISTER
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1002@172.16.80.3:65398;ob&gt;;expires=200
+</span></span><span class="line"><span class="cl">Server: kamailio (5.8.5 (x86_64/linux))
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>kamailio-sipdump-2025-04-03&ndash;10-49-15.meta 的内容:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">v: 1.0
+</span></span><span class="line"><span class="cl">version: kamailio 5.8.5
+</span></span><span class="line"><span class="cl">start: Thu Apr  3 10:49:04 2025
+</span></span><span class="line"><span class="cl">nrprocs: 46
+</span></span><span class="line"><span class="cl">process: 0 5741 main process - attendant
+</span></span><span class="line"><span class="cl">process: 1 5743 udp receiver child=0 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 2 5744 udp receiver child=1 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 3 5745 udp receiver child=2 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 4 5746 udp receiver child=3 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 5 5747 udp receiver child=4 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 6 5748 udp receiver child=5 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 7 5749 udp receiver child=6 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 8 5750 udp receiver child=7 sock=172.16.4.113:5460
+</span></span><span class="line"><span class="cl">process: 9 5751 udp receiver child=0 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 10 5752 udp receiver child=1 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 11 5753 udp receiver child=2 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 12 5754 udp receiver child=3 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 13 5755 udp receiver child=4 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 14 5756 udp receiver child=5 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 15 5757 udp receiver child=6 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 16 5758 udp receiver child=7 sock=172.16.4.113:5464
+</span></span><span class="line"><span class="cl">process: 17 5759 udp receiver child=0 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 18 5760 udp receiver child=1 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 19 5761 udp receiver child=2 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 20 5762 udp receiver child=3 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 21 5763 udp receiver child=4 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 22 5764 udp receiver child=5 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 23 5765 udp receiver child=6 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 24 5766 udp receiver child=7 sock=172.16.4.113:5465
+</span></span><span class="line"><span class="cl">process: 25 5767 slow timer
+</span></span><span class="line"><span class="cl">process: 26 5768 timer
+</span></span><span class="line"><span class="cl">process: 27 5769 secondary timer
+</span></span><span class="line"><span class="cl">process: 28 5770 JSONRPCS FIFO
+</span></span><span class="line"><span class="cl">process: 29 5771 JSONRPCS DATAGRAM
+</span></span><span class="line"><span class="cl">process: 30 5772 USRLOC Timer
+</span></span><span class="line"><span class="cl">process: 31 5773 ctl handler
+</span></span><span class="line"><span class="cl">process: 32 5774 TIMER NH
+</span></span><span class="line"><span class="cl">process: 33 5775 WEBSOCKET KEEPALIVE
+</span></span><span class="line"><span class="cl">process: 34 5776 WEBSOCKET TIMER
+</span></span><span class="line"><span class="cl">process: 35 5777 Dialog Clean Timer
+</span></span><span class="line"><span class="cl">process: 36 5778 SIPDUMP WRITE TIMER
+</span></span><span class="line"><span class="cl">process: 37 5779 tcp receiver (generic) child=0
+</span></span><span class="line"><span class="cl">process: 38 5780 tcp receiver (generic) child=1
+</span></span><span class="line"><span class="cl">process: 39 5781 tcp receiver (generic) child=2
+</span></span><span class="line"><span class="cl">process: 40 5782 tcp receiver (generic) child=3
+</span></span><span class="line"><span class="cl">process: 41 5783 tcp receiver (generic) child=4
+</span></span><span class="line"><span class="cl">process: 42 5784 tcp receiver (generic) child=5
+</span></span><span class="line"><span class="cl">process: 43 5785 tcp receiver (generic) child=6
+</span></span><span class="line"><span class="cl">process: 44 5786 tcp receiver (generic) child=7
+</span></span><span class="line"><span class="cl">process: 45 5787 tcp main process
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>wss</code>注册的情况:
+<ul>
+<li>event_route 事件产生
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip7.png"
+	width="1582"
+	height="796"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip7_hu10936763112753709976.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip7_hu14873893932430712825.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="198"
+		data-flex-basis="476px"
+	
+></li>
+<li><code>.data</code>数据:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: rcv
+</span></span><span class="line"><span class="cl">pid: 6301
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743651209.118606
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 11:33:29 2025
+</span></span><span class="line"><span class="cl">proto: tls ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 53099
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5462
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">GET / HTTP/1.1
+</span></span><span class="line"><span class="cl">Host: sbc001.abc:5462
+</span></span><span class="line"><span class="cl">Connection: Upgrade
+</span></span><span class="line"><span class="cl">Pragma: no-cache
+</span></span><span class="line"><span class="cl">Cache-Control: no-cache
+</span></span><span class="line"><span class="cl">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+</span></span><span class="line"><span class="cl">Upgrade: websocket
+</span></span><span class="line"><span class="cl">Origin: null
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Version: 13
+</span></span><span class="line"><span class="cl">Accept-Encoding: gzip, deflate, br, zstd
+</span></span><span class="line"><span class="cl">Accept-Language: zh-CN,zh;q=0.9
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Key: g+6VfakF0iemlALkcrqQzg==
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Protocol: sip
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: rcv
+</span></span><span class="line"><span class="cl">pid: 6301
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743651209.122952
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 11:33:29 2025
+</span></span><span class="line"><span class="cl">proto: wss ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 53099
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5462
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">REGISTER sip:sbc001.abc:5462 SIP/2.0
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/WSS 247b5g7epaou.invalid;branch=z9hG4bK5563369
+</span></span><span class="line"><span class="cl">Max-Forwards: 69
+</span></span><span class="line"><span class="cl">To: &lt;sip:1007@sbc001.abc:5462&gt;
+</span></span><span class="line"><span class="cl">From: &#34;1007&#34; &lt;sip:1007@sbc001.abc:5462&gt;;tag=sagp76d6l3
+</span></span><span class="line"><span class="cl">Call-ID: a6g0dtj2pi05mnfrre5jjq
+</span></span><span class="line"><span class="cl">CSeq: 4 REGISTER
+</span></span><span class="line"><span class="cl">X-SBC: Dinstar Mediant
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1007@247b5g7epaou.invalid;transport=ws&gt;;+sip.ice;reg-id=1;+sip.instance=&#34;&lt;urn:uuid:86509451-8dd3-4056-8273-756c451940fe&gt;&#34;;expires=600
+</span></span><span class="line"><span class="cl">Expires: 600
+</span></span><span class="line"><span class="cl">Allow: INVITE,ACK,CANCEL,BYE,UPDATE,MESSAGE,OPTIONS,REFER,INFO,NOTIFY,SUBSCRIBE
+</span></span><span class="line"><span class="cl">Supported: path,gruu,outbound
+</span></span><span class="line"><span class="cl">User-Agent: Dinstar WebRTC SDK. Simple phone 1.17.0 Chrome/134
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: snd
+</span></span><span class="line"><span class="cl">pid: 6301
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743651209.123431
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 11:33:29 2025
+</span></span><span class="line"><span class="cl">proto: wss ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.4.113
+</span></span><span class="line"><span class="cl">srcport: 5462
+</span></span><span class="line"><span class="cl">dstip: 172.16.80.3
+</span></span><span class="line"><span class="cl">dstport: 53099
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">SIP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/WSS 247b5g7epaou.invalid;branch=z9hG4bK5563369;rport=53099;received=172.16.80.3
+</span></span><span class="line"><span class="cl">To: &lt;sip:1007@sbc001.abc:5462&gt;;tag=ca36158e07626139fe33104dfec02b96.ccae0000
+</span></span><span class="line"><span class="cl">From: &#34;1007&#34; &lt;sip:1007@sbc001.abc:5462&gt;;tag=sagp76d6l3
+</span></span><span class="line"><span class="cl">Call-ID: a6g0dtj2pi05mnfrre5jjq
+</span></span><span class="line"><span class="cl">CSeq: 4 REGISTER
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1007@172.16.80.3:53099;transport=ws&gt;;expires=600;received=&#34;sip:172.16.80.3:53099;transport=ws&#34;;+sip.instance=&#34;&lt;urn:uuid:86509451-8dd3-4056-8273-756c451940fe&gt;&#34;;reg-id=1
+</span></span><span class="line"><span class="cl">Server: kamailio (5.8.5 (x86_64/linux))
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<h4 id="mode--4">mode = 4
+</h4><ol>
+<li>注册</li>
+</ol>
+<ul>
+<li>
+<p>日志这块确实没有<code>event_route</code>事件产生:
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip4.png"
+	width="1792"
+	height="191"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip4_hu6657083377866721779.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip4_hu16571488286924274515.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="938"
+		data-flex-basis="2251px"
+	
+></p>
+</li>
+<li>
+<p>保存的文件<code>/run/kamailio/</code>:
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip3.png"
+	width="1223"
+	height="242"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip3_hu13663129835796807057.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip3_hu17792696137696004999.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="505"
+		data-flex-basis="1212px"
+	
+></p>
+<p>产生了<code>.pcap</code>和<code>.meta</code>文件, <code>.meta</code>和上面的一样，就不看了，使用<code>wireshark</code>打开<code>.pcap</code>文件，看到的效果：
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip5.png"
+	width="2085"
+	height="684"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip5_hu4336860492780787358.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip5_hu12625888759170854063.png 1024w"
+	loading="lazy"
+	
+		alt="register"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="304"
+		data-flex-basis="731px"
+	
+></p>
+</li>
+<li>
+<p><code>wss</code> 的<code>.pcap</code>内容：
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip6.png"
+	width="2055"
+	height="441"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip6_hu7761811230294460801.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip6_hu15532424627204402234.png 1024w"
+	loading="lazy"
+	
+		alt="wss"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="465"
+		data-flex-basis="1118px"
+	
+></p>
+<p>可以看到, <code>kamailio</code>把<code>wss</code>解析后转成了<code>udp</code>存储到<code>.pcap</code>文件中.</p>
+</li>
+</ul>
+<h4 id="mode--12">mode = 12
+</h4><p>不能mode=8,必须是<code>8+4</code>(写<code>pcap</code>文件+<code>P-KSR-SIPDump</code>头)</p>
+<ol>
+<li>
+<p><code>wss</code>注册</p>
+<ul>
+<li>产生的<code>.pcap</code>文件,使用<code>wireshark</code>打开之后的结果:
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip8.png"
+	width="2019"
+	height="693"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip8_hu5763221671083325603.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip8_hu3270276268290463389.png 1024w"
+	loading="lazy"
+	
+		alt="wss"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="291"
+		data-flex-basis="699px"
+	
+></li>
+</ul>
+<p>可以看到还是把<code>wss</code>解析后转成了<code>udp</code>存储到<code>.pcap</code>文件中. <code>REGISTER</code>信令带了<code>P-KSR-SIPDump</code>头。</p>
+<p>回复的<code>200OK</code>也是带了<code>P-KSR-SIPDump</code>头:
+<img src="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip9.png"
+	width="1257"
+	height="268"
+	srcset="/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip9_hu18040637693599432048.png 480w, /p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/sip9_hu16911702067959596056.png 1024w"
+	loading="lazy"
+	
+		alt="wss"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="469"
+		data-flex-basis="1125px"
+	
+></p>
+</li>
+</ol>
+<h3 id="使用sipdump_send">使用sipdump_send
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;sipdump.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;enable&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;mode&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;wait&#34;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;rotate&#34;</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;folder&#34;</span><span class="p">,</span> <span class="s2">&#34;/run/kamailio&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;sipdump&#34;</span><span class="p">,</span> <span class="s2">&#34;fage&#34;</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">REGISTRAR</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">sipdump_send</span><span class="p">(</span><span class="s2">&#34;reg&#34;</span><span class="p">);</span><span class="c1"># 跟踪REGISTER信令</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span><span class="p">(</span><span class="n">isflagset</span><span class="p">(</span><span class="n">FLT_NATS</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>查看生成的<code>.data</code>数据,可以看到有<code>tag</code>为<code>reg</code>的进来数据：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: rcv
+</span></span><span class="line"><span class="cl">pid: 6710
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743663241.182846
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 14:54:01 2025
+</span></span><span class="line"><span class="cl">proto: tls ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 3757
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5462
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">GET / HTTP/1.1
+</span></span><span class="line"><span class="cl">Host: sbc001.abc:5462
+</span></span><span class="line"><span class="cl">Connection: Upgrade
+</span></span><span class="line"><span class="cl">Pragma: no-cache
+</span></span><span class="line"><span class="cl">Cache-Control: no-cache
+</span></span><span class="line"><span class="cl">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36
+</span></span><span class="line"><span class="cl">Upgrade: websocket
+</span></span><span class="line"><span class="cl">Origin: null
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Version: 13
+</span></span><span class="line"><span class="cl">Accept-Encoding: gzip, deflate, br, zstd
+</span></span><span class="line"><span class="cl">Accept-Language: zh-CN,zh;q=0.9
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Key: FEb0cVfwgJRa4dJrL5Ping==
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits
+</span></span><span class="line"><span class="cl">Sec-WebSocket-Protocol: sip
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: rcv
+</span></span><span class="line"><span class="cl">pid: 6710
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743663241.198303
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 14:54:01 2025
+</span></span><span class="line"><span class="cl">proto: wss ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 3757
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5462
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">REGISTER sip:sbc001.abc:5462 SIP/2.0
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/WSS v7xc2nukc192.invalid;branch=z9hG4bK5988756
+</span></span><span class="line"><span class="cl">Max-Forwards: 69
+</span></span><span class="line"><span class="cl">To: &lt;sip:1007@sbc001.abc:5462&gt;
+</span></span><span class="line"><span class="cl">From: &#34;1007&#34; &lt;sip:1007@sbc001.abc:5462&gt;;tag=uckhn179rv
+</span></span><span class="line"><span class="cl">Call-ID: vk44j9hdgsjohp5g5m63tr
+</span></span><span class="line"><span class="cl">CSeq: 12 REGISTER
+</span></span><span class="line"><span class="cl">X-SBC: Dinstar Mediant
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1007@v7xc2nukc192.invalid;transport=ws&gt;;+sip.ice;reg-id=1;+sip.instance=&#34;&lt;urn:uuid:91dfb460-6e55-465c-a3fa-df50b4a8e284&gt;&#34;;expires=600
+</span></span><span class="line"><span class="cl">Expires: 600
+</span></span><span class="line"><span class="cl">Allow: INVITE,ACK,CANCEL,BYE,UPDATE,MESSAGE,OPTIONS,REFER,INFO,NOTIFY,SUBSCRIBE
+</span></span><span class="line"><span class="cl">Supported: path,gruu,outbound
+</span></span><span class="line"><span class="cl">User-Agent: Dinstar WebRTC SDK. Simple phone 1.17.0 Chrome/134
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: reg
+</span></span><span class="line"><span class="cl">pid: 6710
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743663241.198688
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 14:54:01 2025
+</span></span><span class="line"><span class="cl">proto: wss ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.80.3
+</span></span><span class="line"><span class="cl">srcport: 3757
+</span></span><span class="line"><span class="cl">dstip: 172.16.4.113
+</span></span><span class="line"><span class="cl">dstport: 5462
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">REGISTER sip:sbc001.abc:5462 SIP/2.0
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/WSS v7xc2nukc192.invalid;branch=z9hG4bK5988756
+</span></span><span class="line"><span class="cl">Max-Forwards: 68
+</span></span><span class="line"><span class="cl">To: &lt;sip:1007@sbc001.abc:5462&gt;
+</span></span><span class="line"><span class="cl">From: &#34;1007&#34; &lt;sip:1007@sbc001.abc:5462&gt;;tag=uckhn179rv
+</span></span><span class="line"><span class="cl">Call-ID: vk44j9hdgsjohp5g5m63tr
+</span></span><span class="line"><span class="cl">CSeq: 12 REGISTER
+</span></span><span class="line"><span class="cl">X-SBC: Dinstar Mediant
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1007@v7xc2nukc192.invalid;transport=ws&gt;;+sip.ice;reg-id=1;+sip.instance=&#34;&lt;urn:uuid:91dfb460-6e55-465c-a3fa-df50b4a8e284&gt;&#34;;expires=600
+</span></span><span class="line"><span class="cl">Expires: 600
+</span></span><span class="line"><span class="cl">Allow: INVITE,ACK,CANCEL,BYE,UPDATE,MESSAGE,OPTIONS,REFER,INFO,NOTIFY,SUBSCRIBE
+</span></span><span class="line"><span class="cl">Supported: path,gruu,outbound
+</span></span><span class="line"><span class="cl">User-Agent: Dinstar WebRTC SDK. Simple phone 1.17.0 Chrome/134
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span><span class="line"><span class="cl">====================
+</span></span><span class="line"><span class="cl">tag: snd
+</span></span><span class="line"><span class="cl">pid: 6710
+</span></span><span class="line"><span class="cl">process: 37
+</span></span><span class="line"><span class="cl">time: 1743663241.198832
+</span></span><span class="line"><span class="cl">date: Thu Apr  3 14:54:01 2025
+</span></span><span class="line"><span class="cl">proto: wss ipv4
+</span></span><span class="line"><span class="cl">srcip: 172.16.4.113
+</span></span><span class="line"><span class="cl">srcport: 5462
+</span></span><span class="line"><span class="cl">dstip: 172.16.80.3
+</span></span><span class="line"><span class="cl">dstport: 3757
+</span></span><span class="line"><span class="cl">~~~~~~~~~~~~~~~~~~~~
+</span></span><span class="line"><span class="cl">SIP/2.0 200 OK
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/WSS v7xc2nukc192.invalid;branch=z9hG4bK5988756;rport=3757;received=172.16.80.3
+</span></span><span class="line"><span class="cl">To: &lt;sip:1007@sbc001.abc:5462&gt;;tag=ca36158e07626139fe33104dfec02b96.94ce0000
+</span></span><span class="line"><span class="cl">From: &#34;1007&#34; &lt;sip:1007@sbc001.abc:5462&gt;;tag=uckhn179rv
+</span></span><span class="line"><span class="cl">Call-ID: vk44j9hdgsjohp5g5m63tr
+</span></span><span class="line"><span class="cl">CSeq: 12 REGISTER
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1007@172.16.80.3:3757;transport=ws&gt;;expires=600;received=&#34;sip:172.16.80.3:3757;transport=ws&#34;;+sip.instance=&#34;&lt;urn:uuid:91dfb460-6e55-465c-a3fa-df50b4a8e284&gt;&#34;;reg-id=1
+</span></span><span class="line"><span class="cl">Server: kamailio (5.8.5 (x86_64/linux))
+</span></span><span class="line"><span class="cl">Content-Length: 0
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">||||||||||||||||||||
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到带<code>reg</code>只有进来的数据没有出去的数据，所以还要在回复的路由处加<code>sipdump_send(&quot;reg&quot;);</code>。
+根据目前的场景看,此函数有点鸡肋。</p>
+<h3 id="总结">总结
+</h3><ol>
+<li>只要写的是文件,就会产生两个文件<code>.data</code>或<code>.pcap</code>和<code>.meta</code></li>
+<li><code>kamailio</code>会把<code>wss</code>解析后转成<code>udp</code>存储到<code>.pcap</code>文件中.</li>
+<li>当<code>fage</code>的时间到了之后，真的会把过时的文件删除掉。</li>
+</ol>
+
+</section>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/kamailio/">Kamailio</a>
+        
+    </section>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/kamailio-siptrace%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kamailio-siptrace%E4%BB%8B%E7%BB%8D/backup.bcc8cfed2f24b3e61a87f0bf2571f1da_hu16424140630884598114.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post kamailio siptrace介绍"
+                        
+                        data-hash="md5-vMjP7S8ks&#43;Yah/C/JXHx2g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kamailio siptrace介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/kamailio-dialplan-%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kamailio-dialplan-%E4%BB%8B%E7%BB%8D/backup.915ddda1aa32a9b1f4b9c0663efc1d94_hu3628636265769070071.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post kamailio dialplan 介绍"
+                        
+                        data-hash="md5-kV3doaoyqbH0ucBmPvwdlA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kamailio dialplan 介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/kamailio-dispatcher%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kamailio-dispatcher%E4%BB%8B%E7%BB%8D/backup.38c632401c4a8a0f241210dbbf5a6d6d_hu174946886868614363.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post kamailio dispatcher介绍"
+                        
+                        data-hash="md5-OMYyQBxKig8kEhDbv1ptbQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kamailio dispatcher介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kamailio-%E9%9B%86%E7%BE%A4dmq%E4%BB%8B%E7%BB%8D/backup.13e491f9abc172bc326a5edd7dfed4d9_hu2641177055585142941.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post kamailio 集群(DMQ)介绍"
+                        
+                        data-hash="md5-E&#43;SR&#43;avBcrwyal7dff7U2Q==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kamailio 集群(DMQ)介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/kamailio-%E6%B7%BB%E5%8A%A0prometheus%E7%9B%91%E6%8E%A7/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kamailio-%E6%B7%BB%E5%8A%A0prometheus%E7%9B%91%E6%8E%A7/backup.eb1ab2685ce4d564221b0d56496bc015_hu12357748644401508557.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post kamailio 添加prometheus监控"
+                        
+                        data-hash="md5-6xqyaFzk1WQiGw1WSWvAFQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">kamailio 添加prometheus监控</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <script type="module">
+        import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
+        pageviewCount({
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    <script type="module">
+        import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+        commentCount({
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        发表了25篇文章 · 
+        总计43.74k字
+    </section>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
+    <span id="busuanzi_container_site_uv">您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者</span>
+    <section class="copyright">
+        &copy; 
+        
+        2025 QuincyGao Blog
+    </section>
+    
+    <section class="powerby">
+        
+        <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025368587号-1| </a>使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script>
+    let s1 = '2025-01-10'; 
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let timeDifference = s2.getTime() - s1.getTime();
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = days + "天" + hours + "小时" + minutes + "分钟";
+    document.getElementById('runningdays').innerHTML = result;
+</script>
+
+
+
+<a href="#" id="back-to-top" title="返回顶部"></a>
+
+
+<style>
+  #back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    width: 55px;
+    height: 55px;
+    border-radius: 7px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: var(--shadow-l2);
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+  }
+
+  #back-to-top:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    height: 10px;
+    width: 10px;
+    border-width: 0 0 2px 2px;
+    border-color: var(--back-to-top-color);
+    border-style: solid;
+  }
+
+  #back-to-top:hover:before {
+    border-color: #2674e0;
+  }
+
+   
+  @media screen and (max-width: 768px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1024px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1280px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 55px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1536px) {
+    #back-to-top {
+      visibility: hidden;
+    }
+  }
+</style>
+
+
+<script>
+  function backToTop() {
+    document.documentElement.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+
+  window.onload = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop > 0) {
+      totopBtn.style.display = 'inline'
+    } else {
+      totopBtn.style.display = 'none'
+    }
+  }
+
+  window.onscroll = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop < 200) {
+      totopBtn.style.display = 'none'
+    } else {
+      totopBtn.style.display = 'inline'
+      totopBtn.addEventListener('click', backToTop, false)
+    }
+  }
+</script>
+
+    </body>
+</html>
