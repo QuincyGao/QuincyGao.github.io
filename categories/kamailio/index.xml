@@ -6,7 +6,257 @@
         <description>Recent content in kamailio on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Thu, 03 Apr 2025 09:25:15 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/kamailio/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Thu, 10 Apr 2025 10:28:55 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/kamailio/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>kamailio sipcapture介绍</title>
+        <link>https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/</link>
+        <pubDate>Thu, 10 Apr 2025 10:28:55 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/backup.jpg" alt="Featured image of post kamailio sipcapture介绍" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;sipcapture&lt;/code&gt;用来存储进来和出去的sip消息,还可以存储&lt;code&gt;HEP&lt;/code&gt;协议的数据。&lt;/p&gt;
+&lt;p&gt;相比&lt;code&gt;siptrace&lt;/code&gt;,&lt;code&gt;sipcapture&lt;/code&gt;只能存储到数据库中，不能发送到第三方存储。&lt;/p&gt;
+&lt;p&gt;官方文档地址:&lt;a class=&#34;link&#34; href=&#34;https://kamailio.org/docs/modules/5.8.x/modules/sipcapture.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;sipcapture&lt;/a&gt;, 本次测试的kamailio版本是:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;version: kamailio 5.8.5 (x86_64/linux)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;重要参数解析&#34;&gt;重要参数解析
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 数据库连接地址
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;db_url&amp;#34;, DBURL)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 表名, 多个表使用|隔开
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;table_name&amp;#34;, &amp;#34;homer_capture1|homer_capture2&amp;#34;);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 存储数据到多个表的模式, rand:随机; round_robin:轮询; hash:哈希
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;mt_mode&amp;#34;, &amp;#34;hash&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 当mt_mode为hash时, hash_source为hash的key,可以为call_id,to_user,from_user.默认call_id
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;hash_source&amp;#34;, &amp;#34;to_user&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 存储到数据库的模式, 1,INSERT DELAYED; 2,ASYNC INSERT; 0,INSERT
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;db_insert_mode&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 设置抓包模式
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;capture_mode&amp;#34;, &amp;#34;mode1=&amp;gt;db_url=mysql://user:passwd@host/dbname1;table_name=homer_capture1|homer_capture2;mt_mode=hash;hash_source=call_id;&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 是否开启sipcapture功能
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;capture_on&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 实时开启抓hep功能
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;hep_capture_on&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 是否开启抓ipip功能
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;raw_ipip_capture_on&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 是否开启监控/镜像端口功能
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;raw_moni_capture_on&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 监听ip地址
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;raw_socket_listen&amp;#34;, &amp;#34;10.0.0.1:5060-5090&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 监听网卡
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;raw_interface&amp;#34;, &amp;#34;eth0&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 监听子进程数量
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;raw_sock_children&amp;#34;, 6)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 是否开启混杂模式
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;promiscuous_on&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 是否开启bpf过滤
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;raw_moni_bpf_on&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 设置节点名称
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;capture_node&amp;#34;, &amp;#34;homer01&amp;#34;)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 写入数据库失败重试次数
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;insert_retries&amp;#34;, 5)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 写入数据库失败重试间隔
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;insert_retry_timeout&amp;#34;, 10)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 设置为1,当Hep消息到达时,event_route[sipcapture:siprequest]生效.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;nonsip_hook&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 是否抓 broken的sip消息
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;sipcapture&amp;#34;, &amp;#34;capture_bad_msgs&amp;#34;, 1)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;重要函数&#34;&gt;重要函数
+&lt;/h2&gt;&lt;h3 id=&#34;sip_capturetable-cmode&#34;&gt;sip_capture([table], [cmode])
+&lt;/h3&gt;&lt;p&gt;存储当前的&lt;code&gt;HEP/IPIP&lt;/code&gt; SIP消息到数据库&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;table
+表名,可以为&amp;quot;&amp;quot;,也可以&lt;code&gt;sip_capture_call_%Y%m%d&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;cmode
+和上面的&lt;code&gt;capture_mode&lt;/code&gt;参数一样&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;report_capturetable-cid-data&#34;&gt;report_capture([table], [cid], [data])
+&lt;/h3&gt;&lt;p&gt;存储&lt;code&gt;HEP REPORT&lt;/code&gt;消息到数据库&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;table
+表名&lt;/li&gt;
+&lt;li&gt;cid
+关联id&lt;/li&gt;
+&lt;li&gt;data
+json格式的数据&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;float2intfval-ival&#34;&gt;float2int(fval, ival)
+&lt;/h3&gt;&lt;p&gt;返回乘积,atof(fval)*atoi(ival)&lt;/p&gt;
+&lt;h3 id=&#34;sip_capture_forwarduri&#34;&gt;sip_capture_forward(uri)
+&lt;/h3&gt;&lt;p&gt;转发&lt;code&gt;HEP&lt;/code&gt;包到到指定的uri,&lt;code&gt;uri&lt;/code&gt;是&lt;code&gt;sip uri&lt;/code&gt;格式，主要用在&lt;code&gt;event_route[sipcapture:siprequest]&lt;/code&gt;中&lt;/p&gt;
+&lt;h2 id=&#34;实战&#34;&gt;实战
+&lt;/h2&gt;&lt;h3 id=&#34;sip_capture-数据表&#34;&gt;sip_capture 数据表
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;sip_capture&lt;/code&gt;数据表默认是没有创建的，需要手动创建。&lt;/p&gt;
+&lt;p&gt;其脚本路径在源码:&lt;code&gt;src/modules/sipcapture/sql/&lt;/code&gt;.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;create_sipcapture_postgress.sql&lt;/code&gt; 是表&lt;code&gt;sip_capture&lt;/code&gt;的创建脚本&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;schema_data.sql&lt;/code&gt;其中的&lt;code&gt;report_capture&lt;/code&gt;和&lt;code&gt;sip_capture_call_20150407&lt;/code&gt;可用&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;sip_capture&lt;/code&gt;的mysql脚本为:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;34
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;35
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;36
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;37
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;38
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;39
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;40
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;41
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;42
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;43
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;44
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;45
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;46
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;47
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;48
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;49
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;50
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE TABLE sip_capture (
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    id INT NOT NULL AUTO_INCREMENT,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    date DATETIME NOT NULL DEFAULT &amp;#39;1900-01-01 00:00:01&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    micro_ts BIGINT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    method VARCHAR(50) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    reply_reason VARCHAR(100) NOT NULL,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ruri VARCHAR(200) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    ruri_user VARCHAR(100) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    from_user VARCHAR(100) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    from_tag VARCHAR(64) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    to_user VARCHAR(100) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    to_tag VARCHAR(64) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    pid_user VARCHAR(100) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    contact_user VARCHAR(120) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    auth_user VARCHAR(120) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    callid VARCHAR(100) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    callid_aleg VARCHAR(100) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    via_1 VARCHAR(256) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    via_1_branch VARCHAR(80) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    cseq VARCHAR(25) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    diversion VARCHAR(256) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    reason VARCHAR(200) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    content_type VARCHAR(256) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    auth VARCHAR(256) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    user_agent VARCHAR(256) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    source_ip VARCHAR(60) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    source_port INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    destination_ip VARCHAR(60) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    destination_port INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    contact_ip VARCHAR(60) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    contact_port INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    originator_ip VARCHAR(60) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    originator_port INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    proto INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    family INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    rtp_stat VARCHAR(256) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    type INT NOT NULL DEFAULT 0,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    node VARCHAR(125) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    msg VARCHAR(1500) NOT NULL DEFAULT &amp;#39;&amp;#39;,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    PRIMARY KEY (id, date)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;) ENGINE=InnoDB;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_ruri_user_idx ON sip_capture (ruri_user);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_from_user_idx ON sip_capture (from_user);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_to_user_idx ON sip_capture (to_user);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_pid_user_idx ON sip_capture (pid_user);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_auth_user_idx ON sip_capture (auth_user);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_callid_aleg_idx ON sip_capture (callid_aleg);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_date_idx ON sip_capture (date);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CREATE INDEX sip_capture_callid_idx ON sip_capture (callid);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;该模块暂时还未配置成功，后续有时间再补上。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>kamailio sipdump介绍</title>
         <link>https://QuincyGao.github.io/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/</link>
         <pubDate>Thu, 03 Apr 2025 09:25:15 +0800</pubDate>
