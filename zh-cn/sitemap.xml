@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,20 +15,20 @@
                 href="https://QuincyGao.github.io/"
                 />
   </url><url>
-    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/tags/golang/</loc>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
   </url><url>
-    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/p/gorilla/websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8A%A5%E9%94%99forbidden/</loc>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/websocket/</loc>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +41,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -52,6 +52,18 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/categories/"
                 />
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
+    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
+    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
+    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2025-04-10T10:28:55+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio-sipdump%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2025-04-03T09:25:15+08:00</lastmod>
@@ -69,9 +81,6 @@
     <lastmod>2025-03-26T09:16:36+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio-websockets%E4%BB%8B%E7%BB%8D/</loc>
-    <lastmod>2025-03-21T09:53:05+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/tags/websocket/</loc>
     <lastmod>2025-03-21T09:53:05+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio-%E6%B7%BB%E5%8A%A0prometheus%E7%9B%91%E6%8E%A7/</loc>
@@ -92,13 +101,7 @@
     <loc>https://QuincyGao.github.io/tags/cgo/</loc>
     <lastmod>2025-03-13T16:19:59+08:00</lastmod>
   </url><url>
-    <loc>https://QuincyGao.github.io/tags/golang/</loc>
-    <lastmod>2025-03-13T16:19:59+08:00</lastmod>
-  </url><url>
     <loc>https://QuincyGao.github.io/p/golang-%E4%BD%BF%E7%94%A8cgo-%E7%94%9F%E6%88%90%E5%8A%A8%E6%80%81%E5%BA%93/</loc>
-    <lastmod>2025-03-13T16:19:59+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
     <lastmod>2025-03-13T16:19:59+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio%E7%9A%84http%E5%8A%9F%E8%83%BD%E4%BA%8C/</loc>

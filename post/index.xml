@@ -6,7 +6,57 @@
         <description>Recent content in Posts on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Thu, 10 Apr 2025 10:28:55 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sun, 27 Apr 2025 09:25:32 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>gorilla/websocket 客户端报错Forbidden</title>
+        <link>https://QuincyGao.github.io/p/gorilla/websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8A%A5%E9%94%99forbidden/</link>
+        <pubDate>Sun, 27 Apr 2025 09:25:32 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/gorilla/websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8A%A5%E9%94%99forbidden/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/gorilla/websocket-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8A%A5%E9%94%99forbidden/backup.jpg" alt="Featured image of post gorilla/websocket 客户端报错Forbidden" /&gt;&lt;h3 id=&#34;问题描述&#34;&gt;问题描述
+&lt;/h3&gt;&lt;p&gt;在使用&lt;code&gt;golang&lt;/code&gt; 写&lt;code&gt;websocket&lt;/code&gt;服务时，不可避免需要使用&lt;code&gt;gorilla/websocket&lt;/code&gt;包.&lt;/p&gt;
+&lt;p&gt;在官方提供的&lt;code&gt;example&lt;/code&gt;示例中,监听的&lt;code&gt;ip&lt;/code&gt;都是&lt;code&gt;localhost&lt;/code&gt;, 但是当需要对外提供服务时,
+我们需要把&lt;code&gt;ip&lt;/code&gt;改为&lt;code&gt;0.0.0.0&lt;/code&gt;或者具体的&lt;code&gt;ip&lt;/code&gt;。
+此时如果使用&lt;code&gt;gorilla/websocket&lt;/code&gt;包写客户端的话，使用默认的&lt;code&gt;DefaultDialer&lt;/code&gt;去连接具体的&lt;code&gt;ip&lt;/code&gt;,
+客户端报错&lt;code&gt;Forbidden&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;解决办法&#34;&gt;解决办法
+&lt;/h3&gt;&lt;p&gt;通过查看&lt;code&gt;gorilla/websocket&lt;/code&gt;包源码, 发现&lt;code&gt;DefaultDialer&lt;/code&gt;的结构为&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DefaultDialer&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Dialer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;n&#34;&gt;Proxy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;            &lt;span class=&#34;n&#34;&gt;http&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ProxyFromEnvironment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	&lt;span class=&#34;n&#34;&gt;HandshakeTimeout&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;45&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;time&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Second&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;ProxyFromEnvironment&lt;/code&gt;函数会读取环境变量里的&lt;code&gt;http_proxy&lt;/code&gt;和&lt;code&gt;https_proxy&lt;/code&gt;代理, 我的测试环境是设置了代理，所以会报错。&lt;/p&gt;
+&lt;p&gt;解决方法是不使用&lt;code&gt;DefaultDialer&lt;/code&gt;，而是使用&lt;code&gt;Dialer&lt;/code&gt;结构体.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;dialer := websocket.Dialer{
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	ReadBufferSize:   2048,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	WriteBufferSize:  2048,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	HandshakeTimeout: 45 * time.Second,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;dialer.Dial(&amp;#34;ws://127.0.0.1:8080/ws&amp;#34;, nil)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>kamailio sipcapture介绍</title>
         <link>https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/</link>
         <pubDate>Thu, 10 Apr 2025 10:28:55 +0800</pubDate>
