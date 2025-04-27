@@ -6992,6 +6992,11 @@ json格式的数据&lt;/li&gt;
           &lt;td style=&#34;text-align: center&#34;&gt;必须使用数据库&lt;/td&gt;
           &lt;td style=&#34;text-align: center&#34;&gt;可不使用数据库，从文件读取&lt;/td&gt;
       &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;缓存&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;cache_store/cache_remove/cache_fetch&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;htable&lt;/td&gt;
+      &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;h2 id=&#34;使用体验&#34;&gt;使用体验
