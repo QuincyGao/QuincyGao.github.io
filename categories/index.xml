@@ -6,21 +6,21 @@
         <description>Recent content in 分类 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Sun, 27 Apr 2025 09:25:32 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 28 Apr 2025 09:38:39 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>kamailio</title>
+        <link>https://QuincyGao.github.io/categories/kamailio/</link>
+        <pubDate>Mon, 28 Apr 2025 09:38:39 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/categories/kamailio/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/categories/kamailio/kamailio.jpg" alt="Featured image of post kamailio" /&gt;</description>
+        </item>
+        <item>
         <title>技术生活</title>
         <link>https://QuincyGao.github.io/categories/daily-life/</link>
         <pubDate>Sun, 27 Apr 2025 09:25:32 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/categories/daily-life/</guid>
         <description>&lt;img src="https://QuincyGao.github.io/categories/daily-life/life.png" alt="Featured image of post 技术生活" /&gt;</description>
-        </item>
-        <item>
-        <title>kamailio</title>
-        <link>https://QuincyGao.github.io/categories/kamailio/</link>
-        <pubDate>Thu, 10 Apr 2025 10:28:55 +0800</pubDate>
-        
-        <guid>https://QuincyGao.github.io/categories/kamailio/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/categories/kamailio/kamailio.jpg" alt="Featured image of post kamailio" /&gt;</description>
         </item>
         <item>
         <title>opensips</title>
