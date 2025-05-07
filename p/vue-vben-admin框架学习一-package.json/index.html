@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="前言 初次接触前端开发还是2017年,那时还是vue2和js, 换过工作之后，前端就没有再开发了。 现在vue3和ts大行其道, 随着AI浪潮的到来, 可以结合前端做一些有意思的工具,所以需要重新学习前端。\n">
+<title>vue-vben-admin框架学习(一)-package.json</title>
+
+<link rel='canonical' href='https://QuincyGao.github.io/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/'>
+
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="vue-vben-admin框架学习(一)-package.json">
+<meta property='og:description' content="前言 初次接触前端开发还是2017年,那时还是vue2和js, 换过工作之后，前端就没有再开发了。 现在vue3和ts大行其道, 随着AI浪潮的到来, 可以结合前端做一些有意思的工具,所以需要重新学习前端。\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/'>
+<meta property='og:site_name' content='QuincyGao Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='web' /><meta property='article:published_time' content='2025-05-07T09:48:25&#43;08:00'/><meta property='article:modified_time' content='2025-05-07T09:48:25&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/backup.jpg' />
+<meta name="twitter:title" content="vue-vben-admin框架学习(一)-package.json">
+<meta name="twitter:description" content="前言 初次接触前端开发还是2017年,那时还是vue2和js, 换过工作之后，前端就没有再开发了。 现在vue3和ts大行其道, 随着AI浪潮的到来, 可以结合前端做一些有意思的工具,所以需要重新学习前端。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/backup.jpg' />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/QuincyGao_hu9863765197253960442.jpg" width="300"
+                            height="225" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">QuincyGao Blog</a></h1>
+            <h2 class="site-description">事在人为，境由心造</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://bilibili.com'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Bilibili-Logo--Streamline-Ultimate.svg" height="24" width="24"><desc>Bilibili Logo Streamline Icon: https://streamlinehq.com</desc><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.90263 6.93445H19.0575s1.4674 0 1.4674 1.46739v9.27356s0 1.4673 -1.4674 1.4673H4.90263s-1.46739 0 -1.46739 -1.4673V8.40184s0 -1.46739 1.46739 -1.46739Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M14.7251 15.8387c-0.0599 0.2695 -0.3493 0.6189 -0.9982 0.6189 -1.1779 0 -1.707 -1.4674 -1.707 -1.4674s-0.529 1.4674 -1.7069 1.4674c-0.68879 0 -0.99824 -0.3494 -0.99824 -0.6189" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.65306 4.24927c-1.03607 0.00264 -2.02881 0.41607 -2.76049 1.14962C1.16089 6.13245 0.749997 7.12623 0.75 8.16231V17.925c0 1.0351 0.41121 2.0279 1.14318 2.7598 0.73197 0.732 1.72472 1.1432 2.75988 1.1432h0.99823v0.2196c0.0276 0.3053 0.16838 0.5892 0.39465 0.7959 0.22627 0.2067 0.52168 0.3213 0.82817 0.3213 0.30649 0 0.6019 -0.1146 0.82818 -0.3213 0.22627 -0.2067 0.36704 -0.4906 0.39465 -0.7959v-0.2495h7.80616v0.2495c0.0276 0.3053 0.1683 0.5892 0.3946 0.7959 0.2263 0.2067 0.5217 0.3213 0.8282 0.3213s0.6019 -0.1146 0.8282 -0.3213c0.2262 -0.2067 0.367 -0.4906 0.3946 -0.7959v-0.2495h0.9982c1.0352 0 2.028 -0.4112 2.7599 -1.1432 0.732 -0.732 1.1432 -1.7247 1.1432 -2.7599V8.16231c0 -1.03608 -0.4109 -2.02986 -1.1426 -2.76342 -0.7317 -0.73355 -1.7244 -1.14698 -2.7605 -1.14962H4.65306Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m5.72116 11.6761 3.84317 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m18.2389 11.6761 -3.8431 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.12045 0.835205 9.53438 4.24914" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M17.8396 0.835205 14.4257 4.24914" stroke-width="1.5"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/QuincyGao'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>github [#142]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 507.93 507.93" xml:space="preserve">
+<g>
+	<rect x="103.527" y="225.828" style="fill:#FFFFFF;" width="300.9" height="253.9"/>
+	<polygon style="fill:#FFFFFF;" points="53.427,197.528 454.427,197.528 253.927,32.428 	"/>
+</g>
+<path style="fill:#56ACE0;" d="M253.927,68.928l-20.1,16.6h12.7c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-47l-21,17.3h19.9
+	c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-53.2c-0.3,0-0.5-0.1-0.8-0.1l-12.4,10.2h243.8L253.927,68.928z"/>
+<rect x="202.427" y="337.028" style="fill:#FFC10D;" width="103" height="142.6"/>
+<path style="fill:#194F82;" d="M501.627,199.828l-238.7-196.6c-5.2-4.3-12.7-4.3-17.9,0l-239.9,197.6c-4.6,3.8-6.3,10-4.3,15.7
+	c2,5.6,7.3,9.3,13.3,9.3h61.1v268c0,7.8,6.3,14.1,14.1,14.1h329.2c7.8,0,14.1-6.3,14.1-14.1v-268h61.1c0.1,0,0.1,0,0.1,0
+	c7.8,0,14.1-6.3,14.1-14.1C508.027,206.728,505.427,202.328,501.627,199.828z M305.427,479.628h-103v-142.6h103V479.628z
+	 M404.427,479.628h-70.8v-156.7c0-7.8-6.3-14.1-14.1-14.1h-131.2c-7.8,0-14.1,6.3-14.1,14.1v156.7h-70.8v-253.8h300.9v253.8H404.427
+	z M53.427,197.528l200.5-165.1l200.5,165.2h-401V197.528z"/>
+</svg>
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M76.412,326.853h85.075c6.012,0,10.925-4.848,10.925-10.925V32.97
+	c0-6.012-4.848-10.925-10.925-10.925H76.412c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C65.487,322.004,70.4,326.853,76.412,326.853z"/>
+<path style="fill:#FFC10D;" d="M231.564,326.853h85.075c5.107,0,9.374-3.556,10.602-8.275l0.388-285.608
+	c0-6.012-4.848-10.925-10.925-10.925h-85.139c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C220.574,322.004,225.552,326.853,231.564,326.853z"/>
+<g>
+	<path style="fill:#FFFFFF;" d="M118.885,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C128.711,260.073,124.315,255.677,118.885,255.677z"/>
+	<path style="fill:#FFFFFF;" d="M274.036,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C283.863,260.073,279.467,255.677,274.036,255.677z"/>
+</g>
+<g>
+	<path style="fill:#194F82;" d="M118.885,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C87.273,282.828,101.495,296.921,118.885,296.921z M118.885,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826S113.519,255.547,118.885,255.547z"/>
+	<path style="fill:#194F82;" d="M98.198,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,82.295,92.186,87.143,98.198,87.143z"/>
+	<path style="fill:#194F82;" d="M98.198,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,136.145,92.186,140.994,98.198,140.994z"/>
+	<path style="fill:#194F82;" d="M274.036,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C242.489,282.828,256.582,296.921,274.036,296.921z M274.036,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826C264.275,259.943,268.671,255.547,274.036,255.547z"/>
+	<path style="fill:#194F82;" d="M253.35,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,82.295,247.337,87.143,253.35,87.143z"/>
+	<path style="fill:#194F82;" d="M253.35,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,136.145,247.337,140.994,253.35,140.994z"/>
+	<path style="fill:#194F82;" d="M381.737,203.378h-32.388V32.97c0-18.036-14.675-32.711-32.711-32.711h-85.075
+		c-18.036,0-32.711,14.675-32.711,32.711v282.958c0,3.879,0.711,7.499,1.939,10.925h-8.404c1.228-3.426,1.939-7.111,1.939-10.925
+		V32.97c0-18.036-14.675-32.711-32.711-32.711H76.412c-18.036,0-32.711,14.675-32.711,32.711v170.473H10.925
+		C4.913,203.442,0,208.291,0,214.368v167.046c0,6.012,4.848,10.925,10.925,10.925h370.747c6.012,0,10.925-4.848,10.925-10.925
+		V214.368C392.598,208.291,387.749,203.378,381.737,203.378z M220.574,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925l-0.388,285.608c-1.164,4.719-5.43,8.275-10.602,8.275h-84.945
+		c-6.012,0-10.925-4.848-10.925-10.925V32.97H220.574z M65.487,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925v282.958c0,6.012-4.848,10.925-10.925,10.925H76.412c-6.012,0-10.925-4.848-10.925-10.925
+		C65.487,315.992,65.487,32.97,65.487,32.97z M370.812,370.424H21.851V225.164h21.786v112.485c0,6.012,4.848,10.925,10.925,10.925
+		h283.539c6.012,0,10.925-4.848,10.925-10.925l0.388-112.485h21.463v145.261H370.812z"/>
+</g>
+<path style="fill:#56ACE0;" d="M349.026,337.778c0,6.012-4.848,10.925-10.925,10.925H54.626c-6.012,0-10.925-4.848-10.925-10.925
+	V225.293H21.851v145.261h348.962V225.228h-21.463L349.026,337.778z"/>
+</svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.609 392.609" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
+	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
+<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
+	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
+	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
+<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
+	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
+	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
+<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
+	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
+	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
+	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
+	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
+	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
+	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
+	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
+</svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#56ACE0;" d="M120.469,49.455c0,15.257-12.412,27.669-27.669,27.669c-15.192,0-27.669-12.412-27.669-27.669
+	S77.543,21.786,92.8,21.786C108.057,21.786,120.469,34.198,120.469,49.455z"/>
+<path style="fill:#FFFFFF;" d="M62.287,265.503h61.026v105.244h-19.588v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.012,0-10.925,4.849-10.925,10.925v42.861H62.287V265.503z"/>
+<path style="fill:#FFC10D;" d="M144.129,181.657v62.061H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C123.572,135.822,144.129,156.38,144.129,181.657z"/>
+<path style="fill:#FFFFFF;" d="M272.129,49.455c0-15.257,12.412-27.669,27.669-27.669c15.257,0,27.669,12.412,27.669,27.669
+	s-12.412,27.669-27.669,27.669C284.606,77.123,272.129,64.711,272.129,49.455z"/>
+<path style="fill:#FFC10D;" d="M269.156,265.503h61.026v105.244h-19.523v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653L269.156,265.503L269.156,265.503z"/>
+<path style="fill:#56ACE0;" d="M351.127,181.657v62.061H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C330.57,135.822,351.127,156.38,351.127,181.657z"/>
+<g>
+	<path style="fill:#194F82;" d="M98.295,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.877c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C165.98,144.356,135.661,113.972,98.295,113.972z M144.129,243.717
+		H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834L144.129,243.717
+		L144.129,243.717z M123.378,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.012,0-10.925,4.849-10.925,10.925
+		v42.861H62.287V265.503h61.026L123.378,370.747L123.378,370.747z"/>
+	<path style="fill:#194F82;" d="M92.8,0C65.519,0,43.281,22.174,43.281,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S120.081,0,92.8,0z M92.8,77.123c-15.192,0-27.669-12.412-27.669-27.669S77.543,21.786,92.8,21.786
+		s27.669,12.412,27.669,27.669S108.057,77.123,92.8,77.123z"/>
+	<path style="fill:#194F82;" d="M305.228,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.941c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C372.913,144.356,342.594,113.972,305.228,113.972z M351.127,243.717
+		H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834V243.717L351.127,243.717z
+		 M330.311,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653
+		V265.503h61.026v105.244H330.311z"/>
+	<path style="fill:#194F82;" d="M299.798,0c-27.281,0-49.455,22.174-49.455,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S327.014,0,299.798,0z M299.798,77.123c-15.192,0-27.669-12.412-27.669-27.669
+		s12.412-27.669,27.669-27.669s27.669,12.412,27.669,27.669S315.055,77.123,299.798,77.123z"/>
+</g>
+</svg>
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.533 392.533" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M196.267,21.851c-96.194,0-174.481,78.287-174.481,174.481s78.287,174.481,174.481,174.481
+	s174.481-78.287,174.481-174.481S292.461,21.851,196.267,21.851z"/>
+<path style="fill:#FFC10D;" d="M196.267,348.962c-84.17,0-152.695-68.461-152.695-152.695s68.525-152.63,152.695-152.63
+	s152.695,68.461,152.695,152.695S280.436,348.962,196.267,348.962z"/>
+<path style="fill:#FFFFFF;" d="M131.814,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	c8.21,0,14.933-6.723,14.933-14.933C146.747,132.267,140.024,125.543,131.814,125.543z"/>
+<path style="fill:#194F82;" d="M131.814,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+	s36.719-16.485,36.719-36.719S152.048,103.758,131.814,103.758z M131.814,155.41c-8.21,0-14.933-6.723-14.933-14.933
+	c0-8.21,6.723-14.933,14.933-14.933c8.21,0,14.933,6.723,14.933,14.933C146.747,148.752,140.024,155.41,131.814,155.41z"/>
+<path style="fill:#FFFFFF;" d="M260.719,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	s14.933-6.723,14.933-14.933S268.994,125.543,260.719,125.543z"/>
+<g>
+	<path style="fill:#194F82;" d="M260.719,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+		c20.234,0,36.719-16.485,36.719-36.719S280.954,103.758,260.719,103.758z M260.719,155.41c-8.21,0-14.933-6.723-14.933-14.933
+		c0-8.21,6.723-14.933,14.933-14.933s14.933,6.723,14.933,14.933C275.653,148.752,268.994,155.41,260.719,155.41z"/>
+	<path style="fill:#194F82;" d="M196.267,0C87.984,0,0,87.984,0,196.267s87.984,196.267,196.267,196.267
+		s196.267-87.984,196.267-196.267S304.549,0,196.267,0z M196.267,370.747c-96.194,0-174.481-78.287-174.481-174.481
+		S100.073,21.786,196.267,21.786s174.481,78.287,174.481,174.481S292.461,370.747,196.267,370.747z"/>
+	<path style="fill:#194F82;" d="M279.079,265.051c-45.64,45.64-119.984,45.64-165.689,0c-4.267-4.267-11.119-4.202-15.451,0
+		c-4.848,4.719-3.943,10.99,0,15.451c55.661,55.467,143.515,53.075,196.525,0c3.685-4.784,5.042-10.731,0-15.451
+		C290.133,260.913,283.345,260.784,279.079,265.051z"/>
+</g>
+</svg>
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#前言">前言</a></li>
+    <li><a href="#代码结构">代码结构</a></li>
+    <li><a href="#packagejson">package.json</a>
+      <ol>
+        <li><a href="#工作空间">工作空间 </a></li>
+        <li><a href="#scripts">scripts</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/">
+                <img src="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/backup_hu16476307608611127395.jpg"
+                        srcset="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/backup_hu16476307608611127395.jpg 800w, /p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/backup_hu10269675088439955037.jpg 1600w"
+                        width="800" 
+                        height="533" 
+                        loading="lazy"
+                        alt="Featured image of post vue-vben-admin框架学习(一)-package.json" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/web/" style="background-color: #d09daa; color: #fff;">
+                web前端
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/">vue-vben-admin框架学习(一)-package.json</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-05-07</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟,共2594 字
+                </time>
+            </div>
+        
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/">0</span> 次浏览
+            </time>
+        </div>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/">0</span> 条评论
+            </time>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="前言">前言
+</h2><p>初次接触前端开发还是2017年,那时还是<code>vue2</code>和<code>js</code>, 换过工作之后，前端就没有再开发了。
+现在<code>vue3</code>和<code>ts</code>大行其道, 随着AI浪潮的到来, 可以结合前端做一些有意思的工具,所以需要重新学习前端。</p>
+<p>目前正在学习<code>vue-vben-admin</code>框架, 记录一下学习过程。本章主要介绍<code>package.json</code></p>
+<p>官方代码地址:<a class="link" href="https://github.com/vbenjs/vue-vben-admin.git"  target="_blank" rel="noopener"
+    >vue-vben-admin</a></p>
+<h2 id="代码结构">代码结构
+</h2><p><img src="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/web.png"
+	width="404"
+	height="710"
+	srcset="/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/web_hu6813385880635187814.png 480w, /p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/web_hu8736093869102677011.png 1024w"
+	loading="lazy"
+	
+		alt="代码结构"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="56"
+		data-flex-basis="136px"
+	
+></p>
+<h2 id="packagejson">package.json
+</h2><p><code>vue-vben-admin</code>框架的<code>package.json</code>如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vben-admin-monorepo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="s2">&#34;5.5.5&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;private&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;keywords&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;monorepo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;turbo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vben&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vben admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vben pro&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vue&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vue admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vue vben admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vue vben admin pro&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;vue3&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;homepage&#34;</span><span class="p">:</span> <span class="s2">&#34;https://github.com/vbenjs/vue-vben-admin&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;bugs&#34;</span><span class="p">:</span> <span class="s2">&#34;https://github.com/vbenjs/vue-vben-admin/issues&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;repository&#34;</span><span class="p">:</span> <span class="s2">&#34;vbenjs/vue-vben-admin.git&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;license&#34;</span><span class="p">:</span> <span class="s2">&#34;MIT&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;author&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;vben&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;email&#34;</span><span class="p">:</span> <span class="s2">&#34;ann.vben@gmail.com&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;url&#34;</span><span class="p">:</span> <span class="s2">&#34;https://github.com/anncwb&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;module&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;scripts&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build&#34;</span><span class="p">:</span> <span class="s2">&#34;cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:analyze&#34;</span><span class="p">:</span> <span class="s2">&#34;turbo build:analyze&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:antd&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm run build --filter=@vben/web-antd&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:docker&#34;</span><span class="p">:</span> <span class="s2">&#34;./scripts/deploy/build-local-docker-image.sh&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:docs&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm run build --filter=@vben/docs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:ele&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm run build --filter=@vben/web-ele&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:naive&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm run build --filter=@vben/web-naive&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;build:play&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm run build --filter=@vben/playground&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;changeset&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm exec changeset&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;check&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm run check:circular &amp;&amp; pnpm run check:dep &amp;&amp; pnpm run check:type &amp;&amp; pnpm check:cspell&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;check:circular&#34;</span><span class="p">:</span> <span class="s2">&#34;vsh check-circular&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;check:cspell&#34;</span><span class="p">:</span> <span class="s2">&#34;cspell lint **/*.ts **/README.md .changeset/*.md --no-progress&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;check:dep&#34;</span><span class="p">:</span> <span class="s2">&#34;vsh check-dep&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;check:type&#34;</span><span class="p">:</span> <span class="s2">&#34;turbo run typecheck&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;clean&#34;</span><span class="p">:</span> <span class="s2">&#34;node ./scripts/clean.mjs&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;commit&#34;</span><span class="p">:</span> <span class="s2">&#34;czg&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;dev&#34;</span><span class="p">:</span> <span class="s2">&#34;turbo-run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;dev:antd&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm -F @vben/web-antd run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;dev:docs&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm -F @vben/docs run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;dev:ele&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm -F @vben/web-ele run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;dev:naive&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm -F @vben/web-naive run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;dev:play&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm -F @vben/playground run dev&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;format&#34;</span><span class="p">:</span> <span class="s2">&#34;vsh lint --format&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lint&#34;</span><span class="p">:</span> <span class="s2">&#34;vsh lint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;postinstall&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm -r run stub --if-present&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;preinstall&#34;</span><span class="p">:</span> <span class="s2">&#34;npx only-allow pnpm&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;prepare&#34;</span><span class="p">:</span> <span class="s2">&#34;is-ci || husky&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;preview&#34;</span><span class="p">:</span> <span class="s2">&#34;turbo-run preview&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;publint&#34;</span><span class="p">:</span> <span class="s2">&#34;vsh publint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;reinstall&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm clean --del-lock &amp;&amp; pnpm install&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;test:unit&#34;</span><span class="p">:</span> <span class="s2">&#34;vitest run --dom&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;test:e2e&#34;</span><span class="p">:</span> <span class="s2">&#34;turbo run test:e2e&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;update:deps&#34;</span><span class="p">:</span> <span class="s2">&#34;npx taze -r -w&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm exec changeset version &amp;&amp; pnpm install --no-frozen-lockfile&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;devDependencies&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@changesets/changelog-github&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@changesets/cli&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@playwright/test&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@types/node&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/commitlint-config&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/eslint-config&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/prettier-config&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/stylelint-config&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/tailwind-config&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/tsconfig&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/turbo-run&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/vite-config&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vben/vsh&#34;</span><span class="p">:</span> <span class="s2">&#34;workspace:*&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vitejs/plugin-vue&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vitejs/plugin-vue-jsx&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;@vue/test-utils&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;autoprefixer&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;cross-env&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;cspell&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;happy-dom&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;husky&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;is-ci&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;lint-staged&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;playwright&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;rimraf&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;tailwindcss&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;turbo&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;typescript&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;unbuild&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vite&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vitest&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vue&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;vue-tsc&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;engines&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;node&#34;</span><span class="p">:</span> <span class="s2">&#34;&gt;=20.10.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;pnpm&#34;</span><span class="p">:</span> <span class="s2">&#34;&gt;=9.12.0&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;packageManager&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm@10.10.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;pnpm&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;peerDependencyRules&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;allowedVersions&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;eslint&#34;</span><span class="p">:</span> <span class="s2">&#34;*&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;overrides&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;@ast-grep/napi&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;@ctrl/tinycolor&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;clsx&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;esbuild&#34;</span><span class="p">:</span> <span class="s2">&#34;0.25.3&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;pinia&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;vue&#34;</span><span class="p">:</span> <span class="s2">&#34;catalog:&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;neverBuiltDependencies&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;canvas&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="s2">&#34;node-gyp&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>对<code>package.json</code>的字段需要进行说明：</p>
+<ul>
+<li><code>name</code>: 项目名称,要少于214个字符,不能大写开头和使用node的核心库名, 可以使用点和下划线开头。</li>
+<li><code>version</code>: 项目版本, 和<code>name</code>一起确定一个项目, 不能重复。</li>
+<li><code>private</code>: 是否为私有项目, 如果为true, 则不会被发布到npm上。</li>
+<li><code>keywords</code>: 项目关键字, 用于<code>npm search</code>搜索。</li>
+<li><code>homepage</code>: 项目主页</li>
+<li><code>bugs</code>: 项目问题地址</li>
+<li><code>repository</code>: 项目仓库</li>
+<li><code>license</code>: 项目许可证, 可以是MIT, Apache-2.0, GPL-3.0等。许可查询地址:<a class="link" href="https://spdx.org/licenses/"  target="_blank" rel="noopener"
+    >license</a></li>
+<li><code>author</code>: 项目作者</li>
+<li><code>type</code>: 项目类型,可以是<code>module</code>, <code>commonjs</code>, <code>none</code>等。</li>
+<li><code>scripts</code>: 项目脚本</li>
+<li><code>devDependencies</code>: 项目开发依赖,不想安装额外的<code>test</code>或者<code>文档</code>框架,可以在这里添加。</li>
+<li><code>engines</code>: 项目引擎, 可以指定node和pnpm的版本。</li>
+<li><code>packageManager</code>: 项目包管理器</li>
+<li><code>pnpm</code>: 项目包管理器配置
+<ul>
+<li><code>peerDependencyRules</code>: 项目依赖规则</li>
+<li><code>overrides</code>: 项目依赖覆盖</li>
+<li><code>neverBuiltDependencies</code>: 项目不需要构建的依赖,安装期间不会执行所列包的<code>preinstall</code>,<code>install</code>和<code>postinstall</code>脚本。</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>官方<code>package.json</code>文档地址:<a class="link" href="https://docs.npmjs.com/cli/v11/configuring-npm/package-json"  target="_blank" rel="noopener"
+    >package.json</a></li>
+<li>官方<code>script</code>脚本参数:<a class="link" href="https://docs.npmjs.com/cli/v11/using-npm/scripts#pre--post-scripts"  target="_blank" rel="noopener"
+    >scripts</a></li>
+<li>官方<code>pnpm</code>文档:<a class="link" href="https://www.pnpm.cn/package_json"  target="_blank" rel="noopener"
+    >pnpm</a></li>
+</ol>
+<h3 id="工作空间">工作空间 
+</h3><p>在<code>devDependencies</code>里, 可以看到依赖的服务版本有两种方式,
+一种是<code>catalog:</code>的方式, 一种是<code>workspace:*</code>的方式。这两个依赖的具体版本是在<code>pnpm-workspace.yaml</code>文件中定义的。
+<code>pnpm-workspace.yaml</code>文件如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">packages</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">internal/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">internal/lint-configs/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/@core/base/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/@core/ui-kit/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/@core/forward/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/@core/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/effects/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">packages/business/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">apps/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">scripts/*</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">docs</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">playground</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">catalog</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@ast-grep/napi&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^0.37.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@changesets/changelog-github&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^0.5.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@changesets/cli&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^2.29.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@changesets/git&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^3.0.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@clack/prompts&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^0.10.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@commitlint/cli&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^19.8.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@commitlint/config-conventional&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^19.8.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@ctrl/tinycolor&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@eslint/js&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^9.25.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@faker-js/faker&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^9.7.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@iconify/json&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^2.2.332</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@iconify/tailwind&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^1.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@iconify/vue&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@intlify/core-base&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^11.1.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@intlify/unplugin-vue-i18n&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^6.0.8</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@jspm/generator&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^2.5.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@manypkg/get-packages&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^2.2.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@nolebase/vitepress-plugin-git-changelog&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^2.17.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@playwright/test&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^1.52.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@pnpm/workspace.read-manifest&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^1000.1.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@stylistic/stylelint-plugin&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^3.1.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@tailwindcss/nesting&#39;</span><span class="p">:</span><span class="w"> </span><span class="m">0.0.0</span>-<span class="l">insiders.565cd3e</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@tailwindcss/typography&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^0.5.16</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@tanstack/vue-query&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^5.74.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@tanstack/vue-store&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^0.7.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/archiver&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^6.0.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/eslint&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^9.6.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/html-minifier-terser&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^7.0.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/jsonwebtoken&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^9.0.9</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/lodash.clonedeep&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.9</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/lodash.get&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.4.9</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/lodash.isequal&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.8</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/lodash.set&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.3.9</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/node&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^22.15.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/nprogress&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^0.2.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/postcss-import&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^14.0.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/qrcode&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^1.5.5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/qs&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^6.9.18</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@types/sortablejs&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^1.15.8</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@typescript-eslint/eslint-plugin&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^8.31.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@typescript-eslint/parser&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^8.31.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vee-validate/zod&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.15.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vite-pwa/vitepress&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^1.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vitejs/plugin-vue&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^5.2.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vitejs/plugin-vue-jsx&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^4.1.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vue/reactivity&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^3.5.13</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vue/shared&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^3.5.13</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vue/test-utils&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^2.4.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vueuse/core&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^13.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vueuse/motion&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^3.0.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#39;@vueuse/integrations&#39;</span><span class="p">:</span><span class="w"> </span><span class="l">^13.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ant-design-vue</span><span class="p">:</span><span class="w"> </span><span class="l">^4.2.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">archiver</span><span class="p">:</span><span class="w"> </span><span class="l">^7.0.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">autoprefixer</span><span class="p">:</span><span class="w"> </span><span class="l">^10.4.21</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">axios</span><span class="p">:</span><span class="w"> </span><span class="l">^1.9.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">axios-mock-adapter</span><span class="p">:</span><span class="w"> </span><span class="l">^2.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cac</span><span class="p">:</span><span class="w"> </span><span class="l">^6.7.14</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">chalk</span><span class="p">:</span><span class="w"> </span><span class="l">^5.4.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cheerio</span><span class="p">:</span><span class="w"> </span><span class="l">^1.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">circular-dependency-scanner</span><span class="p">:</span><span class="w"> </span><span class="l">^2.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">class-variance-authority</span><span class="p">:</span><span class="w"> </span><span class="l">^0.7.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">clsx</span><span class="p">:</span><span class="w"> </span><span class="l">^2.1.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">commitlint-plugin-function-rules</span><span class="p">:</span><span class="w"> </span><span class="l">^4.0.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">consola</span><span class="p">:</span><span class="w"> </span><span class="l">^3.4.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cross-env</span><span class="p">:</span><span class="w"> </span><span class="l">^7.0.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cspell</span><span class="p">:</span><span class="w"> </span><span class="l">^8.19.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cssnano</span><span class="p">:</span><span class="w"> </span><span class="l">^7.0.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">cz-git</span><span class="p">:</span><span class="w"> </span><span class="l">^1.11.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">czg</span><span class="p">:</span><span class="w"> </span><span class="l">^1.11.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">dayjs</span><span class="p">:</span><span class="w"> </span><span class="l">^1.11.13</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">defu</span><span class="p">:</span><span class="w"> </span><span class="l">^6.1.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">depcheck</span><span class="p">:</span><span class="w"> </span><span class="l">^1.4.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">dotenv</span><span class="p">:</span><span class="w"> </span><span class="l">^16.5.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">echarts</span><span class="p">:</span><span class="w"> </span><span class="l">^5.6.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">element-plus</span><span class="p">:</span><span class="w"> </span><span class="l">^2.9.9</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint</span><span class="p">:</span><span class="w"> </span><span class="l">^9.25.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-config-turbo</span><span class="p">:</span><span class="w"> </span><span class="l">^2.5.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-command</span><span class="p">:</span><span class="w"> </span><span class="l">^3.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-eslint-comments</span><span class="p">:</span><span class="w"> </span><span class="l">^3.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-import-x</span><span class="p">:</span><span class="w"> </span><span class="l">^4.11.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-jsdoc</span><span class="p">:</span><span class="w"> </span><span class="l">^50.6.11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-jsonc</span><span class="p">:</span><span class="w"> </span><span class="l">^2.20.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-n</span><span class="p">:</span><span class="w"> </span><span class="l">^17.17.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-no-only-tests</span><span class="p">:</span><span class="w"> </span><span class="l">^3.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-perfectionist</span><span class="p">:</span><span class="w"> </span><span class="l">^4.12.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-prettier</span><span class="p">:</span><span class="w"> </span><span class="l">^5.2.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-regexp</span><span class="p">:</span><span class="w"> </span><span class="l">^2.7.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-unicorn</span><span class="p">:</span><span class="w"> </span><span class="l">^59.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-unused-imports</span><span class="p">:</span><span class="w"> </span><span class="l">^4.1.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-vitest</span><span class="p">:</span><span class="w"> </span><span class="l">^0.5.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">eslint-plugin-vue</span><span class="p">:</span><span class="w"> </span><span class="l">^10.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">execa</span><span class="p">:</span><span class="w"> </span><span class="l">^9.5.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">find-up</span><span class="p">:</span><span class="w"> </span><span class="l">^7.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">get-port</span><span class="p">:</span><span class="w"> </span><span class="l">^7.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">globals</span><span class="p">:</span><span class="w"> </span><span class="l">^16.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">h3</span><span class="p">:</span><span class="w"> </span><span class="l">^1.15.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">happy-dom</span><span class="p">:</span><span class="w"> </span><span class="l">^17.4.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">html-minifier-terser</span><span class="p">:</span><span class="w"> </span><span class="l">^7.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">husky</span><span class="p">:</span><span class="w"> </span><span class="l">^9.1.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">is-ci</span><span class="p">:</span><span class="w"> </span><span class="l">^4.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">jsonc-eslint-parser</span><span class="p">:</span><span class="w"> </span><span class="l">^2.4.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">jsonwebtoken</span><span class="p">:</span><span class="w"> </span><span class="l">^9.0.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lint-staged</span><span class="p">:</span><span class="w"> </span><span class="l">^15.5.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lodash.clonedeep</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lodash.get</span><span class="p">:</span><span class="w"> </span><span class="l">^4.4.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lodash.set</span><span class="p">:</span><span class="w"> </span><span class="l">^4.3.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lodash.isequal</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">lucide-vue-next</span><span class="p">:</span><span class="w"> </span><span class="l">^0.503.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">medium-zoom</span><span class="p">:</span><span class="w"> </span><span class="l">^1.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">naive-ui</span><span class="p">:</span><span class="w"> </span><span class="l">^2.41.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">nitropack</span><span class="p">:</span><span class="w"> </span><span class="l">^2.11.11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">nprogress</span><span class="p">:</span><span class="w"> </span><span class="l">^0.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ora</span><span class="p">:</span><span class="w"> </span><span class="l">^8.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pinia</span><span class="p">:</span><span class="w"> </span><span class="l">^3.0.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pinia-plugin-persistedstate</span><span class="p">:</span><span class="w"> </span><span class="l">^4.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">pkg-types</span><span class="p">:</span><span class="w"> </span><span class="l">^2.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">playwright</span><span class="p">:</span><span class="w"> </span><span class="l">^1.52.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">postcss</span><span class="p">:</span><span class="w"> </span><span class="l">^8.5.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">postcss-antd-fixes</span><span class="p">:</span><span class="w"> </span><span class="l">^0.2.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">postcss-html</span><span class="p">:</span><span class="w"> </span><span class="l">^1.8.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">postcss-import</span><span class="p">:</span><span class="w"> </span><span class="l">^16.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">postcss-preset-env</span><span class="p">:</span><span class="w"> </span><span class="l">^10.1.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">postcss-scss</span><span class="p">:</span><span class="w"> </span><span class="l">^4.0.9</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">prettier</span><span class="p">:</span><span class="w"> </span><span class="l">^3.5.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">prettier-plugin-tailwindcss</span><span class="p">:</span><span class="w"> </span><span class="l">^0.6.11</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">publint</span><span class="p">:</span><span class="w"> </span><span class="l">^0.3.12</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">qrcode</span><span class="p">:</span><span class="w"> </span><span class="l">^1.5.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">qs</span><span class="p">:</span><span class="w"> </span><span class="l">^6.14.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">radix-vue</span><span class="p">:</span><span class="w"> </span><span class="l">^1.9.17</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resolve.exports</span><span class="p">:</span><span class="w"> </span><span class="l">^2.0.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">rimraf</span><span class="p">:</span><span class="w"> </span><span class="l">^6.0.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">rollup</span><span class="p">:</span><span class="w"> </span><span class="l">^4.40.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">rollup-plugin-visualizer</span><span class="p">:</span><span class="w"> </span><span class="l">^5.14.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">sass</span><span class="p">:</span><span class="w"> </span><span class="l">^1.87.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">secure-ls</span><span class="p">:</span><span class="w"> </span><span class="l">^2.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">sortablejs</span><span class="p">:</span><span class="w"> </span><span class="l">^1.15.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint</span><span class="p">:</span><span class="w"> </span><span class="l">^16.19.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-config-recess-order</span><span class="p">:</span><span class="w"> </span><span class="l">^6.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-config-recommended</span><span class="p">:</span><span class="w"> </span><span class="l">^16.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-config-recommended-scss</span><span class="p">:</span><span class="w"> </span><span class="l">^14.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-config-recommended-vue</span><span class="p">:</span><span class="w"> </span><span class="l">^1.6.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-config-standard</span><span class="p">:</span><span class="w"> </span><span class="l">^38.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-order</span><span class="p">:</span><span class="w"> </span><span class="l">^7.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-prettier</span><span class="p">:</span><span class="w"> </span><span class="l">^5.0.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">stylelint-scss</span><span class="p">:</span><span class="w"> </span><span class="l">^6.11.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tailwind-merge</span><span class="p">:</span><span class="w"> </span><span class="l">^2.6.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tailwindcss</span><span class="p">:</span><span class="w"> </span><span class="l">^3.4.17</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tailwindcss-animate</span><span class="p">:</span><span class="w"> </span><span class="l">^1.0.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">theme-colors</span><span class="p">:</span><span class="w"> </span><span class="l">^0.1.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tippy.js</span><span class="p">:</span><span class="w"> </span><span class="l">^6.3.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">turbo</span><span class="p">:</span><span class="w"> </span><span class="l">^2.5.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">typescript</span><span class="p">:</span><span class="w"> </span><span class="l">^5.8.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">unbuild</span><span class="p">:</span><span class="w"> </span><span class="l">^3.5.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">unplugin-element-plus</span><span class="p">:</span><span class="w"> </span><span class="l">^0.10.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vee-validate</span><span class="p">:</span><span class="w"> </span><span class="l">^4.15.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite</span><span class="p">:</span><span class="w"> </span><span class="l">^6.3.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite-plugin-compression</span><span class="p">:</span><span class="w"> </span><span class="l">^0.5.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite-plugin-dts</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite-plugin-html</span><span class="p">:</span><span class="w"> </span><span class="l">^3.2.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite-plugin-lazy-import</span><span class="p">:</span><span class="w"> </span><span class="l">^1.0.7</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite-plugin-pwa</span><span class="p">:</span><span class="w"> </span><span class="l">^1.0.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vite-plugin-vue-devtools</span><span class="p">:</span><span class="w"> </span><span class="l">^7.7.6</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vitepress</span><span class="p">:</span><span class="w"> </span><span class="l">^1.6.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vitepress-plugin-group-icons</span><span class="p">:</span><span class="w"> </span><span class="l">^1.5.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vitest</span><span class="p">:</span><span class="w"> </span><span class="l">^3.1.2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue</span><span class="p">:</span><span class="w"> </span><span class="l">^3.5.13</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue-eslint-parser</span><span class="p">:</span><span class="w"> </span><span class="l">^10.1.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue-i18n</span><span class="p">:</span><span class="w"> </span><span class="l">^11.1.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue-json-viewer</span><span class="p">:</span><span class="w"> </span><span class="l">^3.0.4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue-router</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue-tippy</span><span class="p">:</span><span class="w"> </span><span class="l">^6.7.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vue-tsc</span><span class="p">:</span><span class="w"> </span><span class="m">2.1.10</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vxe-pc-ui</span><span class="p">:</span><span class="w"> </span><span class="l">^4.5.14</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">vxe-table</span><span class="p">:</span><span class="w"> </span><span class="l">^4.13.14</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">watermark-js-plus</span><span class="p">:</span><span class="w"> </span><span class="l">^1.6.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">zod</span><span class="p">:</span><span class="w"> </span><span class="l">^3.24.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">zod-defaults</span><span class="p">:</span><span class="w"> </span><span class="l">^0.1.3</span><span class="w">
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>workspace:*</code>: 用的是以<code>@vben/</code>开头的依赖, 这些包在<code>internal/*</code>和<code>scripts/*</code>目录下</li>
+<li><code>catalog:</code>: 用的是第三方依赖</li>
+</ul>
+<h3 id="scripts">scripts
+</h3><p><code>package.json</code>里的<code>scripts</code>字段是项目的脚本, 可以在命令行中执行。
+在本项目中, 常用的脚本有:</p>
+<ul>
+<li><code>dev</code>: 启动开发服务器</li>
+<li><code>build</code>: 构建项目</li>
+<li><code>test</code>: 运行测试</li>
+<li><code>lint</code>: 检查代码格式</li>
+<li><code>format</code>: 格式化代码</li>
+<li><code>version</code>: 版本管理</li>
+<li><code>commit</code>: 提交代码</li>
+</ul>
+<p>官方<code>scripts</code>的使用文档：<a class="link" href="https://docs.npmjs.com/cli/v11/using-npm/scripts#pre--post-scripts"  target="_blank" rel="noopener"
+    >scripts</a>,
+比较重要的有<code>生命周期</code>脚本：</p>
+<ul>
+<li><code>pre&lt;event&gt;</code>: <code>event</code>事件前执行的脚本, 如<code>preinstall</code>在安装前执行。</li>
+<li><code>event</code>: 事件脚本, 如<code>install</code>在安装时执行。</li>
+<li><code>post&lt;event&gt;</code>: <code>event</code>事件后执行的脚本, 如<code>postinstall</code>在安装后执行。</li>
+</ul>
+<p>本项目中，当运行<code>pnpm install</code>时，具体执行顺序如下:</p>
+<ol>
+<li>
+<p>执行<code>preinstall</code>脚本(<code>npx only-allow pnpm</code>)</p>
+</li>
+<li>
+<p>执行<code>install</code>脚本</p>
+</li>
+<li>
+<p>执行<code>postinstall</code>脚本(<code>pnpm -r run stub --if-present</code>)</p>
+<ul>
+<li><code>pnpm -r run stub --if-present</code>会找本项目下的所有包的<code>package.json</code>, 如果有<code>stub</code>脚本, 则执行。</li>
+<li><code>stub</code>脚本会在<code>package.json</code>的<code>scripts</code>字段中定义, 如下:
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="s2">&#34;scripts&#34;</span><span class="err">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;stub&#34;</span><span class="p">:</span> <span class="s2">&#34;pnpm unbuild --stub&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>找到的包有很多，比如:<code>internal/lint-configs/eslint-config</code>执行<code>pnpm unbuild --stub</code>
+<code>unbuild</code>是打包工具,会生成<code>cjs</code>和<code>mjs</code>到<code>dist</code>目录下</li>
+</ul>
+</li>
+<li>
+<p>执行<code>prepare</code>脚本(<code>is-ci || husky</code>)</p>
+<ul>
+<li><code>is-ci</code>是判断是否在CI环境下</li>
+<li><code>husky</code>是<code>git</code>的钩子工具, 可以在<code>git</code>提交前执行一些脚本, 如:格式化代码.
+本项目配置在<code>.husky/*</code>目录下, 具体有三个文件:
+<ul>
+<li><code>commit-msg</code>是在提交消息前执行的脚本:</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">echo Start running commit-msg hook...
+</span></span><span class="line"><span class="cl"># Check whether the git commit information is standardized
+</span></span><span class="line"><span class="cl">pnpm exec commitlint --edit &#34;$1&#34;
+</span></span><span class="line"><span class="cl">echo Run commit-msg hook done.
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>post-merge</code>是在合并分支后执行的脚本, 如:检查代码格式是否正确。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pnpm install
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li><code>pre-commit</code>是在提交前执行的脚本, 如:检查代码格式是否正确。</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">pnpm vsh code-workspace --auto-commit
+</span></span><span class="line"><span class="cl"># Format and submit code according to lintstagedrc.js configuration
+</span></span><span class="line"><span class="cl">pnpm exec lint-staged
+</span></span><span class="line"><span class="cl">echo Run pre-commit hook done.
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+</li>
+</ol>
+
+</section>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/web/">Web</a>
+        
+    </section>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <script type="module">
+        import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
+        pageviewCount({
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    <script type="module">
+        import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+        commentCount({
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        发表了29篇文章 · 
+        总计49.33k字
+    </section>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
+    <span id="busuanzi_container_site_uv">您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者</span>
+    <section class="copyright">
+        &copy; 
+        
+        2025 QuincyGao Blog
+    </section>
+    
+    <section class="powerby">
+        
+        <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025368587号-1| </a>使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script>
+    let s1 = '2025-01-10'; 
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let timeDifference = s2.getTime() - s1.getTime();
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = days + "天" + hours + "小时" + minutes + "分钟";
+    document.getElementById('runningdays').innerHTML = result;
+</script>
+
+
+
+<a href="#" id="back-to-top" title="返回顶部"></a>
+
+
+<style>
+  #back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    width: 55px;
+    height: 55px;
+    border-radius: 7px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: var(--shadow-l2);
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+  }
+
+  #back-to-top:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    height: 10px;
+    width: 10px;
+    border-width: 0 0 2px 2px;
+    border-color: var(--back-to-top-color);
+    border-style: solid;
+  }
+
+  #back-to-top:hover:before {
+    border-color: #2674e0;
+  }
+
+   
+  @media screen and (max-width: 768px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1024px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1280px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 55px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1536px) {
+    #back-to-top {
+      visibility: hidden;
+    }
+  }
+</style>
+
+
+<script>
+  function backToTop() {
+    document.documentElement.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+
+  window.onload = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop > 0) {
+      totopBtn.style.display = 'inline'
+    } else {
+      totopBtn.style.display = 'none'
+    }
+  }
+
+  window.onscroll = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop < 200) {
+      totopBtn.style.display = 'none'
+    } else {
+      totopBtn.style.display = 'inline'
+      totopBtn.addEventListener('click', backToTop, false)
+    }
+  }
+</script>
+
+    </body>
+</html>

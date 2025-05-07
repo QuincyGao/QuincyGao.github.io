@@ -6,7 +6,15 @@
         <description>Recent content in 分类 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 28 Apr 2025 09:38:39 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 07 May 2025 09:48:25 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>web前端</title>
+        <link>https://QuincyGao.github.io/categories/web/</link>
+        <pubDate>Wed, 07 May 2025 09:48:25 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/categories/web/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/categories/web/web.svg" alt="Featured image of post web前端" /&gt;</description>
+        </item>
+        <item>
         <title>kamailio</title>
         <link>https://QuincyGao.github.io/categories/kamailio/</link>
         <pubDate>Mon, 28 Apr 2025 09:38:39 +0800</pubDate>
