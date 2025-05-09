@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,20 +15,20 @@
                 href="https://QuincyGao.github.io/"
                 />
   </url><url>
+    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/kamailio-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
+  </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/tags/web/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/categories/web/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +41,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
+    <lastmod>2025-05-09T15:55:02+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -53,11 +53,14 @@
                 href="https://QuincyGao.github.io/categories/"
                 />
   </url><url>
-    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
-    <lastmod>2025-04-28T09:38:39+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/p/vue-vben-admin%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E4%B8%80-package.json/</loc>
+    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
   </url><url>
-    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
-    <lastmod>2025-04-28T09:38:39+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/tags/web/</loc>
+    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/web/</loc>
+    <lastmod>2025-05-07T09:48:25+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio%E7%9A%84%E7%BC%93%E5%AD%98htable/</loc>
     <lastmod>2025-04-28T09:38:39+08:00</lastmod>
