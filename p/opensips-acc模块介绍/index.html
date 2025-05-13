@@ -1,0 +1,2118 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景 acc 模块用来记录会话信息到syslog,数据库, AAA和EVENTS中，do_accounting()函数并不是记录信息，只是标记会话信息，当会话完成时才去记录。\n">
+<title>opensips acc模块介绍</title>
+
+<link rel='canonical' href='https://QuincyGao.github.io/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/'>
+
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="opensips acc模块介绍">
+<meta property='og:description' content="背景 acc 模块用来记录会话信息到syslog,数据库, AAA和EVENTS中，do_accounting()函数并不是记录信息，只是标记会话信息，当会话完成时才去记录。\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/'>
+<meta property='og:site_name' content='QuincyGao Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-05-13T13:01:51&#43;08:00'/><meta property='article:modified_time' content='2025-05-13T13:02:51&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup.jpg' />
+<meta name="twitter:title" content="opensips acc模块介绍">
+<meta name="twitter:description" content="背景 acc 模块用来记录会话信息到syslog,数据库, AAA和EVENTS中，do_accounting()函数并不是记录信息，只是标记会话信息，当会话完成时才去记录。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup.jpg' />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/QuincyGao_hu9863765197253960442.jpg" width="300"
+                            height="225" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">QuincyGao Blog</a></h1>
+            <h2 class="site-description">事在人为，境由心造</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://bilibili.com'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Bilibili-Logo--Streamline-Ultimate.svg" height="24" width="24"><desc>Bilibili Logo Streamline Icon: https://streamlinehq.com</desc><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.90263 6.93445H19.0575s1.4674 0 1.4674 1.46739v9.27356s0 1.4673 -1.4674 1.4673H4.90263s-1.46739 0 -1.46739 -1.4673V8.40184s0 -1.46739 1.46739 -1.46739Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M14.7251 15.8387c-0.0599 0.2695 -0.3493 0.6189 -0.9982 0.6189 -1.1779 0 -1.707 -1.4674 -1.707 -1.4674s-0.529 1.4674 -1.7069 1.4674c-0.68879 0 -0.99824 -0.3494 -0.99824 -0.6189" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.65306 4.24927c-1.03607 0.00264 -2.02881 0.41607 -2.76049 1.14962C1.16089 6.13245 0.749997 7.12623 0.75 8.16231V17.925c0 1.0351 0.41121 2.0279 1.14318 2.7598 0.73197 0.732 1.72472 1.1432 2.75988 1.1432h0.99823v0.2196c0.0276 0.3053 0.16838 0.5892 0.39465 0.7959 0.22627 0.2067 0.52168 0.3213 0.82817 0.3213 0.30649 0 0.6019 -0.1146 0.82818 -0.3213 0.22627 -0.2067 0.36704 -0.4906 0.39465 -0.7959v-0.2495h7.80616v0.2495c0.0276 0.3053 0.1683 0.5892 0.3946 0.7959 0.2263 0.2067 0.5217 0.3213 0.8282 0.3213s0.6019 -0.1146 0.8282 -0.3213c0.2262 -0.2067 0.367 -0.4906 0.3946 -0.7959v-0.2495h0.9982c1.0352 0 2.028 -0.4112 2.7599 -1.1432 0.732 -0.732 1.1432 -1.7247 1.1432 -2.7599V8.16231c0 -1.03608 -0.4109 -2.02986 -1.1426 -2.76342 -0.7317 -0.73355 -1.7244 -1.14698 -2.7605 -1.14962H4.65306Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m5.72116 11.6761 3.84317 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m18.2389 11.6761 -3.8431 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.12045 0.835205 9.53438 4.24914" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M17.8396 0.835205 14.4257 4.24914" stroke-width="1.5"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/QuincyGao'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>github [#142]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 507.93 507.93" xml:space="preserve">
+<g>
+	<rect x="103.527" y="225.828" style="fill:#FFFFFF;" width="300.9" height="253.9"/>
+	<polygon style="fill:#FFFFFF;" points="53.427,197.528 454.427,197.528 253.927,32.428 	"/>
+</g>
+<path style="fill:#56ACE0;" d="M253.927,68.928l-20.1,16.6h12.7c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-47l-21,17.3h19.9
+	c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-53.2c-0.3,0-0.5-0.1-0.8-0.1l-12.4,10.2h243.8L253.927,68.928z"/>
+<rect x="202.427" y="337.028" style="fill:#FFC10D;" width="103" height="142.6"/>
+<path style="fill:#194F82;" d="M501.627,199.828l-238.7-196.6c-5.2-4.3-12.7-4.3-17.9,0l-239.9,197.6c-4.6,3.8-6.3,10-4.3,15.7
+	c2,5.6,7.3,9.3,13.3,9.3h61.1v268c0,7.8,6.3,14.1,14.1,14.1h329.2c7.8,0,14.1-6.3,14.1-14.1v-268h61.1c0.1,0,0.1,0,0.1,0
+	c7.8,0,14.1-6.3,14.1-14.1C508.027,206.728,505.427,202.328,501.627,199.828z M305.427,479.628h-103v-142.6h103V479.628z
+	 M404.427,479.628h-70.8v-156.7c0-7.8-6.3-14.1-14.1-14.1h-131.2c-7.8,0-14.1,6.3-14.1,14.1v156.7h-70.8v-253.8h300.9v253.8H404.427
+	z M53.427,197.528l200.5-165.1l200.5,165.2h-401V197.528z"/>
+</svg>
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M76.412,326.853h85.075c6.012,0,10.925-4.848,10.925-10.925V32.97
+	c0-6.012-4.848-10.925-10.925-10.925H76.412c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C65.487,322.004,70.4,326.853,76.412,326.853z"/>
+<path style="fill:#FFC10D;" d="M231.564,326.853h85.075c5.107,0,9.374-3.556,10.602-8.275l0.388-285.608
+	c0-6.012-4.848-10.925-10.925-10.925h-85.139c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C220.574,322.004,225.552,326.853,231.564,326.853z"/>
+<g>
+	<path style="fill:#FFFFFF;" d="M118.885,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C128.711,260.073,124.315,255.677,118.885,255.677z"/>
+	<path style="fill:#FFFFFF;" d="M274.036,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C283.863,260.073,279.467,255.677,274.036,255.677z"/>
+</g>
+<g>
+	<path style="fill:#194F82;" d="M118.885,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C87.273,282.828,101.495,296.921,118.885,296.921z M118.885,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826S113.519,255.547,118.885,255.547z"/>
+	<path style="fill:#194F82;" d="M98.198,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,82.295,92.186,87.143,98.198,87.143z"/>
+	<path style="fill:#194F82;" d="M98.198,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,136.145,92.186,140.994,98.198,140.994z"/>
+	<path style="fill:#194F82;" d="M274.036,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C242.489,282.828,256.582,296.921,274.036,296.921z M274.036,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826C264.275,259.943,268.671,255.547,274.036,255.547z"/>
+	<path style="fill:#194F82;" d="M253.35,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,82.295,247.337,87.143,253.35,87.143z"/>
+	<path style="fill:#194F82;" d="M253.35,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,136.145,247.337,140.994,253.35,140.994z"/>
+	<path style="fill:#194F82;" d="M381.737,203.378h-32.388V32.97c0-18.036-14.675-32.711-32.711-32.711h-85.075
+		c-18.036,0-32.711,14.675-32.711,32.711v282.958c0,3.879,0.711,7.499,1.939,10.925h-8.404c1.228-3.426,1.939-7.111,1.939-10.925
+		V32.97c0-18.036-14.675-32.711-32.711-32.711H76.412c-18.036,0-32.711,14.675-32.711,32.711v170.473H10.925
+		C4.913,203.442,0,208.291,0,214.368v167.046c0,6.012,4.848,10.925,10.925,10.925h370.747c6.012,0,10.925-4.848,10.925-10.925
+		V214.368C392.598,208.291,387.749,203.378,381.737,203.378z M220.574,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925l-0.388,285.608c-1.164,4.719-5.43,8.275-10.602,8.275h-84.945
+		c-6.012,0-10.925-4.848-10.925-10.925V32.97H220.574z M65.487,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925v282.958c0,6.012-4.848,10.925-10.925,10.925H76.412c-6.012,0-10.925-4.848-10.925-10.925
+		C65.487,315.992,65.487,32.97,65.487,32.97z M370.812,370.424H21.851V225.164h21.786v112.485c0,6.012,4.848,10.925,10.925,10.925
+		h283.539c6.012,0,10.925-4.848,10.925-10.925l0.388-112.485h21.463v145.261H370.812z"/>
+</g>
+<path style="fill:#56ACE0;" d="M349.026,337.778c0,6.012-4.848,10.925-10.925,10.925H54.626c-6.012,0-10.925-4.848-10.925-10.925
+	V225.293H21.851v145.261h348.962V225.228h-21.463L349.026,337.778z"/>
+</svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.609 392.609" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
+	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
+<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
+	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
+	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
+<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
+	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
+	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
+<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
+	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
+	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
+	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
+	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
+	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
+	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
+	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
+</svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#56ACE0;" d="M120.469,49.455c0,15.257-12.412,27.669-27.669,27.669c-15.192,0-27.669-12.412-27.669-27.669
+	S77.543,21.786,92.8,21.786C108.057,21.786,120.469,34.198,120.469,49.455z"/>
+<path style="fill:#FFFFFF;" d="M62.287,265.503h61.026v105.244h-19.588v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.012,0-10.925,4.849-10.925,10.925v42.861H62.287V265.503z"/>
+<path style="fill:#FFC10D;" d="M144.129,181.657v62.061H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C123.572,135.822,144.129,156.38,144.129,181.657z"/>
+<path style="fill:#FFFFFF;" d="M272.129,49.455c0-15.257,12.412-27.669,27.669-27.669c15.257,0,27.669,12.412,27.669,27.669
+	s-12.412,27.669-27.669,27.669C284.606,77.123,272.129,64.711,272.129,49.455z"/>
+<path style="fill:#FFC10D;" d="M269.156,265.503h61.026v105.244h-19.523v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653L269.156,265.503L269.156,265.503z"/>
+<path style="fill:#56ACE0;" d="M351.127,181.657v62.061H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C330.57,135.822,351.127,156.38,351.127,181.657z"/>
+<g>
+	<path style="fill:#194F82;" d="M98.295,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.877c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C165.98,144.356,135.661,113.972,98.295,113.972z M144.129,243.717
+		H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834L144.129,243.717
+		L144.129,243.717z M123.378,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.012,0-10.925,4.849-10.925,10.925
+		v42.861H62.287V265.503h61.026L123.378,370.747L123.378,370.747z"/>
+	<path style="fill:#194F82;" d="M92.8,0C65.519,0,43.281,22.174,43.281,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S120.081,0,92.8,0z M92.8,77.123c-15.192,0-27.669-12.412-27.669-27.669S77.543,21.786,92.8,21.786
+		s27.669,12.412,27.669,27.669S108.057,77.123,92.8,77.123z"/>
+	<path style="fill:#194F82;" d="M305.228,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.941c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C372.913,144.356,342.594,113.972,305.228,113.972z M351.127,243.717
+		H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834V243.717L351.127,243.717z
+		 M330.311,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653
+		V265.503h61.026v105.244H330.311z"/>
+	<path style="fill:#194F82;" d="M299.798,0c-27.281,0-49.455,22.174-49.455,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S327.014,0,299.798,0z M299.798,77.123c-15.192,0-27.669-12.412-27.669-27.669
+		s12.412-27.669,27.669-27.669s27.669,12.412,27.669,27.669S315.055,77.123,299.798,77.123z"/>
+</g>
+</svg>
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.533 392.533" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M196.267,21.851c-96.194,0-174.481,78.287-174.481,174.481s78.287,174.481,174.481,174.481
+	s174.481-78.287,174.481-174.481S292.461,21.851,196.267,21.851z"/>
+<path style="fill:#FFC10D;" d="M196.267,348.962c-84.17,0-152.695-68.461-152.695-152.695s68.525-152.63,152.695-152.63
+	s152.695,68.461,152.695,152.695S280.436,348.962,196.267,348.962z"/>
+<path style="fill:#FFFFFF;" d="M131.814,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	c8.21,0,14.933-6.723,14.933-14.933C146.747,132.267,140.024,125.543,131.814,125.543z"/>
+<path style="fill:#194F82;" d="M131.814,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+	s36.719-16.485,36.719-36.719S152.048,103.758,131.814,103.758z M131.814,155.41c-8.21,0-14.933-6.723-14.933-14.933
+	c0-8.21,6.723-14.933,14.933-14.933c8.21,0,14.933,6.723,14.933,14.933C146.747,148.752,140.024,155.41,131.814,155.41z"/>
+<path style="fill:#FFFFFF;" d="M260.719,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	s14.933-6.723,14.933-14.933S268.994,125.543,260.719,125.543z"/>
+<g>
+	<path style="fill:#194F82;" d="M260.719,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+		c20.234,0,36.719-16.485,36.719-36.719S280.954,103.758,260.719,103.758z M260.719,155.41c-8.21,0-14.933-6.723-14.933-14.933
+		c0-8.21,6.723-14.933,14.933-14.933s14.933,6.723,14.933,14.933C275.653,148.752,268.994,155.41,260.719,155.41z"/>
+	<path style="fill:#194F82;" d="M196.267,0C87.984,0,0,87.984,0,196.267s87.984,196.267,196.267,196.267
+		s196.267-87.984,196.267-196.267S304.549,0,196.267,0z M196.267,370.747c-96.194,0-174.481-78.287-174.481-174.481
+		S100.073,21.786,196.267,21.786s174.481,78.287,174.481,174.481S292.461,370.747,196.267,370.747z"/>
+	<path style="fill:#194F82;" d="M279.079,265.051c-45.64,45.64-119.984,45.64-165.689,0c-4.267-4.267-11.119-4.202-15.451,0
+		c-4.848,4.719-3.943,10.99,0,15.451c55.661,55.467,143.515,53.075,196.525,0c3.685-4.784,5.042-10.731,0-15.451
+		C290.133,260.913,283.345,260.784,279.079,265.051z"/>
+</g>
+</svg>
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#重要参数解析">重要参数解析</a></li>
+    <li><a href="#重要函数解析">重要函数解析</a>
+      <ol>
+        <li><a href="#do_accountingtype-flags-table">do_accounting(type, [flags], [table])</a></li>
+        <li><a href="#drop_accountingtype-flags">drop_accounting([type], [flags])</a></li>
+        <li><a href="#acc_log_requestcomment">acc_log_request(comment)</a></li>
+        <li><a href="#acc_db_requestcomment-table">acc_db_request(comment, table)</a></li>
+        <li><a href="#acc_aaa_requestcomment">acc_aaa_request(comment)</a></li>
+        <li><a href="#acc_evi_requestcomment">acc_evi_request(comment)</a></li>
+        <li><a href="#acc_new_leg">acc_new_leg()</a></li>
+        <li><a href="#acc_load_ctx_from_dlg">acc_load_ctx_from_dlg()</a></li>
+        <li><a href="#acc_unload_ctx_from_dlg">acc_unload_ctx_from_dlg()</a></li>
+      </ol>
+    </li>
+    <li><a href="#events事件">EVENTS事件</a>
+      <ol>
+        <li><a href="#e_acc_cdr">E_ACC_CDR</a></li>
+        <li><a href="#e_acc_event">E_ACC_EVENT</a></li>
+        <li><a href="#e_acc_missed_event">E_ACC_MISSED_EVENT</a></li>
+      </ol>
+    </li>
+    <li><a href="#实战">实战</a>
+      <ol>
+        <li><a href="#输出到syslog">输出到syslog</a>
+          <ol>
+            <li><a href="#配置文件">配置文件</a></li>
+            <li><a href="#输出的结果">输出的结果</a></li>
+          </ol>
+        </li>
+        <li><a href="#输出到数据库">输出到数据库</a>
+          <ol>
+            <li><a href="#配置文件-1">配置文件</a></li>
+            <li><a href="#输出的结果-1">输出的结果</a></li>
+          </ol>
+        </li>
+        <li><a href="#输出到events">输出到EVENTS</a>
+          <ol>
+            <li><a href="#配置文件-2">配置文件</a></li>
+            <li><a href="#输出结果">输出结果</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+                <img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup_hu15834032962917921068.jpg"
+                        srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup_hu15834032962917921068.jpg 800w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup_hu13824835664041932040.jpg 1600w"
+                        width="800" 
+                        height="640" 
+                        loading="lazy"
+                        alt="Featured image of post opensips acc模块介绍" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/opensips/" style="background-color: #d09daa; color: #fff;">
+                opensips
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">opensips acc模块介绍</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-05-13</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 7 分钟,共3256 字
+                </time>
+            </div>
+        
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">0</span> 次浏览
+            </time>
+        </div>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">0</span> 条评论
+            </time>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="背景">背景
+</h2><p><code>acc</code> 模块用来记录会话信息到<code>syslog</code>,<code>数据库</code>, <code>AAA</code>和<code>EVENTS</code>中，<code>do_accounting()</code>函数并不是记录信息，只是标记会话信息，当会话完成时才去记录。</p>
+<p>最小的记录信息包括:</p>
+<ul>
+<li>请求<code>method</code></li>
+<li>From 头的<code>tag</code></li>
+<li>To 头的<code>tag</code></li>
+<li><code>Call-ID</code></li>
+<li>响应的<code>code</code></li>
+<li>响应的<code>reason</code></li>
+<li>会话完成的<code>时间戳</code></li>
+</ul>
+<p>官方文档地址: <a class="link" href="https://opensips.org/docs/modules/3.3.x/acc.html"  target="_blank" rel="noopener"
+    >acc</a>,本次测试的<code>opensips</code>版本是:</p>
+<blockquote>
+<p>version: opensips 3.3.10 (x86_64/linux)</p>
+</blockquote>
+<h2 id="重要参数解析">重要参数解析
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 记录响铃
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;early_media&#34;, 1)
+</span></span><span class="line"><span class="cl"># 上报CANCEL消息
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;report_cancels&#34;, 1)
+</span></span><span class="line"><span class="cl"># 控制请求方向
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;detect_direction&#34;, 1)
+</span></span><span class="line"><span class="cl"># 定义额外的参数
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;extra_fields&#34;, &#34;log: a-&gt;My_a_Field; b&#34;)
+</span></span><span class="line"><span class="cl"># 定义多条腿的参数
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;leg_fields&#34;, &#34;log: a-&gt;My_a_Field; b&#34;)
+</span></span><span class="line"><span class="cl"># 定义日志级别
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;log_level&#34;, 2)
+</span></span><span class="line"><span class="cl"># 定义数据表名
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;db_table_acc&#34;, &#34;acc&#34;)
+</span></span><span class="line"><span class="cl"># 定义失败的数据表名
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;db_table_missed_calls&#34;, &#34;missed_calls&#34;)
+</span></span><span class="line"><span class="cl"># 数据库地址
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;db_url&#34;, &#34;DBURL&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="重要函数解析">重要函数解析
+</h2><h3 id="do_accountingtype-flags-table">do_accounting(type, [flags], [table])
+</h3><ul>
+<li>
+<p>type: 类型，有以下几种类型:</p>
+<ul>
+<li><code>log</code>: syslog</li>
+<li><code>db</code>: database</li>
+<li><code>aaa</code>: aaa</li>
+<li><code>evi</code>: event</li>
+</ul>
+</li>
+<li>
+<p>flags: 标志位，有以下几种标志位:</p>
+<ul>
+<li><code>cdr</code>: 记录CDR</li>
+<li><code>missed</code>: 记录未接电话</li>
+<li><code>failed</code>: 当状态码&gt;=300,记录失败信息</li>
+</ul>
+</li>
+<li>
+<p>table: 数据表名</p>
+</li>
+</ul>
+<h3 id="drop_accountingtype-flags">drop_accounting([type], [flags])
+</h3><p>重置flag和types, 参数和<code>do_accounting</code>函数一样。</p>
+<ul>
+<li>不带参数时，所有的记录都会停止。</li>
+<li>带一个参数时，只会停止指定的类型。</li>
+<li>带两个参数时，只会停止指定的类型和标志位。</li>
+</ul>
+<h3 id="acc_log_requestcomment">acc_log_request(comment)
+</h3><p>上报请求到日志,<code>comment</code> 必须是带有错误码的字符串,例如:<code>480 NoBody Home</code></p>
+<h3 id="acc_db_requestcomment-table">acc_db_request(comment, table)
+</h3><p>上报请求到数据库,<code>comment</code>和<code>acc_log_request</code>一样</p>
+<h3 id="acc_aaa_requestcomment">acc_aaa_request(comment)
+</h3><p>上报请求到AAA,<code>comment</code>和<code>acc_log_request</code>一样</p>
+<h3 id="acc_evi_requestcomment">acc_evi_request(comment)
+</h3><p>上报请求到EVENTS,<code>comment</code>和<code>acc_log_request</code>一样</p>
+<h3 id="acc_new_leg">acc_new_leg()
+</h3><p>创建一个新腿,所有的参数为null.</p>
+<h3 id="acc_load_ctx_from_dlg">acc_load_ctx_from_dlg()
+</h3><p>加载和导出当前在用的dialog的accouting context. 必须和<code>load_dialog_ctx()</code>一起使用</p>
+<h3 id="acc_unload_ctx_from_dlg">acc_unload_ctx_from_dlg()
+</h3><p>卸载accouting context</p>
+<h2 id="events事件">EVENTS事件
+</h2><h3 id="e_acc_cdr">E_ACC_CDR
+</h3><p>cdr事件,参数:</p>
+<ul>
+<li><code>method</code></li>
+<li><code>from_tag</code></li>
+<li><code>to_tag</code></li>
+<li><code>callid</code></li>
+<li><code>sip_code</code></li>
+<li><code>sip_reason</code></li>
+<li><code>time</code></li>
+<li><code>evi_extra</code></li>
+<li><code>evi_extra_bye</code></li>
+<li><code>multi_leg_info</code></li>
+<li><code>multi_leg_bye_info</code></li>
+<li><code>duration</code></li>
+<li><code>ms_duration</code></li>
+<li><code>setuptime</code></li>
+<li><code>created</code></li>
+</ul>
+<h3 id="e_acc_event">E_ACC_EVENT
+</h3><ul>
+<li><code>method</code></li>
+<li><code>from_tag</code></li>
+<li><code>to_tag</code></li>
+<li><code>callid</code></li>
+<li><code>sip_code</code></li>
+<li><code>sip_reason</code></li>
+<li><code>time</code></li>
+<li><code>evi_extra</code></li>
+<li><code>multi_leg_info</code></li>
+</ul>
+<h3 id="e_acc_missed_event">E_ACC_MISSED_EVENT
+</h3><ul>
+<li><code>method</code></li>
+<li><code>from_tag</code></li>
+<li><code>to_tag</code></li>
+<li><code>callid</code></li>
+<li><code>sip_code</code></li>
+<li><code>sip_reason</code></li>
+<li><code>time</code></li>
+<li><code>evi_extra</code></li>
+<li><code>multi_leg_info</code></li>
+<li><code>created</code></li>
+<li><code>setuptime</code></li>
+</ul>
+<h2 id="实战">实战
+</h2><h3 id="输出到syslog">输出到syslog
+</h3><p>使用官方配置：</p>
+<h4 id="配置文件">配置文件
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># OpenSIPS residential configuration script</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#     by OpenSIPS Solutions &lt;team@opensips-solutions.com&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># This script was generated via &#34;make menuconfig&#34;, from</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   the &#34;Residential&#34; scenario.</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># You can enable / disable more features / functionalities by</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#   re-generating the scenario with different options.#</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Please refer to the Core CookBook at:</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#      https://opensips.org/Resources/DocsCookbooks</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># for a explanation of possible statements, functions and parameters.</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">####### Global Parameters #########</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">uncomment</span> <span class="n">the</span> <span class="n">following</span> <span class="n">lines</span> <span class="n">to</span> <span class="n">enable</span> <span class="n">debugging</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#debug_mode=yes</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">log_level</span><span class="o">=</span><span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="n">xlog_level</span><span class="o">=</span><span class="mi">3</span>
+</span></span><span class="line"><span class="cl"><span class="n">log_stderror</span><span class="o">=</span><span class="n">no</span>
+</span></span><span class="line"><span class="cl"><span class="n">log_facility</span><span class="o">=</span><span class="n">LOG_LOCAL0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">udp_workers</span><span class="o">=</span><span class="mi">4</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">uncomment</span> <span class="n">the</span> <span class="n">next</span> <span class="n">line</span> <span class="n">to</span> <span class="n">enable</span> <span class="n">the</span> <span class="n">auto</span> <span class="n">temporary</span> <span class="n">blacklisting</span> <span class="n">of</span> 
+</span></span><span class="line"><span class="cl">   <span class="ow">not</span> <span class="n">available</span> <span class="n">destinations</span> <span class="p">(</span><span class="n">default</span> <span class="n">disabled</span><span class="p">)</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#disable_dns_blacklist=no</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">uncomment</span> <span class="n">the</span> <span class="n">next</span> <span class="n">line</span> <span class="n">to</span> <span class="n">enable</span> <span class="n">IPv6</span> <span class="n">lookup</span> <span class="n">after</span> <span class="n">IPv4</span> <span class="n">dns</span> 
+</span></span><span class="line"><span class="cl">   <span class="n">lookup</span> <span class="n">failures</span> <span class="p">(</span><span class="n">default</span> <span class="n">disabled</span><span class="p">)</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#dns_try_ipv6=yes</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">socket</span><span class="o">=</span><span class="n">udp</span><span class="p">:</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="p">:</span><span class="mi">5261</span>   <span class="c1"># CUSTOMIZE ME</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">####### Modules Section ########</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#set module path</span>
+</span></span><span class="line"><span class="cl"><span class="n">mpath</span><span class="o">=</span><span class="s2">&#34;/usr/local/lib/opensips/modules/&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### SIGNALING module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;signaling.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### StateLess module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;sl.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### Transaction Module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;tm.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;fr_timeout&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;fr_inv_timeout&#34;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;restart_fr_on_each_reply&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;tm&#34;</span><span class="p">,</span> <span class="s2">&#34;onreply_avp_mode&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### Record Route Module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;rr.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="k">do</span> <span class="ow">not</span> <span class="n">append</span> <span class="n">from</span> <span class="n">tag</span> <span class="n">to</span> <span class="n">the</span> <span class="n">RR</span> <span class="p">(</span><span class="n">no</span> <span class="n">need</span> <span class="k">for</span> <span class="n">this</span> <span class="n">script</span><span class="p">)</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;rr&#34;</span><span class="p">,</span> <span class="s2">&#34;append_fromtag&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### MAX ForWarD module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;maxfwd.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### SIP MSG OPerationS module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;sipmsgops.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### FIFO Management Interface</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;mi_fifo.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;mi_fifo&#34;</span><span class="p">,</span> <span class="s2">&#34;fifo_name&#34;</span><span class="p">,</span> <span class="s2">&#34;/run/opensips/opensips_fifo&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;mi_fifo&#34;</span><span class="p">,</span> <span class="s2">&#34;fifo_mode&#34;</span><span class="p">,</span> <span class="mi">0666</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### USeR LOCation module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;usrloc.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;usrloc&#34;</span><span class="p">,</span> <span class="s2">&#34;nat_bflag&#34;</span><span class="p">,</span> <span class="s2">&#34;NAT&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;usrloc&#34;</span><span class="p">,</span> <span class="s2">&#34;working_mode_preset&#34;</span><span class="p">,</span> <span class="s2">&#34;single-instance-no-db&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### REGISTRAR module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;registrar.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;registrar&#34;</span><span class="p">,</span> <span class="s2">&#34;tcp_persistent_flag&#34;</span><span class="p">,</span> <span class="s2">&#34;TCP_PERSISTENT&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">uncomment</span> <span class="n">the</span> <span class="n">next</span> <span class="n">line</span> <span class="ow">not</span> <span class="n">to</span> <span class="n">allow</span> <span class="n">more</span> <span class="n">than</span> <span class="mi">10</span> <span class="n">contacts</span> <span class="n">per</span> <span class="n">AOR</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#modparam(&#34;registrar&#34;, &#34;max_contacts&#34;, 10)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#### ACCounting module</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;acc.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">what</span> <span class="n">special</span> <span class="n">events</span> <span class="n">should</span> <span class="n">be</span> <span class="n">accounted</span> <span class="err">?</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;acc&#34;</span><span class="p">,</span> <span class="s2">&#34;early_media&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;acc&#34;</span><span class="p">,</span> <span class="s2">&#34;report_cancels&#34;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">/*</span> <span class="n">by</span> <span class="n">default</span> <span class="n">we</span> <span class="k">do</span> <span class="ow">not</span> <span class="n">adjust</span> <span class="n">the</span> <span class="n">direct</span> <span class="n">of</span> <span class="n">the</span> <span class="n">sequential</span> <span class="n">requests</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">   <span class="k">if</span> <span class="n">you</span> <span class="n">enable</span> <span class="n">this</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">be</span> <span class="n">sure</span> <span class="n">to</span> <span class="n">enable</span> <span class="s2">&#34;append_fromtag&#34;</span>
+</span></span><span class="line"><span class="cl">   <span class="ow">in</span> <span class="s2">&#34;rr&#34;</span> <span class="n">module</span> <span class="o">*/</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;acc&#34;</span><span class="p">,</span> <span class="s2">&#34;detect_direction&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">modparam</span><span class="p">(</span><span class="s2">&#34;acc&#34;</span><span class="p">,</span> <span class="s2">&#34;extra_fields&#34;</span><span class="p">,</span> <span class="s2">&#34;log: a-&gt;$ci; b&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;proto_udp.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">####### Routing Logic ########</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># main request routing logic</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">mf_process_maxfwd_header</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">send_reply</span><span class="p">(</span><span class="mi">483</span><span class="p">,</span><span class="s2">&#34;Too Many Hops&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">has_totag</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1"># handle hop-by-hop ACK (no routing required)</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span> <span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;ACK&#34;</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">t_check_trans</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="n">t_relay</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">			<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1"># sequential request within a dialog should</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># take the path determined by record-routing</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">loose_route</span><span class="p">()</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1"># we do record-routing for all our traffic, so we should not</span>
+</span></span><span class="line"><span class="cl">			<span class="c1"># receive any sequential requests without Route hdr.</span>
+</span></span><span class="line"><span class="cl">			<span class="n">send_reply</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span><span class="s2">&#34;Not here&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">			<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;BYE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1"># do accounting even if the transaction fails</span>
+</span></span><span class="line"><span class="cl">			<span class="n">do_accounting</span><span class="p">(</span><span class="s2">&#34;log&#34;</span><span class="p">,</span><span class="s2">&#34;failed&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="c1"># route it out to whatever destination was set by loose_route()</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># in $du (destination URI).</span>
+</span></span><span class="line"><span class="cl">		<span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># CANCEL processing</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;CANCEL&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">t_check_trans</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">			<span class="n">t_relay</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># absorb retransmissions, but do not create transaction</span>
+</span></span><span class="line"><span class="cl">	<span class="n">t_check_trans</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">)</span>  <span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="n">is_myself</span><span class="p">(</span><span class="s2">&#34;$fd&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">					
+</span></span><span class="line"><span class="cl">		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="c1"># if caller is not local, then called number must be local</span>
+</span></span><span class="line"><span class="cl">			
+</span></span><span class="line"><span class="cl">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_myself</span><span class="p">(</span><span class="s2">&#34;$rd&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">				<span class="n">send_reply</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span><span class="s2">&#34;Relay Forbidden&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">				<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">}</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># preloaded route checking</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">loose_route</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_ERR&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="s2">&#34;Attempt to route with preloaded Route&#39;s [$fu/$tu/$ru/$ci]&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;ACK&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="n">send_reply</span><span class="p">(</span><span class="mi">403</span><span class="p">,</span><span class="s2">&#34;Preload Route denied&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># record routing</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER|MESSAGE&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">		<span class="n">record_route</span><span class="p">();</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># account only INVITEs</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="n">do_accounting</span><span class="p">(</span><span class="s2">&#34;log&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="n">acc_extra</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">=$</span><span class="n">ci</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is_myself</span><span class="p">(</span><span class="s2">&#34;$rd&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">append_hf</span><span class="p">(</span><span class="s2">&#34;P-hint: outbound</span><span class="se">\r\n</span><span class="s2">&#34;</span><span class="p">);</span> 
+</span></span><span class="line"><span class="cl">		
+</span></span><span class="line"><span class="cl">		<span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># requests for my domain</span>
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;PUBLISH|SUBSCRIBE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">send_reply</span><span class="p">(</span><span class="mi">503</span><span class="p">,</span> <span class="s2">&#34;Service Unavailable&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;REGISTER&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># store the registration and generate a SIP reply</span>
+</span></span><span class="line"><span class="cl">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">save</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">			<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;failed to register AoR $tu</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">rU</span><span class="o">==</span><span class="n">NULL</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="c1"># request with no Username in RURI</span>
+</span></span><span class="line"><span class="cl">		<span class="n">send_reply</span><span class="p">(</span><span class="mi">484</span><span class="p">,</span><span class="s2">&#34;Address Incomplete&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># do lookup with method filtering</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&#34;location&#34;</span><span class="p">,</span><span class="s2">&#34;m&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_reply</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span> <span class="s2">&#34;Not Found&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># when routing via usrloc, log the missed calls also</span>
+</span></span><span class="line"><span class="cl">	<span class="n">do_accounting</span><span class="p">(</span><span class="s2">&#34;log&#34;</span><span class="p">,</span><span class="s2">&#34;missed&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">route</span><span class="p">[</span><span class="n">relay</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># for INVITEs enable some additional helper routes</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">is_method</span><span class="p">(</span><span class="s2">&#34;INVITE&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_on_branch</span><span class="p">(</span><span class="s2">&#34;per_branch_ops&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_on_reply</span><span class="p">(</span><span class="s2">&#34;handle_nat&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">		<span class="n">t_on_failure</span><span class="p">(</span><span class="s2">&#34;missed_call&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">t_relay</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">send_reply</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="s2">&#34;Internal Error&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">branch_route</span><span class="p">[</span><span class="n">per_branch_ops</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;new branch at $ru</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">onreply_route</span><span class="p">[</span><span class="n">handle_nat</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;incoming reply</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">failure_route</span><span class="p">[</span><span class="n">missed_call</span><span class="p">]</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="k">if</span> <span class="p">(</span><span class="n">t_was_cancelled</span><span class="p">())</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="n">exit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="c1"># uncomment the following lines if you want to block client </span>
+</span></span><span class="line"><span class="cl">	<span class="c1"># redirect based on 3xx replies.</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">##if (t_check_status(&#34;3[0-9][0-9]&#34;)) {</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">##t_reply(404,&#34;Not found&#34;);</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">##	exit;</span>
+</span></span><span class="line"><span class="cl">	<span class="c1">##}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>配置文件解析：</p>
+<p><code>modparam(&quot;acc&quot;, &quot;extra_fields&quot;, &quot;log: a-&gt;$ci; b&quot;)</code>, 这里只是定义了<code>a</code>的<code>key</code>为<code>$ci</code>,
+要使用<code>$acc_extra(a)</code>来设置<code>value</code>。通过这种方式，我们可以设置一些额外的参数输出到日志中。</p>
+<h4 id="输出的结果">输出的结果
+</h4><ol>
+<li>正常接通挂断</li>
+</ol>
+<p>sip信令图:
+<img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip.png"
+	width="1224"
+	height="1127"
+	srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip_hu1096007624117459274.png 480w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip_hu17757437378142236557.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="108"
+		data-flex-basis="260px"
+	
+></p>
+<p>syslog输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">May 13 10:07:20 [349] [130][23d4df0d6efe4cd481a6f4e29ca82f9b]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:07:22 [352] ACC: transaction answered: timestamp=1747102042;created=0;setuptime=1747102042;method=INVITE;from_tag=e2ff73efbd8242208c88592bda1d8d02;to_tag=06127b55;call_id=23d4df0d6efe4cd481a6f4e29ca82f9b;code=200;reason=OK;$ci=23d4df0d6efe4cd481a6f4e29ca82f9b;b=
+</span></span><span class="line"><span class="cl">May 13 10:07:22 [352] [130][23d4df0d6efe4cd481a6f4e29ca82f9b]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:07:22 [351] [130][23d4df0d6efe4cd481a6f4e29ca82f9b]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:07:22 [352] [130][23d4df0d6efe4cd481a6f4e29ca82f9b]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:07:24 [353] [130][23d4df0d6efe4cd481a6f4e29ca82f9b]---main--:BYE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:07:24 [351] ACC: transaction answered: timestamp=1747102044;created=0;setuptime=1747102044;method=BYE;from_tag=e2ff73efbd8242208c88592bda1d8d02;to_tag=06127b55;call_id=23d4df0d6efe4cd481a6f4e29ca82f9b;code=200;reason=OK;$ci=;b=
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用官方的配置，可以看到只有两个记录了<code>INVITE</code>和<code>BYE</code>，没有<code>响铃</code>。另外,在<code>BYE</code>时，<code>$acc_extra(a)</code>的值为空。</p>
+<p>现在修改<code>INVITE</code>处的<code>do_accounting(&quot;log&quot;);</code>为<code>do_accounting(&quot;log&quot;, &quot;cdr|missed|failed&quot;);</code>,再次测试,syslog输出如下:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">06</span> <span class="p">[</span><span class="mi">535</span><span class="p">]</span> <span class="n">NOTICE</span><span class="p">:</span><span class="n">signaling</span><span class="p">:</span><span class="n">mod_init</span><span class="p">:</span> <span class="n">initializing</span> <span class="n">module</span> <span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">14</span> <span class="p">[</span><span class="mi">550</span><span class="p">]</span> <span class="p">[</span><span class="mi">132</span><span class="p">][</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">]</span><span class="o">---</span><span class="n">main</span><span class="o">--</span><span class="p">:</span><span class="n">INVITE</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;|</span><span class="n">sip</span><span class="p">:</span><span class="mi">1009</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="o">|</span><span class="mi">5261</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">15</span> <span class="p">[</span><span class="mi">550</span><span class="p">]</span> <span class="p">[</span><span class="mi">132</span><span class="p">][</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">]</span><span class="o">---</span><span class="n">main</span><span class="o">--</span><span class="p">:</span><span class="n">ACK</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;|</span><span class="n">sip</span><span class="p">:</span><span class="mi">1009</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="o">|</span><span class="mi">5261</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">15</span> <span class="p">[</span><span class="mi">550</span><span class="p">]</span> <span class="p">[</span><span class="mi">132</span><span class="p">][</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">]</span><span class="o">---</span><span class="n">main</span><span class="o">--</span><span class="p">:</span><span class="n">INVITE</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;|</span><span class="n">sip</span><span class="p">:</span><span class="mi">1009</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="o">|</span><span class="mi">5261</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">15</span> <span class="p">[</span><span class="mi">550</span><span class="p">]</span> <span class="p">[</span><span class="mi">132</span><span class="p">][</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">]</span><span class="o">---</span><span class="n">main</span><span class="o">--</span><span class="p">:</span><span class="n">ACK</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;|</span><span class="n">sip</span><span class="p">:</span><span class="mi">1009</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="o">|</span><span class="mi">5261</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">17</span> <span class="p">[</span><span class="mi">550</span><span class="p">]</span> <span class="p">[</span><span class="mi">132</span><span class="p">][</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">]</span><span class="o">---</span><span class="n">main</span><span class="o">--</span><span class="p">:</span><span class="n">BYE</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;|</span><span class="n">sip</span><span class="p">:</span><span class="mi">1009</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span><span class="o">|</span><span class="mi">5261</span><span class="o">|&lt;</span><span class="n">null</span><span class="o">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="n">May</span> <span class="mi">13</span> <span class="mi">10</span><span class="p">:</span><span class="mi">36</span><span class="p">:</span><span class="mi">17</span> <span class="p">[</span><span class="mi">553</span><span class="p">]</span> <span class="n">ACC</span><span class="p">:</span> <span class="n">call</span> <span class="n">ended</span><span class="p">:</span> <span class="n">created</span><span class="o">=</span><span class="mi">1747103774</span><span class="p">;</span><span class="n">call_start_time</span><span class="o">=</span><span class="mi">1747103775</span><span class="p">;</span><span class="n">duration</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span><span class="n">ms_duration</span><span class="o">=</span><span class="mi">2455</span><span class="p">;</span><span class="n">setuptime</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="n">method</span><span class="o">=</span><span class="n">INVITE</span><span class="p">;</span><span class="n">from_tag</span><span class="o">=</span><span class="mi">82</span><span class="n">c34d97660b4e6fb6c1d8ccf04c194d</span><span class="p">;</span><span class="n">to_tag</span><span class="o">=</span><span class="mi">7</span><span class="n">f0a2548</span><span class="p">;</span><span class="n">call_id</span><span class="o">=</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">;</span><span class="n">code</span><span class="o">=</span><span class="mi">200</span><span class="p">;</span><span class="n">reason</span><span class="o">=</span><span class="n">OK</span><span class="p">;</span><span class="o">$</span><span class="n">ci</span><span class="o">=</span><span class="n">ec40d522330f4171866f26f9bd1a1499</span><span class="p">;</span><span class="n">b</span><span class="o">=</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>只有一个记录，但是带了其他信息：<code>call_start_time</code>:电话接通的时间戳、<code>duration</code>:通话时长s、<code>ms_duration</code>:通话时长ms,<code>setuptime</code>:电话建立的时间，可以认为是响铃时长s,<code>created</code>:此记录开始的时间.</p>
+<ol start="2">
+<li>未接电话</li>
+</ol>
+<p>sip信令图:
+<img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1.png"
+	width="1227"
+	height="711"
+	srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu16081542784239268849.png 480w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip1_hu7264021615211042545.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="172"
+		data-flex-basis="414px"
+	
+></p>
+<p>syslog输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">May 13 10:50:51 [622] [132][67abdb49d25f4d579670b78b56d4f0a3]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:50:52 [622] ACC: call missed: timestamp=1747104652;created=1747104651;setuptime=1;method=INVITE;from_tag=2cf172b645e04628a1ace902e877512b;to_tag=7f10ee66;call_id=67abdb49d25f4d579670b78b56d4f0a3;code=480;reason=Temporarily Unavailable;$ci=67abdb49d25f4d579670b78b56d4f0a3;b=
+</span></span><span class="line"><span class="cl">May 13 10:50:52 [622] [312][67abdb49d25f4d579670b78b56d4f0a3]---missed_call----:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261
+</span></span><span class="line"><span class="cl">May 13 10:50:52 [622] [132][67abdb49d25f4d579670b78b56d4f0a3]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到记录了<code>missed_call</code></p>
+<ol start="3">
+<li>主叫CANCEL</li>
+</ol>
+<p>sip信令图:
+<img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2.png"
+	width="1215"
+	height="832"
+	srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu17278224825624002021.png 480w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sip2_hu11943301272222595760.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="146"
+		data-flex-basis="350px"
+	
+></p>
+<p>syslog输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">May 13 10:57:39 [685] [132][7b53a5cf8c9741db9eccc429e719a7b1]---main--:CANCEL|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 10:57:39 [686] ACC: call missed: timestamp=1747105059;created=1747105057;setuptime=2;method=INVITE;from_tag=52d3da242e4f47e0ab21cbb95afc715c;to_tag=8f3e627c;call_id=7b53a5cf8c9741db9eccc429e719a7b1;code=487;reason=Request Terminated;$ci=7b53a5cf8c9741db9eccc429e719a7b1;b=
+</span></span><span class="line"><span class="cl">May 13 10:57:39 [686] [312][7b53a5cf8c9741db9eccc429e719a7b1]---missed_call----:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261
+</span></span><span class="line"><span class="cl">May 13 10:57:39 [685] [132][7b53a5cf8c9741db9eccc429e719a7b1]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到记录了<code>missed_call</code>, 但是应该是<code>487</code>信令的，而不是<code>CANCEL</code>.</p>
+<h3 id="输出到数据库">输出到数据库
+</h3><h4 id="配置文件-1">配置文件
+</h4><p>在syslog输出的基础上，修改配置文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;extra_fields&#34;, &#34;log: a-&gt;$ci; b&#34;)
+</span></span><span class="line"><span class="cl">modparam(&#34;acc&#34;, &#34;db_url&#34;, &#34;DBURL&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>把所有的<code>do_accounting(&quot;log&quot;,&quot;xxx&quot;)</code>改成<code>do_accounting(&quot;log|db&quot;,&quot;xxx&quot;)</code>,再次测试。</p>
+<h4 id="输出的结果-1">输出的结果
+</h4><ol>
+<li>正常接通挂断</li>
+</ol>
+<p>数据表记录:
+<img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql.png"
+	width="1559"
+	height="133"
+	srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql_hu7097228874666675238.png 480w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql_hu16459824815280374966.png 1024w"
+	loading="lazy"
+	
+		alt="db"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="1172"
+		data-flex-basis="2813px"
+	
+></p>
+<p>相对于<code>kamailio</code>,<code>opensips</code>的数据库记录更加详细,把<code>CDR</code>的信息一起记录到了<code>acc</code>表。</p>
+<ol start="2">
+<li>未接电话</li>
+</ol>
+<p>数据表记录:
+<img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql1.png"
+	width="1571"
+	height="167"
+	srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql1_hu1922971581328500587.png 480w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql1_hu17409556230682698614.png 1024w"
+	loading="lazy"
+	
+		alt="db"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="940"
+		data-flex-basis="2257px"
+	
+></p>
+<p>数据记录在<code>missed_call</code>表</p>
+<ol start="3">
+<li>主叫CANCEL</li>
+</ol>
+<p>数据表记录:
+<img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql2.png"
+	width="1558"
+	height="168"
+	srcset="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql2_hu3622453901791026591.png 480w, /p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/sql2_hu480183348300452.png 1024w"
+	loading="lazy"
+	
+		alt="db"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="927"
+		data-flex-basis="2225px"
+	
+></p>
+<p>数据记录在<code>missed_call</code>表</p>
+<h3 id="输出到events">输出到EVENTS
+</h3><h4 id="配置文件-2">配置文件
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;event_route.so&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl"><span class="n">event_route</span><span class="p">[</span><span class="n">E_ACC_CDR</span><span class="p">]{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line]---event_route[E_ACC_CDR]----:$param(method)|$param(from_tag)|$param(to_tag)|$param(callid)|$param(sip_code)|$param(sip_reason)|$param(time)|$param(duration)|$param(ms_duration)|$param(created)|$param(setuptime)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">event_route</span><span class="p">[</span><span class="n">E_ACC_EVENT</span><span class="p">]{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line]---event_route[E_ACC_EVENT]----:$param(method)|$param(from_tag)|$param(to_tag)|$param(callid)|$param(sip_code)|$param(sip_reason)|$param(time)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">event_route</span><span class="p">[</span><span class="n">E_ACC_MISSED_EVENT</span><span class="p">]{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line]---event_route[E_ACC_MISSED_EVENT]----:$param(method)|$param(from_tag)|$param(to_tag)|$param(callid)|$param(sip_code)|$param(sip_reason)|$param(time)|$param(created)|$param(setuptime)</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>把<code>do_accounting(&quot;log|db&quot;,&quot;xxxx&quot;);</code> 全部替换为<code>do_accounting(&quot;log|db|evi&quot;,&quot;xxxx&quot;);</code></p>
+<h4 id="输出结果">输出结果
+</h4><ol>
+<li>正常接通挂断</li>
+</ol>
+<p>event_route输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">May 13 11:42:32 [959] [137][8b8ae3d6728a4b04bf6875f005730039]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:42:33 [959] [137][8b8ae3d6728a4b04bf6875f005730039]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:42:33 [961] [137][8b8ae3d6728a4b04bf6875f005730039]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:42:34 [957] [137][8b8ae3d6728a4b04bf6875f005730039]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:42:36 [959] [137][8b8ae3d6728a4b04bf6875f005730039]---main--:BYE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:42:36 [959] ACC: call ended: created=1747107752;call_start_time=1747107753;duration=3;ms_duration=2446;setuptime=1;method=INVITE;from_tag=5af280175d2f4bb8b32d883e3286cc4a;to_tag=897c787b;call_id=8b8ae3d6728a4b04bf6875f005730039;code=200;reason=OK;$ci=8b8ae3d6728a4b04bf6875f005730039;b=
+</span></span><span class="line"><span class="cl">May 13 11:42:36 [957] [333]---event_route[E_ACC_CDR]----:INVITE|5af280175d2f4bb8b32d883e3286cc4a|897c787b|8b8ae3d6728a4b04bf6875f005730039|200|OK|1747107753|3|2446|1747107752|1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到在<code>E_ACC_CDR</code>的信息和<code>syslog</code>的一致.</p>
+<ol start="2">
+<li>未接电话</li>
+</ol>
+<p>event_route输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">May 13 11:45:40 [959] [137][cfb5b5aa7a4f4ed081ced6764ae58867]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:45:43 [959] [343]---event_route[E_ACC_MISSED_EVENT]----:INVITE|67c43acbbb68485e8437d660ab210df3|ba1cbf25|cfb5b5aa7a4f4ed081ced6764ae58867|480|Temporarily Unavailable|1747107943|1747107940|3
+</span></span><span class="line"><span class="cl">May 13 11:45:43 [958] ACC: call missed: timestamp=1747107943;created=1747107940;setuptime=3;method=INVITE;from_tag=67c43acbbb68485e8437d660ab210df3;to_tag=ba1cbf25;call_id=cfb5b5aa7a4f4ed081ced6764ae58867;code=480;reason=Temporarily Unavailable;$ci=cfb5b5aa7a4f4ed081ced6764ae58867;b=
+</span></span><span class="line"><span class="cl">May 13 11:45:43 [958] [317][cfb5b5aa7a4f4ed081ced6764ae58867]---missed_call----:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261
+</span></span><span class="line"><span class="cl">May 13 11:45:43 [957] [137][cfb5b5aa7a4f4ed081ced6764ae58867]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到数据输出到<code>E_ACC_MISSED_EVENT</code>, 在<code>E_ACC_MISSED_EVENT</code>的信息和<code>syslog</code>的一致.</p>
+<ol start="3">
+<li>主叫CANCEL</li>
+</ol>
+<p>event_route输出:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">May 13 11:46:47 [958] [137][df003e31dace43b298e30ef175d99343]---main--:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:46:48 [957] [137][df003e31dace43b298e30ef175d99343]---main--:CANCEL|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span><span class="line"><span class="cl">May 13 11:46:49 [957] [343]---event_route[E_ACC_MISSED_EVENT]----:INVITE|bd65219bbfb74f5a859fca3126483d6e|e11fff0b|df003e31dace43b298e30ef175d99343|487|Request Terminated|1747108009|1747108007|2
+</span></span><span class="line"><span class="cl">May 13 11:46:49 [960] ACC: call missed: timestamp=1747108009;created=1747108007;setuptime=2;method=INVITE;from_tag=bd65219bbfb74f5a859fca3126483d6e;to_tag=e11fff0b;call_id=df003e31dace43b298e30ef175d99343;code=487;reason=Request Terminated;$ci=df003e31dace43b298e30ef175d99343;b=
+</span></span><span class="line"><span class="cl">May 13 11:46:49 [960] [317][df003e31dace43b298e30ef175d99343]---missed_call----:INVITE|&lt;null&gt;|sip:1009@172.16.4.111|5261
+</span></span><span class="line"><span class="cl">May 13 11:46:49 [957] [137][df003e31dace43b298e30ef175d99343]---main--:ACK|&lt;null&gt;|sip:1009@172.16.4.111|5261|&lt;null&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到数据输出到<code>E_ACC_MISSED_EVENT</code>, 在<code>E_ACC_MISSED_EVENT</code>的信息和<code>syslog</code>的一致.</p>
+<h2 id="总结">总结
+</h2><ol>
+<li><code>opensips</code>的<code>extra_fields</code>设置没有<code>kamailio</code>的方便。</li>
+<li><code>180响铃</code>,<code>opensips</code>和<code>kamailio</code>一样，都未上报，<code>183</code>可能会上报。</li>
+<li>使用数据库时，<code>opensips</code>只用到两个表，<code>kamailio</code>用到了三个表。</li>
+<li><code>opensips</code>的上报方式更丰富些.</li>
+</ol>
+
+</section>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/opensips/">Opensips</a>
+        
+    </section>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 2025-05-13
+        </span>
+    </section></footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/opensips-%E6%B7%BB%E5%8A%A0prometheus%E7%9B%91%E6%8E%A7/">
+        
+        
+            <div class="article-image">
+                <img src="/p/opensips-%E6%B7%BB%E5%8A%A0prometheus%E7%9B%91%E6%8E%A7/backup.4a67d38b0574e67067326a80bb306121_hu16567966775042941918.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post opensips 添加prometheus监控"
+                        
+                        data-hash="md5-SmfTiwV05nBnMmqAuzBhIQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">opensips 添加prometheus监控</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">opensips和kamailio比较(持续更新中···)</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/topology_hiding%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/11.3ffb9c9b8b8063b3e32b685b311dbbc1_hu4057854913553884513.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post topology_hiding模块介绍"
+                        
+                        data-hash="md5-P/ucm4uAY7PjK2hbMR27wQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">topology_hiding模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
+        
+        
+            <div class="article-image">
+                <img src="/p/registrar%E5%92%8Cmid_registrar%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/9.6791e9f7d4174ba8950564f4026448fa_hu12827902533016567927.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post registrar和mid_registrar模块介绍"
+                        
+                        data-hash="md5-Z5Hp99QXS6iVBWT0AmRI&#43;g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">registrar和mid_registrar模块介绍</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/tracer%E6%A8%A1%E5%9D%97/">
+        
+        
+            <div class="article-image">
+                <img src="/p/tracer%E6%A8%A1%E5%9D%97/8.2085021b22fbfed95d9c0a34bbde5364_hu15311640070674681633.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post tracer模块"
+                        
+                        data-hash="md5-IIUCGyL7/tldnAo0u95TZA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">tracer模块</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <script type="module">
+        import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
+        pageviewCount({
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    <script type="module">
+        import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+        commentCount({
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        发表了31篇文章 · 
+        总计55.61k字
+    </section>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
+    <span id="busuanzi_container_site_uv">您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者</span>
+    <section class="copyright">
+        &copy; 
+        
+        2025 QuincyGao Blog
+    </section>
+    
+    <section class="powerby">
+        
+        <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025368587号-1| </a>使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script>
+    let s1 = '2025-01-10'; 
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let timeDifference = s2.getTime() - s1.getTime();
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = days + "天" + hours + "小时" + minutes + "分钟";
+    document.getElementById('runningdays').innerHTML = result;
+</script>
+
+
+
+<a href="#" id="back-to-top" title="返回顶部"></a>
+
+
+<style>
+  #back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    width: 55px;
+    height: 55px;
+    border-radius: 7px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: var(--shadow-l2);
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+  }
+
+  #back-to-top:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    height: 10px;
+    width: 10px;
+    border-width: 0 0 2px 2px;
+    border-color: var(--back-to-top-color);
+    border-style: solid;
+  }
+
+  #back-to-top:hover:before {
+    border-color: #2674e0;
+  }
+
+   
+  @media screen and (max-width: 768px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1024px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1280px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 55px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1536px) {
+    #back-to-top {
+      visibility: hidden;
+    }
+  }
+</style>
+
+
+<script>
+  function backToTop() {
+    document.documentElement.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+
+  window.onload = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop > 0) {
+      totopBtn.style.display = 'inline'
+    } else {
+      totopBtn.style.display = 'none'
+    }
+  }
+
+  window.onscroll = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop < 200) {
+      totopBtn.style.display = 'none'
+    } else {
+      totopBtn.style.display = 'inline'
+      totopBtn.addEventListener('click', backToTop, false)
+    }
+  }
+</script>
+
+    </body>
+</html>
