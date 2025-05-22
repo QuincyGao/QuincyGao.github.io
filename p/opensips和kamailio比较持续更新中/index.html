@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route event_route[tm:branch-failure] 出错路由 8 local_route event_route[tm:local-request] 本地路由 9 startup_route event_route[core:worker-one-init] 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 文档 opensips kamailio 核心变量 https://www.opensips.org/Documentation/Script-CoreVar-3-3 https://www.kamailio.org/wikidocs/cookbooks/5.8.x/pseudovariables/ 全局变量 1. https://www.opensips.org/Documentation/Script-CoreFunctions-3-3\n2. https://www.opensips.org/Documentation/Script-CoreParameters-3-3 https://www.kamailio.org/wikidocs/cookbooks/5.8.x/core/ 函数索引 https://www.opensips.org/Documentation/Function-Index-3-3 https://www.kamailio.org/wikidocs/alphaindexes/5.8.x/modfunctions/ 数据表 https://www.opensips.org/Documentation/Install-DBSchema-3-3 https://kamailio.org/docs/db-tables/kamailio-db-5.8.x.html 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route event_route[tm:branch-failure] 出错路由 8 local_route event_route[tm:local-request] 本地路由 9 startup_route event_route[core:worker-one-init]或者event_route[evrexec:timer] 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
 <title>opensips和kamailio比较(持续更新中···)</title>
 
 <link rel='canonical' href='https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/'>
 
 <link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="opensips和kamailio比较(持续更新中···)">
-<meta property='og:description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route event_route[tm:branch-failure] 出错路由 8 local_route event_route[tm:local-request] 本地路由 9 startup_route event_route[core:worker-one-init] 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
+<meta property='og:description' content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 文档 opensips kamailio 核心变量 https://www.opensips.org/Documentation/Script-CoreVar-3-3 https://www.kamailio.org/wikidocs/cookbooks/5.8.x/pseudovariables/ 全局变量 1. https://www.opensips.org/Documentation/Script-CoreFunctions-3-3\n2. https://www.opensips.org/Documentation/Script-CoreParameters-3-3 https://www.kamailio.org/wikidocs/cookbooks/5.8.x/core/ 函数索引 https://www.opensips.org/Documentation/Function-Index-3-3 https://www.kamailio.org/wikidocs/alphaindexes/5.8.x/modfunctions/ 数据表 https://www.opensips.org/Documentation/Install-DBSchema-3-3 https://kamailio.org/docs/db-tables/kamailio-db-5.8.x.html 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route event_route[tm:branch-failure] 出错路由 8 local_route event_route[tm:local-request] 本地路由 9 startup_route event_route[core:worker-one-init]或者event_route[evrexec:timer] 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
 <meta property='og:url' content='https://QuincyGao.github.io/p/opensips%E5%92%8Ckamailio%E6%AF%94%E8%BE%83%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-02-28T14:12:33&#43;08:00'/><meta property='article:modified_time' content='2025-02-28T14:12:33&#43;08:00'/>
 <meta name="twitter:title" content="opensips和kamailio比较(持续更新中···)">
-<meta name="twitter:description" content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route event_route[tm:branch-failure] 出错路由 8 local_route event_route[tm:local-request] 本地路由 9 startup_route event_route[core:worker-one-init] 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
+<meta name="twitter:description" content="对比的版本 opensips kamailio 版本信息 3.3.10 5.8.5 官方文档地址 https://www.opensips.org/Documentation/Manuals https://www.kamailio.org/w/documentation/ 文档 opensips kamailio 核心变量 https://www.opensips.org/Documentation/Script-CoreVar-3-3 https://www.kamailio.org/wikidocs/cookbooks/5.8.x/pseudovariables/ 全局变量 1. https://www.opensips.org/Documentation/Script-CoreFunctions-3-3\n2. https://www.opensips.org/Documentation/Script-CoreParameters-3-3 https://www.kamailio.org/wikidocs/cookbooks/5.8.x/core/ 函数索引 https://www.opensips.org/Documentation/Function-Index-3-3 https://www.kamailio.org/wikidocs/alphaindexes/5.8.x/modfunctions/ 数据表 https://www.opensips.org/Documentation/Install-DBSchema-3-3 https://kamailio.org/docs/db-tables/kamailio-db-5.8.x.html 支持的route类型 序号 opensips kamailio 说明 1 route request_route 请求入口 2 branch_route[a] branch_route[a] 分支路由,a为自定义变量 3 failure_route[a] failure_route[a] 失败路由,a为自定义变量 4 onreply_route reply_route onreply_route{}\nonreply_route[0]{} 主返回路由 5 onreply_route[a] onreply_route[a] 子返回路由,a为自定义变量 6 event_route[a] event_route[a] 事件路由,a为自定义变量 7 error_route event_route[tm:branch-failure] 出错路由 8 local_route event_route[tm:local-request] 本地路由 9 startup_route event_route[core:worker-one-init]或者event_route[evrexec:timer] 服务启动时执行的路由 10 timer_route[a] RTimer模块 定时执行的路由, a为自定义变量 11 - onsend_route 请求发出去前执行的路由 监控管理端 差异 opensips kamailio 运行命令 opensips-cli kamctl 独立编译 是,仓库地址:\nhttps://github.com/OpenSIPS/opensips-cli.git 否\n没有单独仓库，和kamailio一起编译生成 编写语言 Python c 配置文件 ~/.opensips-cli.cfg kamctlrc 创建数据库 opensips-cli -f ~/.opensips-cli.cfg -x database create kamdbctl create kamailio 和服务端连接方式 fifo/http/udp fifo 说明:\n">
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -400,6 +400,7 @@
             <nav id="TableOfContents">
   <ol>
     <li><a href="#对比的版本">对比的版本</a></li>
+    <li><a href="#文档">文档</a></li>
     <li><a href="#支持的route类型">支持的route类型</a></li>
     <li><a href="#监控管理端">监控管理端</a></li>
     <li><a href="#web管理服务">web管理服务</a></li>
@@ -469,7 +470,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 3 分钟,共1005 字
+                    阅读时长: 3 分钟,共1075 字
                 </time>
             </div>
         
@@ -518,6 +519,47 @@
     >https://www.opensips.org/Documentation/Manuals</a></td>
           <td><a class="link" href="https://www.kamailio.org/w/documentation/"  target="_blank" rel="noopener"
     >https://www.kamailio.org/w/documentation/</a></td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="文档">文档
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>opensips</th>
+          <th>kamailio</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>核心变量</td>
+          <td><a class="link" href="https://www.opensips.org/Documentation/Script-CoreVar-3-3"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Script-CoreVar-3-3</a></td>
+          <td><a class="link" href="https://www.kamailio.org/wikidocs/cookbooks/5.8.x/pseudovariables/"  target="_blank" rel="noopener"
+    >https://www.kamailio.org/wikidocs/cookbooks/5.8.x/pseudovariables/</a></td>
+      </tr>
+      <tr>
+          <td>全局变量</td>
+          <td>1. <a class="link" href="https://www.opensips.org/Documentation/Script-CoreFunctions-3-3"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Script-CoreFunctions-3-3</a><br> 2. <a class="link" href="https://www.opensips.org/Documentation/Script-CoreParameters-3-3"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Script-CoreParameters-3-3</a></td>
+          <td><a class="link" href="https://www.kamailio.org/wikidocs/cookbooks/5.8.x/core/"  target="_blank" rel="noopener"
+    >https://www.kamailio.org/wikidocs/cookbooks/5.8.x/core/</a></td>
+      </tr>
+      <tr>
+          <td>函数索引</td>
+          <td><a class="link" href="https://www.opensips.org/Documentation/Function-Index-3-3"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Function-Index-3-3</a></td>
+          <td><a class="link" href="https://www.kamailio.org/wikidocs/alphaindexes/5.8.x/modfunctions/"  target="_blank" rel="noopener"
+    >https://www.kamailio.org/wikidocs/alphaindexes/5.8.x/modfunctions/</a></td>
+      </tr>
+      <tr>
+          <td>数据表</td>
+          <td><a class="link" href="https://www.opensips.org/Documentation/Install-DBSchema-3-3"  target="_blank" rel="noopener"
+    >https://www.opensips.org/Documentation/Install-DBSchema-3-3</a></td>
+          <td><a class="link" href="https://kamailio.org/docs/db-tables/kamailio-db-5.8.x.html"  target="_blank" rel="noopener"
+    >https://kamailio.org/docs/db-tables/kamailio-db-5.8.x.html</a></td>
       </tr>
   </tbody>
 </table></div>
@@ -583,7 +625,7 @@
       <tr>
           <td>9</td>
           <td style="text-align: center">startup_route</td>
-          <td style="text-align: center">event_route[core:worker-one-init]</td>
+          <td style="text-align: center">event_route[core:worker-one-init]或者event_route[evrexec:timer]</td>
           <td>服务启动时执行的路由</td>
       </tr>
       <tr>
@@ -728,12 +770,12 @@
       <tr>
           <td>模块功能</td>
           <td>能满足日常需求</td>
-          <td>较丰富，还有KEMI脚本语言实现(没有示例，上手难度大)</td>
+          <td>较丰富，还有KEMI脚本语言实现(上手难度大)</td>
       </tr>
       <tr>
           <td>官方文档</td>
           <td>文档层次分明,模块清楚</td>
-          <td>文档基本完整，但是缺少基本函数检索文档</td>
+          <td>文档完整</td>
       </tr>
       <tr>
           <td>网络教程</td>
@@ -1091,9 +1133,11 @@
         
             
         
+            
         
-        发表了33篇文章 · 
-        总计56.79k字
+        
+        发表了34篇文章 · 
+        总计60.41k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
