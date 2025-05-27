@@ -419,7 +419,7 @@
         <li><a href="#压测极限">压测极限</a>
           <ol>
             <li><a href="#监测数据">监测数据</a></li>
-            <li><a href="#实际压测数据">实际压测数据</a></li>
+            <li><a href="#实际压测2小时数据">实际压测2小时数据</a></li>
             <li><a href="#sip-使用tcp通信">sip 使用tcp通信</a></li>
           </ol>
         </li>
@@ -502,7 +502,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 4 分钟,共1923 字
+                    阅读时长: 5 分钟,共2105 字
                 </time>
             </div>
         
@@ -624,7 +624,8 @@
 <pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">./sipp -r 9 -rp 1s -i 172.16.4.115 -p 5667  -sf register.xml -inf $csvfile 172.20.231.4:5261 -l 1019 -m 61140 -aa -trace_err -error_file ./reg_error.log -bg
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h2 id="压测结果分析">压测结果分析
+</div><p>可以看到<code>-l 1019</code>,如果想要<code>dialog</code>能稳定到<code>1000</code>路，需要把<code>-l</code>参数调整到<code>1019</code>。</p>
+<h2 id="压测结果分析">压测结果分析
 </h2><h3 id="opensips和rtpengine的内存未释放">opensips和rtpengine的内存未释放？
 </h3><p>在udp压测时，opensips的运行参数为:  <code>-m 2048 -M 100</code> 意思为:共享内存为2048MB,pkg内存100MB, <code>udp_workers=32 tcp_workers=8</code>。
 在实际压测过程中，阿里云的监控能够看到，内存使用率一直都是2G，变化较少。但是通过<code>docker stats</code>分别在压测开始和结束统计,能够看到opensips和rtpengine的实际占用内存是有变化的。以1000路为例:</p>
@@ -653,8 +654,189 @@
 </span></span><span class="line"><span class="cl">mi get_statistics all                       可以查看所有统计数据
 </span></span></code></pre></td></tr></table>
 </div>
-</div><h4 id="实际压测数据">实际压测数据
-</h4><p>8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。</p>
+</div><h4 id="实际压测2小时数据">实际压测2小时数据
+</h4><ul>
+<li>1700路</li>
+</ul>
+<ol>
+<li>
+<p>cpu使用率
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E4%BD%BF%E7%94%A8%E7%8E%87.png"
+	width="1708"
+	height="584"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu12861255322678944445.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu12264692188755053227.png 1024w"
+	loading="lazy"
+	
+		alt="cpu使用率"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="292"
+		data-flex-basis="701px"
+	
+></p>
+</li>
+<li>
+<p>cpu负载
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E8%B4%9F%E8%BD%BD.png"
+	width="1747"
+	height="566"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E8%B4%9F%E8%BD%BD_hu16750362503532477796.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E8%B4%9F%E8%BD%BD_hu1717511347637459630.png 1024w"
+	loading="lazy"
+	
+		alt="cpu负载"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="308"
+		data-flex-basis="740px"
+	
+></p>
+</li>
+<li>
+<p>内存使用率
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F.png"
+	width="1723"
+	height="580"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu1395926102302177290.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu8908370853589847268.png 1024w"
+	loading="lazy"
+	
+		alt="内存使用率"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="297"
+		data-flex-basis="712px"
+	
+></p>
+</li>
+<li>
+<p>带宽:
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1700%E5%B8%A6%E5%AE%BD.png"
+	width="1708"
+	height="574"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1700%E5%B8%A6%E5%AE%BD_hu13871179774899467502.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1700%E5%B8%A6%E5%AE%BD_hu6006739937723969644.png 1024w"
+	loading="lazy"
+	
+		alt="带宽"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="297"
+		data-flex-basis="714px"
+	
+></p>
+</li>
+<li>
+<p>通话量:
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E9%80%9A%E8%AF%9D%E9%87%8F.png"
+	width="871"
+	height="272"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E9%80%9A%E8%AF%9D%E9%87%8F_hu1457729761033336515.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E9%80%9A%E8%AF%9D%E9%87%8F_hu15328802969956001054.png 1024w"
+	loading="lazy"
+	
+		alt="通话量"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="320"
+		data-flex-basis="768px"
+	
+></p>
+</li>
+</ol>
+<ul>
+<li>1800路</li>
+</ul>
+<ol>
+<li>
+<p>cpu使用率
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E4%BD%BF%E7%94%A8%E7%8E%87.png"
+	width="1706"
+	height="599"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu3054960318568209473.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu4652908502287159221.png 1024w"
+	loading="lazy"
+	
+		alt="cpu使用率"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="284"
+		data-flex-basis="683px"
+	
+></p>
+</li>
+<li>
+<p>cpu负载
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E8%B4%9F%E8%BD%BD.png"
+	width="1725"
+	height="607"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E8%B4%9F%E8%BD%BD_hu2429533340996687714.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E8%B4%9F%E8%BD%BD_hu4287574729984616986.png 1024w"
+	loading="lazy"
+	
+		alt="cpu负载"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="284"
+		data-flex-basis="682px"
+	
+></p>
+</li>
+<li>
+<p>内存使用率
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F.png"
+	width="1735"
+	height="588"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu9654071261380768280.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu8043262368759655572.png 1024w"
+	loading="lazy"
+	
+		alt="内存使用率"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="295"
+		data-flex-basis="708px"
+	
+></p>
+</li>
+<li>
+<p>带宽:
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%B8%A6%E5%AE%BD.png"
+	width="1773"
+	height="571"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%B8%A6%E5%AE%BD_hu16260019884464159154.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%B8%A6%E5%AE%BD_hu6841483548758331684.png 1024w"
+	loading="lazy"
+	
+		alt="带宽"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="310"
+		data-flex-basis="745px"
+	
+></p>
+</li>
+<li>
+<p>通话量:
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E9%80%9A%E8%AF%9D%E9%87%8F.png"
+	width="910"
+	height="255"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E9%80%9A%E8%AF%9D%E9%87%8F_hu14991901112206019734.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E9%80%9A%E8%AF%9D%E9%87%8F_hu6136896382976771766.png 1024w"
+	loading="lazy"
+	
+		alt="通话量"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="356"
+		data-flex-basis="856px"
+	
+></p>
+</li>
+</ol>
+<p>通过对比:<code>1600-1700</code>路和<code>1700-1800</code>路的带宽增长情况,发现<code>1700</code>路-&gt;<code>1800</code>路的带宽增长迟缓,没有达到理论值。</p>
+<p>8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。</p>
 <p>压测结束后，通过<code>opensips-cli</code>执行<code>mi get_statistics all</code>
 能够看到实际占用的内存很少，还有大量的内存空闲。</p>
 <div class="highlight"><div class="chroma">
@@ -692,6 +874,42 @@
 <blockquote>
 <p>uac&ndash;tcp&mdash;-&gt;opensips&mdash;-tcp&mdash;-&gt;uas</p>
 </blockquote>
+<ul>
+<li>
+<p>1600路
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp_%E8%BF%9E%E6%8E%A5%E6%95%B0.png"
+	width="1731"
+	height="581"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp_%E8%BF%9E%E6%8E%A5%E6%95%B0_hu11283186546203286547.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp_%E8%BF%9E%E6%8E%A5%E6%95%B0_hu2985499215730676006.png 1024w"
+	loading="lazy"
+	
+		alt="tcp连接数"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="297"
+		data-flex-basis="715px"
+	
+></p>
+</li>
+<li>
+<p>1800路
+<img src="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp%E8%BF%9E%E6%8E%A5%E6%95%B0.png"
+	width="1743"
+	height="594"
+	srcset="/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp%E8%BF%9E%E6%8E%A5%E6%95%B0_hu573448827785966018.png 480w, /p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp%E8%BF%9E%E6%8E%A5%E6%95%B0_hu7760324060397552847.png 1024w"
+	loading="lazy"
+	
+		alt="tcp连接数"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="293"
+		data-flex-basis="704px"
+	
+></p>
+</li>
+</ul>
 <ol>
 <li>uac和opensips使用tcp通信，uac是多个tcp连接到opensips的同一个端口.</li>
 <li>在opensips和uas使用tcp通信时，原本以为会是多个tcp和uas连接，结果只用了<strong>一个tcp连接</strong>，所有的请求都是<strong>复用</strong>这个tcp连接。</li>
@@ -1034,7 +1252,7 @@
         
         
         发表了36篇文章 · 
-        总计63.85k字
+        总计64.03k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>

@@ -17442,7 +17442,8 @@ contact信息并未变化&lt;/li&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;./sipp -r 9 -rp 1s -i 172.16.4.115 -p 5667  -sf register.xml -inf $csvfile 172.20.231.4:5261 -l 1019 -m 61140 -aa -trace_err -error_file ./reg_error.log -bg
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h2 id=&#34;压测结果分析&#34;&gt;压测结果分析
+&lt;/div&gt;&lt;p&gt;可以看到&lt;code&gt;-l 1019&lt;/code&gt;,如果想要&lt;code&gt;dialog&lt;/code&gt;能稳定到&lt;code&gt;1000&lt;/code&gt;路，需要把&lt;code&gt;-l&lt;/code&gt;参数调整到&lt;code&gt;1019&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;压测结果分析&#34;&gt;压测结果分析
 &lt;/h2&gt;&lt;h3 id=&#34;opensips和rtpengine的内存未释放&#34;&gt;opensips和rtpengine的内存未释放？
 &lt;/h3&gt;&lt;p&gt;在udp压测时，opensips的运行参数为:  &lt;code&gt;-m 2048 -M 100&lt;/code&gt; 意思为:共享内存为2048MB,pkg内存100MB, &lt;code&gt;udp_workers=32 tcp_workers=8&lt;/code&gt;。
 在实际压测过程中，阿里云的监控能够看到，内存使用率一直都是2G，变化较少。但是通过&lt;code&gt;docker stats&lt;/code&gt;分别在压测开始和结束统计,能够看到opensips和rtpengine的实际占用内存是有变化的。以1000路为例:&lt;/p&gt;
@@ -17471,8 +17472,189 @@ contact信息并未变化&lt;/li&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mi get_statistics all                       可以查看所有统计数据
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
 &lt;/div&gt;
-&lt;/div&gt;&lt;h4 id=&#34;实际压测数据&#34;&gt;实际压测数据
-&lt;/h4&gt;&lt;p&gt;8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。&lt;/p&gt;
+&lt;/div&gt;&lt;h4 id=&#34;实际压测2小时数据&#34;&gt;实际压测2小时数据
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;1700路&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;cpu使用率
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E4%BD%BF%E7%94%A8%E7%8E%87.png&#34;
+	width=&#34;1708&#34;
+	height=&#34;584&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu12861255322678944445.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu12264692188755053227.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;cpu使用率&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;292&#34;
+		data-flex-basis=&#34;701px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;cpu负载
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E8%B4%9F%E8%BD%BD.png&#34;
+	width=&#34;1747&#34;
+	height=&#34;566&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E8%B4%9F%E8%BD%BD_hu16750362503532477796.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/cpu%E8%B4%9F%E8%BD%BD_hu1717511347637459630.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;cpu负载&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;308&#34;
+		data-flex-basis=&#34;740px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;内存使用率
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F.png&#34;
+	width=&#34;1723&#34;
+	height=&#34;580&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu1395926102302177290.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu8908370853589847268.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;内存使用率&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;297&#34;
+		data-flex-basis=&#34;712px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;带宽:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1700%E5%B8%A6%E5%AE%BD.png&#34;
+	width=&#34;1708&#34;
+	height=&#34;574&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1700%E5%B8%A6%E5%AE%BD_hu13871179774899467502.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1700%E5%B8%A6%E5%AE%BD_hu6006739937723969644.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;带宽&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;297&#34;
+		data-flex-basis=&#34;714px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通话量:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E9%80%9A%E8%AF%9D%E9%87%8F.png&#34;
+	width=&#34;871&#34;
+	height=&#34;272&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E9%80%9A%E8%AF%9D%E9%87%8F_hu1457729761033336515.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/%E9%80%9A%E8%AF%9D%E9%87%8F_hu15328802969956001054.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;通话量&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;320&#34;
+		data-flex-basis=&#34;768px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;1800路&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;cpu使用率
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E4%BD%BF%E7%94%A8%E7%8E%87.png&#34;
+	width=&#34;1706&#34;
+	height=&#34;599&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu3054960318568209473.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E4%BD%BF%E7%94%A8%E7%8E%87_hu4652908502287159221.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;cpu使用率&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;284&#34;
+		data-flex-basis=&#34;683px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;cpu负载
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E8%B4%9F%E8%BD%BD.png&#34;
+	width=&#34;1725&#34;
+	height=&#34;607&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E8%B4%9F%E8%BD%BD_hu2429533340996687714.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800cpu%E8%B4%9F%E8%BD%BD_hu4287574729984616986.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;cpu负载&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;284&#34;
+		data-flex-basis=&#34;682px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;内存使用率
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F.png&#34;
+	width=&#34;1735&#34;
+	height=&#34;588&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu9654071261380768280.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E9%87%8F_hu8043262368759655572.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;内存使用率&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;295&#34;
+		data-flex-basis=&#34;708px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;带宽:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%B8%A6%E5%AE%BD.png&#34;
+	width=&#34;1773&#34;
+	height=&#34;571&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%B8%A6%E5%AE%BD_hu16260019884464159154.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E5%B8%A6%E5%AE%BD_hu6841483548758331684.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;带宽&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;310&#34;
+		data-flex-basis=&#34;745px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通话量:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E9%80%9A%E8%AF%9D%E9%87%8F.png&#34;
+	width=&#34;910&#34;
+	height=&#34;255&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E9%80%9A%E8%AF%9D%E9%87%8F_hu14991901112206019734.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/1800%E9%80%9A%E8%AF%9D%E9%87%8F_hu6136896382976771766.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;通话量&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;356&#34;
+		data-flex-basis=&#34;856px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;通过对比:&lt;code&gt;1600-1700&lt;/code&gt;路和&lt;code&gt;1700-1800&lt;/code&gt;路的带宽增长情况,发现&lt;code&gt;1700&lt;/code&gt;路-&amp;gt;&lt;code&gt;1800&lt;/code&gt;路的带宽增长迟缓,没有达到理论值。&lt;/p&gt;
+&lt;p&gt;8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。&lt;/p&gt;
 &lt;p&gt;压测结束后，通过&lt;code&gt;opensips-cli&lt;/code&gt;执行&lt;code&gt;mi get_statistics all&lt;/code&gt;
 能够看到实际占用的内存很少，还有大量的内存空闲。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
@@ -17510,6 +17692,42 @@ contact信息并未变化&lt;/li&gt;
 &lt;blockquote&gt;
 &lt;p&gt;uac&amp;ndash;tcp&amp;mdash;-&amp;gt;opensips&amp;mdash;-tcp&amp;mdash;-&amp;gt;uas&lt;/p&gt;
 &lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;1600路
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp_%E8%BF%9E%E6%8E%A5%E6%95%B0.png&#34;
+	width=&#34;1731&#34;
+	height=&#34;581&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp_%E8%BF%9E%E6%8E%A5%E6%95%B0_hu11283186546203286547.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp_%E8%BF%9E%E6%8E%A5%E6%95%B0_hu2985499215730676006.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcp连接数&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;297&#34;
+		data-flex-basis=&#34;715px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;1800路
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp%E8%BF%9E%E6%8E%A5%E6%95%B0.png&#34;
+	width=&#34;1743&#34;
+	height=&#34;594&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp%E8%BF%9E%E6%8E%A5%E6%95%B0_hu573448827785966018.png 480w, https://QuincyGao.github.io/p/opensips-%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D/tcp%E8%BF%9E%E6%8E%A5%E6%95%B0_hu7760324060397552847.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcp连接数&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;293&#34;
+		data-flex-basis=&#34;704px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
 &lt;ol&gt;
 &lt;li&gt;uac和opensips使用tcp通信，uac是多个tcp连接到opensips的同一个端口.&lt;/li&gt;
 &lt;li&gt;在opensips和uas使用tcp通信时，原本以为会是多个tcp和uas连接，结果只用了&lt;strong&gt;一个tcp连接&lt;/strong&gt;，所有的请求都是&lt;strong&gt;复用&lt;/strong&gt;这个tcp连接。&lt;/li&gt;
