@@ -502,7 +502,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 5 分钟,共2105 字
+                    阅读时长: 5 分钟,共2137 字
                 </time>
             </div>
         
@@ -744,7 +744,13 @@
 	
 ></p>
 </li>
+<li>
+<p>内存增长:</p>
+</li>
 </ol>
+<blockquote>
+<p>opensips:959.4MiB-&gt;989MiB=29.6MiB   |    rtpengine: 24.46MiB-&gt;118.9MiB=94.44MiB</p>
+</blockquote>
 <ul>
 <li>1800路</li>
 </ul>
@@ -834,9 +840,15 @@
 	
 ></p>
 </li>
+<li>
+<p>内存增长:</p>
+</li>
 </ol>
+<blockquote>
+<p>opensips:959.4MiB-&gt;990.4MiB=31MiB   |    rtpengine: 23.89MiB-&gt;123.1MiB=99.21MiB</p>
+</blockquote>
 <p>通过对比:<code>1600-1700</code>路和<code>1700-1800</code>路的带宽增长情况,发现<code>1700</code>路-&gt;<code>1800</code>路的带宽增长迟缓,没有达到理论值。</p>
-<p>8C8G压测的极限是1700路，此极限是rtpengine的极限,cpu负载过大，导致rtpengine出流较慢，影响了通话质量。opensips其实并未到极限。</p>
+<p>所以,8C8G压测的极限是1700路，此极限是rtpengine的极限,推测:cpu负载大，导致rtpengine出流较慢，udp数据包减少,影响了通话质量。opensips其实并未到极限。</p>
 <p>压测结束后，通过<code>opensips-cli</code>执行<code>mi get_statistics all</code>
 能够看到实际占用的内存很少，还有大量的内存空闲。</p>
 <div class="highlight"><div class="chroma">
@@ -1252,7 +1264,7 @@
         
         
         发表了36篇文章 · 
-        总计64.03k字
+        总计64.06k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
