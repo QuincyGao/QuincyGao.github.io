@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,20 +15,17 @@
                 href="https://QuincyGao.github.io/"
                 />
   </url><url>
-    <loc>https://QuincyGao.github.io/categories/opensips/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/p/freeswitch-%E6%B5%8B%E8%AF%95mrcp%E6%A8%A1%E5%9D%97/</loc>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
   </url><url>
-    <loc>https://QuincyGao.github.io/tags/opensips/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/opensips-3.3.10-%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0-3.5.5/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/tags/mrcp/</loc>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +38,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -52,6 +49,18 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/categories/"
                 />
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
+    <lastmod>2025-05-30T09:15:44+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/opensips/</loc>
+    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/opensips/</loc>
+    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/opensips-3.3.10-%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0-3.5.5/</loc>
+    <lastmod>2025-05-27T10:16:52+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/opensips-auth%E5%92%8Cauth_db%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/</loc>
     <lastmod>2025-05-26T09:38:24+08:00</lastmod>
@@ -96,9 +105,6 @@
     <lastmod>2025-04-27T09:25:32+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/websocket/</loc>
-    <lastmod>2025-04-27T09:25:32+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
     <lastmod>2025-04-27T09:25:32+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio-sipcapture%E4%BB%8B%E7%BB%8D/</loc>
