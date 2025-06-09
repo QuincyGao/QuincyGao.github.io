@@ -6,7 +6,222 @@
         <description>Recent content in Opensips on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 27 May 2025 10:16:52 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 09 Jun 2025 11:05:03 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>opensips dtmf 按键失效问题</title>
+        <link>https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/</link>
+        <pubDate>Mon, 09 Jun 2025 11:05:03 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/backup.jpg" alt="Featured image of post opensips dtmf 按键失效问题" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;项目上使用的是&lt;code&gt;opensips(3.3.10)&lt;/code&gt;+&lt;code&gt;rtpengine(13.1.0.0+0~mr13.1.0.0 git-heads/mr13.0.1.2-3ac08574)&lt;/code&gt;用做注册代理。&lt;/p&gt;
+&lt;p&gt;软电话通过&lt;code&gt;opensips&lt;/code&gt;注册到&lt;code&gt;uas&lt;/code&gt;, 按键进行ivr流程。&lt;/p&gt;
+&lt;h2 id=&#34;问题现象&#34;&gt;问题现象
+&lt;/h2&gt;&lt;p&gt;软电话通过&lt;code&gt;opensips&lt;/code&gt;的&lt;code&gt;外网ip&lt;/code&gt;进行注册, 按键进行ivr流程, 按键无效,但是说话能识别。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;uas&lt;/code&gt;没有日志,所以不能通过日志分析问题。&lt;/p&gt;
+&lt;h2 id=&#34;排查分析&#34;&gt;排查分析
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;通过抓包发现按键信息确实发送给了&lt;code&gt;uas&lt;/code&gt;, &lt;code&gt;uas&lt;/code&gt;也收到了按键消息,但是&lt;code&gt;uas&lt;/code&gt;没有响应。
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip.png&#34;
+	width=&#34;1288&#34;
+	height=&#34;878&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip_hu11800563953836851836.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip_hu3528651302419529030.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;146&#34;
+		data-flex-basis=&#34;352px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;切换到内网测试&lt;code&gt;opensips&lt;/code&gt;,把&lt;code&gt;opensips&lt;/code&gt;转到同一个&lt;code&gt;uas&lt;/code&gt;上, 按键有效！！！&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通过对比纯内网和带外网的&lt;code&gt;opensips&lt;/code&gt;的服务器上抓包，发现问题出在&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;invite&lt;/code&gt;信令。
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip1.png&#34;
+	width=&#34;1402&#34;
+	height=&#34;800&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip1_hu5776138643348858056.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip1_hu6331632419750141747.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;175&#34;
+		data-flex-basis=&#34;420px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;sdp信息中的&lt;code&gt;ip&lt;/code&gt;是&lt;code&gt;外网ip&lt;/code&gt;, &lt;code&gt;opensips&lt;/code&gt;和&lt;code&gt;uas&lt;/code&gt;是纯内网交互，这个的&lt;code&gt;ip&lt;/code&gt;要是&lt;code&gt;内网ip&lt;/code&gt;。
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip2.png&#34;
+	width=&#34;1111&#34;
+	height=&#34;820&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip2_hu5938165049819642345.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip2_hu3569410064005048033.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sdp&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;135&#34;
+		data-flex-basis=&#34;325px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;解决方法&#34;&gt;解决方法
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;在&lt;code&gt;opensips.cfg&lt;/code&gt;的&lt;code&gt;t_on_branch(&amp;quot;per_branch_ops&amp;quot;)&lt;/code&gt;请求&lt;code&gt;rtpengine&lt;/code&gt;获取&lt;code&gt;sdp&lt;/code&gt;信息时,传递&lt;code&gt;media-address=内网ip&lt;/code&gt;。
+强制生成的&lt;code&gt;sdp&lt;/code&gt;信息中的&lt;code&gt;ip&lt;/code&gt;是&lt;code&gt;内网ip&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;rtpengine_manage(&amp;#34; media-address=172.16.7.239 &amp;#34;);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;修改之后，验证成功,按键有效。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;疑问: &lt;code&gt;sip服务器&lt;/code&gt;为何因为&lt;code&gt;sdp&lt;/code&gt;信息中的&lt;code&gt;ip&lt;/code&gt;是&lt;code&gt;外网ip&lt;/code&gt;而没有响应按键不得而知(第三方的,没人能解答)。&lt;/p&gt;
+&lt;h2 id=&#34;延伸&#34;&gt;延伸
+&lt;/h2&gt;&lt;h3 id=&#34;按键dtmf-类型&#34;&gt;按键dtmf 类型
+&lt;/h3&gt;&lt;p&gt;按键主要有三种类型，在抓包中的表现形式为:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;rfc2833
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf.png&#34;
+	width=&#34;1217&#34;
+	height=&#34;492&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf_hu6154883573731857760.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf_hu1348540063389246121.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;rfc2833&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;247&#34;
+		data-flex-basis=&#34;593px&#34;
+	
+&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;通过&lt;code&gt;wireshark&lt;/code&gt;抓包的&lt;code&gt;sip&lt;/code&gt;信令上，可以看到&lt;code&gt;rfc2833&lt;/code&gt;和语音&lt;code&gt;RTP&lt;/code&gt;流是分开的，能够很直观的区分.&lt;/p&gt;
+&lt;p&gt;点击此信令,能够看到的详细信息:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf1.png&#34;
+	width=&#34;901&#34;
+	height=&#34;337&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf1_hu16158194257896613541.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf1_hu3551348088219848216.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;rfc2833&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;267&#34;
+		data-flex-basis=&#34;641px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;inbound&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;inboud&lt;/code&gt; 按键和语音&lt;code&gt;RTP&lt;/code&gt;流是一起的, 无法区分。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip3.png&#34;
+	width=&#34;1473&#34;
+	height=&#34;918&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip3_hu3832383337292889626.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip3_hu13193680654401490123.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;inbound&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;160&#34;
+		data-flex-basis=&#34;385px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;通过播放该rtp流, 可以听到按键声音,也可以看到按键的波形。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf2.png&#34;
+	width=&#34;1622&#34;
+	height=&#34;942&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf2_hu4839554792471178918.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf2_hu9720044482632962036.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;inbound&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;172&#34;
+		data-flex-basis=&#34;413px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;INFO&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;INFO&lt;/code&gt;是指按键信息以&lt;code&gt;SIP INFO&lt;/code&gt;的方式发送,直接抓sip信令就能看到。
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip4.png&#34;
+	width=&#34;1435&#34;
+	height=&#34;1041&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip4_hu6452881457536007103.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip4_hu5918796983102552855.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;info&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;137&#34;
+		data-flex-basis=&#34;330px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;按键信息:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf3.png&#34;
+	width=&#34;768&#34;
+	height=&#34;282&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf3_hu3229667218799889938.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/dtmf3_hu12239943176543597602.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;info&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;272&#34;
+		data-flex-basis=&#34;653px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;INFO&lt;/code&gt;的&lt;code&gt;body&lt;/code&gt;中，可以看到按键信息。&lt;/p&gt;
+&lt;h3 id=&#34;opensips-内外网ip的问题&#34;&gt;opensips 内外网ip的问题
+&lt;/h3&gt;&lt;p&gt;使用&lt;code&gt;opensips&lt;/code&gt;做网关时, 比较重要的就是内外网ip的转换问题。 这里包括两个部分:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;sip信令中的&lt;code&gt;Record-Route&lt;/code&gt;, 使用 &lt;code&gt;record_route_preset&lt;/code&gt;不要用&lt;code&gt;record_route&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;sdp信息中的&lt;code&gt;c&lt;/code&gt;,  使用&lt;code&gt;media-address&lt;/code&gt;设置。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;以下列的sip信令为例:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip5.png&#34;
+	width=&#34;878&#34;
+	height=&#34;1098&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip5_hu14018658206264466424.png 480w, https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/sip5_hu13670927504910925283.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;79&#34;
+		data-flex-basis=&#34;191px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;需要修改的地方:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在转发&lt;code&gt;INVITE&lt;/code&gt;给&lt;code&gt;uas&lt;/code&gt;时,&lt;code&gt;Record-Route&lt;/code&gt;要改成&lt;code&gt;内网ip&lt;/code&gt;, &lt;code&gt;sdp&lt;/code&gt;的&lt;code&gt;c&lt;/code&gt;改成&lt;code&gt;内网ip&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;收到&lt;code&gt;uas&lt;/code&gt;的&lt;code&gt;183&lt;/code&gt;或者&lt;code&gt;200 OK&lt;/code&gt;信令时, 转发给&lt;code&gt;uac&lt;/code&gt;时&lt;code&gt;Record-Route&lt;/code&gt;要改成&lt;code&gt;外网ip&lt;/code&gt;, &lt;code&gt;sdp&lt;/code&gt;的&lt;code&gt;c&lt;/code&gt;改成&lt;code&gt;外网ip&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>opensips 3.3.10 版本升级到 3.5.5</title>
         <link>https://QuincyGao.github.io/p/opensips-3.3.10-%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0-3.5.5/</link>
         <pubDate>Tue, 27 May 2025 10:16:52 +0800</pubDate>
