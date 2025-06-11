@@ -6,7 +6,203 @@
         <description>Recent content in opensips on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 09 Jun 2025 11:05:03 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 10 Jun 2025 16:24:48 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>rtpengine 按键转换</title>
+        <link>https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/</link>
+        <pubDate>Tue, 10 Jun 2025 16:24:48 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/backup.jpg" alt="Featured image of post rtpengine 按键转换" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;在上一章中，我们介绍了&lt;code&gt;dtmf&lt;/code&gt;按键功能，可以看到&lt;code&gt;rtpengine&lt;/code&gt;能够把收到的&lt;code&gt;rfc2833&lt;/code&gt;和&lt;code&gt;inbound&lt;/code&gt;类型的&lt;code&gt;dtmf&lt;/code&gt;透传到&lt;code&gt;uas&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;在实际项目中, 我们可能还需要对&lt;code&gt;dtmf&lt;/code&gt;做按键类型转换, 在&lt;code&gt;rtpengine&lt;/code&gt;的官方文档&lt;a class=&#34;link&#34; href=&#34;https://rtpengine.readthedocs.io/en/latest/transcoding.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;transcoding&lt;/a&gt;中，我们找到这样一段话：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Rtpengine supports transcoding between RFC 2833/4733 DTMF event packets (telephone-event payloads) and in-band DTMF audio tones. When enabled, rtpengine translates DTMF event packets to in-band DTMF audio by generating DTMF tones and injecting them into the audio stream, and translates in-band DTMF tones by running the audio stream through a DSP, and generating DTMF event packets when a DTMF tone is detected.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以可以得知&lt;code&gt;rfc2833/4733&lt;/code&gt;和&lt;code&gt;inbound&lt;/code&gt;类型可以互相转换。&lt;/p&gt;
+&lt;p&gt;本次测试的rtpengine版本:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Version: 13.1.0.0+0~mr13.1.0.0 git-heads/mr13.0.1.2-3ac08574&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;rfc2833-转inbound&#34;&gt;rfc2833 转inbound
+&lt;/h2&gt;&lt;p&gt;在&lt;code&gt;opensips&lt;/code&gt;调用&lt;code&gt;rtpengine_manager&lt;/code&gt;里,参数设置如下:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;always-transcode codec-mask-all codec-transcode-telephone-event codec-strip-telephone-event&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;通过抓包得到的结果如下:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip.png&#34;
+	width=&#34;1125&#34;
+	height=&#34;1005&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip_hu15014411371689715799.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip_hu5122431649787902314.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;111&#34;
+		data-flex-basis=&#34;268px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发给&lt;code&gt;uas&lt;/code&gt;的&lt;code&gt;RTP&lt;/code&gt;按键内容为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf.png&#34;
+	width=&#34;1872&#34;
+	height=&#34;915&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf_hu5880551696720063172.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf_hu15925254528221308044.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;inbound&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;204&#34;
+		data-flex-basis=&#34;491px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;所以可以确定&lt;code&gt;rfc2833&lt;/code&gt;转&lt;code&gt;inbound&lt;/code&gt;成功。&lt;/p&gt;
+&lt;p&gt;另外&lt;code&gt;uac&lt;/code&gt;发送的&lt;code&gt;invite&lt;/code&gt;的&lt;code&gt;SDP&lt;/code&gt;信息为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip1.png&#34;
+	width=&#34;892&#34;
+	height=&#34;584&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip1_hu5290505663922169746.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip1_hu4996879167443248996.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;152&#34;
+		data-flex-basis=&#34;366px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发给&lt;code&gt;uas&lt;/code&gt;的&lt;code&gt;invite&lt;/code&gt;的&lt;code&gt;sdp&lt;/code&gt;信息：
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip2.png&#34;
+	width=&#34;1068&#34;
+	height=&#34;479&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip2_hu5165391912126913881.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip2_hu16198163867904016068.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;222&#34;
+		data-flex-basis=&#34;535px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可能有点问题的是： 这个转发的&lt;code&gt;invite&lt;/code&gt;居然把&lt;code&gt;media&lt;/code&gt;相关的信息都去掉了。&lt;/p&gt;
+&lt;h2 id=&#34;inbound-转rfc2833&#34;&gt;inbound 转rfc2833
+&lt;/h2&gt;&lt;p&gt;目前没有成功,我用了&lt;code&gt;always-transcode detect-DTMF codec-transcode-telephone-event codec-strip=telephone-event&lt;/code&gt;
+和&lt;code&gt;always-transcode inject-DTMF codec-transcode-telephone-event codec-strip=telephone-event&lt;/code&gt;,都没转成功。&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;rtpengine&lt;/code&gt;的group发的帖子,一直自动删除. 后面如果有成功的,会在这里补充。&lt;/p&gt;
+&lt;h2 id=&#34;info-转-rfc2833&#34;&gt;INFO 转 rfc2833
+&lt;/h2&gt;&lt;p&gt;按键&lt;code&gt;INFO&lt;/code&gt;的&lt;code&gt;sip&lt;/code&gt;信令如下:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip3.png&#34;
+	width=&#34;1299&#34;
+	height=&#34;483&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip3_hu6563820721585249387.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip3_hu17007571019150523539.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;268&#34;
+		data-flex-basis=&#34;645px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到按键的&lt;code&gt;INFO&lt;/code&gt;的&lt;code&gt;sip&lt;/code&gt;头里的&lt;code&gt;content-type&lt;/code&gt;为&lt;code&gt;application/dtmf-relay&lt;/code&gt;,
+&lt;code&gt;BODY&lt;/code&gt;里的&lt;code&gt;Signal&lt;/code&gt;即为按键内容。&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;opensips&lt;/code&gt;的配置中，设置如下:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;is_method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;INFO&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cT&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;application/dtmf-relay&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)){&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rb&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;body&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;){&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;substr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signalNumber&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;signal&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;){&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;substr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;});&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;xlog&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;L_DBG&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;[$cfg_line][$ci]---info--:$rm|$rs|$tu|---receive dtmf:$rb,signal:$var(signal),number:$var(signalNumber)&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;rtpengine_play_dtmf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;signalNumber&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sl_send_reply&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;OK&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;exit&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;能接收的按键为:&lt;code&gt;(0-9)&lt;/code&gt;和&lt;code&gt;(*,#,A,B,C,D)&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;另外还要在转发的&lt;code&gt;invite&lt;/code&gt;,生成&lt;code&gt;SDP&lt;/code&gt;信息时，&lt;code&gt;rtpengine_manager&lt;/code&gt;的参数添加如下:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;always-transcode inject-DTMF codec-mask-all&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;实际抓包的&lt;code&gt;sip&lt;/code&gt;信令如下:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip4.png&#34;
+	width=&#34;1078&#34;
+	height=&#34;895&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip4_hu8694893111416807780.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip4_hu5664660785981370699.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;120&#34;
+		data-flex-basis=&#34;289px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;确实可以看到&lt;code&gt;INFO&lt;/code&gt;转成了&lt;code&gt;rfc2833&lt;/code&gt;类型的按键。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;uac&lt;/code&gt;发送的&lt;code&gt;invite&lt;/code&gt;的&lt;code&gt;SDP&lt;/code&gt;信息为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf1.png&#34;
+	width=&#34;1012&#34;
+	height=&#34;531&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf1_hu17816362718974717633.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf1_hu5051137423468223527.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sdp&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;190&#34;
+		data-flex-basis=&#34;457px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发给&lt;code&gt;uas&lt;/code&gt;的&lt;code&gt;invite&lt;/code&gt;的&lt;code&gt;sdp&lt;/code&gt;信息：
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf2.png&#34;
+	width=&#34;972&#34;
+	height=&#34;585&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf2_hu17368038805251718829.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/dtmf2_hu7569315965878125715.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sdp&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;166&#34;
+		data-flex-basis=&#34;398px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;info-转-inbound&#34;&gt;INFO 转 inbound
+&lt;/h2&gt;&lt;p&gt;暂未成功。&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;rtpengine&lt;/code&gt;的按键转换功能, 目前验证成功是&lt;code&gt;rfc2833&lt;/code&gt;转&lt;code&gt;inbound&lt;/code&gt;和&lt;code&gt;INFO&lt;/code&gt;转&lt;code&gt;rfc2833&lt;/code&gt;。&lt;code&gt;inbound&lt;/code&gt;转&lt;code&gt;rfc2833&lt;/code&gt;和&lt;code&gt;INFO&lt;/code&gt;转&lt;code&gt;inbound&lt;/code&gt;暂未成功。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rfc2833&lt;/code&gt;或者&lt;code&gt;inbound&lt;/code&gt;应该不能转成&lt;code&gt;INFO&lt;/code&gt;类型。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>opensips dtmf 按键失效问题</title>
         <link>https://QuincyGao.github.io/p/opensips-dtmf-%E6%8C%89%E9%94%AE%E5%A4%B1%E6%95%88%E9%97%AE%E9%A2%98/</link>
         <pubDate>Mon, 09 Jun 2025 11:05:03 +0800</pubDate>
