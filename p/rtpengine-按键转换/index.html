@@ -482,7 +482,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 3 分钟,共1025 字
+                    阅读时长: 3 分钟,共1372 字
                 </time>
             </div>
         
@@ -523,7 +523,9 @@
 <p>Version: 13.1.0.0+0~mr13.1.0.0 git-heads/mr13.0.1.2-3ac08574</p>
 </blockquote>
 <h2 id="rfc2833-转inbound">rfc2833 转inbound
-</h2><p>在<code>opensips</code>调用<code>rtpengine_manager</code>里,参数设置如下:</p>
+</h2><ol>
+<li>在<code>opensips</code>在转发<code>invite</code>时,<code>rtpengine_manager</code>里,参数设置如下:</li>
+</ol>
 <blockquote>
 <p>always-transcode codec-mask-all codec-transcode-telephone-event codec-strip-telephone-event</p>
 </blockquote>
@@ -589,6 +591,95 @@
 	
 ></p>
 <p>可能有点问题的是： 这个转发的<code>invite</code>居然把<code>media</code>相关的信息都去掉了。</p>
+<ol start="2">
+<li><strong>20250623 修正</strong></li>
+</ol>
+<p><code>opensips</code>转发<code>invite</code>时,<code>rtpengine_manager</code>参数设置为:</p>
+<blockquote>
+<p>always-transcode codec-strip-telephone-event DTLS=off SDES-off ICE=remove RTP/AVP</p>
+</blockquote>
+<p>从<code>uac</code>发送过来的<code>invite</code>sip信令图为:
+<img src="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip5.png"
+	width="1163"
+	height="602"
+	srcset="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip5_hu9327989611100319860.png 480w, /p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip5_hu17067266626547741145.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="193"
+		data-flex-basis="463px"
+	
+></p>
+<p><code>opensips</code>转发给<code>uas</code>的<code>invite</code>信令图为:
+<img src="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip6.png"
+	width="1122"
+	height="638"
+	srcset="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip6_hu9330582260912443093.png 480w, /p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip6_hu6235923013581141086.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="175"
+		data-flex-basis="422px"
+	
+></p>
+<p>可以看到转发的<code>invite</code>只是去掉了<code>telephone-event</code></p>
+<p><code>opensips</code>收到<code>183ring</code>或者<code>200OK</code>时的<code>rtpengine_manager</code>参数为:</p>
+<blockquote>
+<p>DTLS=off SDES-off ICE=remove RTP/AVP</p>
+</blockquote>
+<p>从<code>uas</code>返回的<code>183ring</code>或者<code>200OK</code>的<code>sip</code>信令图为:
+<img src="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip7.png"
+	width="1152"
+	height="552"
+	srcset="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip7_hu17983437937410682513.png 480w, /p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip7_hu15203018671373473920.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="208"
+		data-flex-basis="500px"
+	
+></p>
+<p>从<code>opensips</code>返回给软电话的<code>183ring</code>或者<code>200OK</code>的<code>sip</code>信令图为:
+<img src="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip8.png"
+	width="1223"
+	height="643"
+	srcset="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip8_hu3814141998817139635.png 480w, /p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip8_hu13159500349360019671.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="190"
+		data-flex-basis="456px"
+	
+></p>
+<p>可以看到返回的<code>183ring</code>或者<code>200OK</code>的<code>sip</code>信令,新增了<code>telephone-event</code></p>
+<p>整体信令图：
+<img src="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip9.png"
+	width="1332"
+	height="1058"
+	srcset="/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip9_hu4084722228091885177.png 480w, /p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip9_hu11484604453480368954.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="125"
+		data-flex-basis="302px"
+	
+></p>
+<p>可以看到<code>rfc2833</code>被转成了<code>inbound</code>, 这种方式比方案1更好。</p>
 <h2 id="inbound-转rfc2833">inbound 转rfc2833
 </h2><p>目前没有成功,我用了<code>always-transcode detect-DTMF codec-transcode-telephone-event codec-strip=telephone-event</code>
 和<code>always-transcode inject-DTMF codec-transcode-telephone-event codec-strip=telephone-event</code>,都没转成功。</p>
@@ -807,6 +898,30 @@
             
                 
 <article class="has-image">
+    <a href="/p/opensips-pike%E6%A8%A1%E5%9D%97/">
+        
+        
+            <div class="article-image">
+                <img src="/p/opensips-pike%E6%A8%A1%E5%9D%97/backup.5d020dd4e6c4fcd78207fcfbaa615c47_hu4543822082528520855.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post opensips pike模块"
+                        
+                        data-hash="md5-XQIN1ObE/NeCB/z7qmFcRw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">opensips pike模块</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/opensips-3.3.10-%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B0-3.5.5/">
         
         
@@ -872,30 +987,6 @@
 
         <div class="article-details">
             <h2 class="article-title">opensips exec模块介绍</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/">
-        
-        
-            <div class="article-image">
-                <img src="/p/opensips-acc%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D/backup.8fe1f31b1de561f38960d68aa5bccd14_hu13662762067246731552.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post opensips acc模块介绍"
-                        
-                        data-hash="md5-j&#43;HzGx3lYfOJYNaKpbzNFA==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">opensips acc模块介绍</h2>
         </div>
     </a>
 </article>
@@ -1042,9 +1133,11 @@
         
             
         
+            
         
-        发表了42篇文章 · 
-        总计72.26k字
+        
+        发表了43篇文章 · 
+        总计73.37k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>

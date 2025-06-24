@@ -25,7 +25,9 @@
 &lt;p&gt;Version: 13.1.0.0+0~mr13.1.0.0 git-heads/mr13.0.1.2-3ac08574&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;rfc2833-转inbound&#34;&gt;rfc2833 转inbound
-&lt;/h2&gt;&lt;p&gt;在&lt;code&gt;opensips&lt;/code&gt;调用&lt;code&gt;rtpengine_manager&lt;/code&gt;里,参数设置如下:&lt;/p&gt;
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;在&lt;code&gt;opensips&lt;/code&gt;在转发&lt;code&gt;invite&lt;/code&gt;时,&lt;code&gt;rtpengine_manager&lt;/code&gt;里,参数设置如下:&lt;/li&gt;
+&lt;/ol&gt;
 &lt;blockquote&gt;
 &lt;p&gt;always-transcode codec-mask-all codec-transcode-telephone-event codec-strip-telephone-event&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -91,6 +93,95 @@
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;可能有点问题的是： 这个转发的&lt;code&gt;invite&lt;/code&gt;居然把&lt;code&gt;media&lt;/code&gt;相关的信息都去掉了。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;20250623 修正&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;invite&lt;/code&gt;时,&lt;code&gt;rtpengine_manager&lt;/code&gt;参数设置为:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;always-transcode codec-strip-telephone-event DTLS=off SDES-off ICE=remove RTP/AVP&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;从&lt;code&gt;uac&lt;/code&gt;发送过来的&lt;code&gt;invite&lt;/code&gt;sip信令图为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip5.png&#34;
+	width=&#34;1163&#34;
+	height=&#34;602&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip5_hu9327989611100319860.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip5_hu17067266626547741145.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;193&#34;
+		data-flex-basis=&#34;463px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发给&lt;code&gt;uas&lt;/code&gt;的&lt;code&gt;invite&lt;/code&gt;信令图为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip6.png&#34;
+	width=&#34;1122&#34;
+	height=&#34;638&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip6_hu9330582260912443093.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip6_hu6235923013581141086.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;175&#34;
+		data-flex-basis=&#34;422px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到转发的&lt;code&gt;invite&lt;/code&gt;只是去掉了&lt;code&gt;telephone-event&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;收到&lt;code&gt;183ring&lt;/code&gt;或者&lt;code&gt;200OK&lt;/code&gt;时的&lt;code&gt;rtpengine_manager&lt;/code&gt;参数为:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;DTLS=off SDES-off ICE=remove RTP/AVP&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;从&lt;code&gt;uas&lt;/code&gt;返回的&lt;code&gt;183ring&lt;/code&gt;或者&lt;code&gt;200OK&lt;/code&gt;的&lt;code&gt;sip&lt;/code&gt;信令图为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip7.png&#34;
+	width=&#34;1152&#34;
+	height=&#34;552&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip7_hu17983437937410682513.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip7_hu15203018671373473920.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;208&#34;
+		data-flex-basis=&#34;500px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;从&lt;code&gt;opensips&lt;/code&gt;返回给软电话的&lt;code&gt;183ring&lt;/code&gt;或者&lt;code&gt;200OK&lt;/code&gt;的&lt;code&gt;sip&lt;/code&gt;信令图为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip8.png&#34;
+	width=&#34;1223&#34;
+	height=&#34;643&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip8_hu3814141998817139635.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip8_hu13159500349360019671.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;190&#34;
+		data-flex-basis=&#34;456px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到返回的&lt;code&gt;183ring&lt;/code&gt;或者&lt;code&gt;200OK&lt;/code&gt;的&lt;code&gt;sip&lt;/code&gt;信令,新增了&lt;code&gt;telephone-event&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;整体信令图：
+&lt;img src=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip9.png&#34;
+	width=&#34;1332&#34;
+	height=&#34;1058&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip9_hu4084722228091885177.png 480w, https://QuincyGao.github.io/p/rtpengine-%E6%8C%89%E9%94%AE%E8%BD%AC%E6%8D%A2/sip9_hu11484604453480368954.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;125&#34;
+		data-flex-basis=&#34;302px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到&lt;code&gt;rfc2833&lt;/code&gt;被转成了&lt;code&gt;inbound&lt;/code&gt;, 这种方式比方案1更好。&lt;/p&gt;
 &lt;h2 id=&#34;inbound-转rfc2833&#34;&gt;inbound 转rfc2833
 &lt;/h2&gt;&lt;p&gt;目前没有成功,我用了&lt;code&gt;always-transcode detect-DTMF codec-transcode-telephone-event codec-strip=telephone-event&lt;/code&gt;
 和&lt;code&gt;always-transcode inject-DTMF codec-transcode-telephone-event codec-strip=telephone-event&lt;/code&gt;,都没转成功。&lt;/p&gt;
