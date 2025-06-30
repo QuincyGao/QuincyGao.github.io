@@ -6,13 +6,13 @@
         <description>Recent content in Rtpengine on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 27 Jun 2025 09:31:00 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/rtpengine/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>关于rtpengine的几个小知识(持续更新···)</title>
-        <link>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</link>
-        <pubDate>Fri, 27 Jun 2025 09:31:00 +0800</pubDate>
+        <lastBuildDate>Mon, 30 Jun 2025 09:31:00 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/rtpengine/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>关于rtpengine的几个小知识</title>
+        <link>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</link>
+        <pubDate>Mon, 30 Jun 2025 09:31:00 +0800</pubDate>
         
-        <guid>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/backup.jpg" alt="Featured image of post 关于rtpengine的几个小知识(持续更新···)" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景 
+        <guid>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/backup.jpg" alt="Featured image of post 关于rtpengine的几个小知识" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景 
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;rtpengine&lt;/code&gt;提供媒体代理功能, 和sip代理(&lt;code&gt;opensips&lt;/code&gt;或者&lt;code&gt;kamailio&lt;/code&gt;)一起组成完整的代理服务。&lt;/p&gt;
 &lt;p&gt;针对&lt;code&gt;rtpengine&lt;/code&gt;的使用，记录几个常用方法。
 rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine.readthedocs.io/en/latest/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
@@ -23,10 +23,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;/blockquote&gt;
 &lt;h2 id=&#34;rtpengine-是否支持视频&#34;&gt;rtpengine 是否支持视频?
 &lt;/h2&gt;&lt;p&gt;一直对&lt;code&gt;rtpengine&lt;/code&gt;的视频支持不是很清楚，官方文档也没有明确说明。 &lt;code&gt;rtpengine&lt;/code&gt;支持的编码有:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/codec.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/codec.png&#34;
 	width=&#34;950&#34;
 	height=&#34;787&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/codec_hu12619076584791487749.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/codec_hu13266923505063136354.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/codec_hu12619076584791487749.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/codec_hu13266923505063136354.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;codec&#34;
@@ -40,10 +40,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;p&gt;从支持的编码上看，都是音频编码，没有视频编码，所以我也认为是不支持视频的。
 最近有空,就使用&lt;code&gt;mircoSIP&lt;/code&gt;测试了视频功能，发现&lt;strong&gt;rtpengine支持视频&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;完整的一通视频sip图:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/video.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/video.png&#34;
 	width=&#34;1256&#34;
 	height=&#34;1080&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/video_hu16852964672843215200.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/video_hu1280857307349153239.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/video_hu16852964672843215200.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/video_hu1280857307349153239.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;video&#34;
@@ -55,10 +55,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;媒体相关的信令:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/video1.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/video1.png&#34;
 	width=&#34;1252&#34;
 	height=&#34;1019&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/video1_hu13653633231159962865.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/video1_hu4486729732962569641.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/video1_hu13653633231159962865.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/video1_hu4486729732962569641.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;rtp&#34;
@@ -74,10 +74,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;microSIP&lt;/code&gt;发出&lt;code&gt;INVITE&lt;/code&gt;信令:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/invite1.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/invite1.png&#34;
 	width=&#34;889&#34;
 	height=&#34;730&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/invite1_hu6912089515113041469.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/invite1_hu7078452612674550690.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/invite1_hu6912089515113041469.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/invite1_hu7078452612674550690.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;invite&#34;
@@ -92,10 +92,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;ol start=&#34;2&#34;&gt;
 &lt;li&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;信令:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/invite2.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/invite2.png&#34;
 	width=&#34;820&#34;
 	height=&#34;711&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/invite2_hu16215846185693582910.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/invite2_hu15579542843376868941.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/invite2_hu16215846185693582910.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/invite2_hu15579542843376868941.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;invite&#34;
@@ -109,10 +109,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;ol start=&#34;3&#34;&gt;
 &lt;li&gt;&lt;code&gt;opensips&lt;/code&gt;收到&lt;code&gt;183ring&lt;/code&gt;信令:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/1832.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/1832.png&#34;
 	width=&#34;918&#34;
 	height=&#34;535&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/1832_hu5386192555869744493.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/1832_hu6569895962313394390.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/1832_hu5386192555869744493.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/1832_hu6569895962313394390.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;183&#34;
@@ -126,10 +126,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;ol start=&#34;4&#34;&gt;
 &lt;li&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;183ring&lt;/code&gt;信令:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/1831.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/1831.png&#34;
 	width=&#34;837&#34;
 	height=&#34;614&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/1831_hu6886753494483493.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/1831_hu9343284717542316353.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/1831_hu6886753494483493.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/1831_hu9343284717542316353.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;183&#34;
@@ -143,10 +143,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;ol start=&#34;5&#34;&gt;
 &lt;li&gt;接通之后,&lt;code&gt;microSIP&lt;/code&gt;发出媒体控制信令&lt;code&gt;INFO&lt;/code&gt;:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/info1.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/info1.png&#34;
 	width=&#34;1764&#34;
 	height=&#34;547&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/info1_hu15554399776819902830.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/info1_hu4868002238484614134.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/info1_hu15554399776819902830.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/info1_hu4868002238484614134.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;info&#34;
@@ -160,10 +160,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 &lt;ol start=&#34;6&#34;&gt;
 &lt;li&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INFO&lt;/code&gt;信令:&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/info2.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/info2.png&#34;
 	width=&#34;1738&#34;
 	height=&#34;539&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/info2_hu9334753906095252802.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/info2_hu14811776661729178773.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/info2_hu9334753906095252802.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/info2_hu14811776661729178773.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;info&#34;
@@ -175,10 +175,10 @@ rtpengine的官方文档: &lt;a class=&#34;link&#34; href=&#34;https://rtpengine
 	
 &gt;&lt;/p&gt;
 &lt;p&gt;目前视频流传输这块发现&lt;code&gt;rtpengine&lt;/code&gt;有报错, 从效果来看，并没有卡顿情况:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/rtp-drop.png&#34;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/rtp-drop.png&#34;
 	width=&#34;1799&#34;
 	height=&#34;183&#34;
-	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/rtp-drop_hu12411041820750014054.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/rtp-drop_hu11530559588727318733.png 1024w&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/rtp-drop_hu12411041820750014054.png 480w, https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/rtp-drop_hu11530559588727318733.png 1024w&#34;
 	loading=&#34;lazy&#34;
 	
 		alt=&#34;warning&#34;
@@ -210,136 +210,37 @@ in the list.&lt;/p&gt;
 &lt;p&gt;意思就是： 可以添加原编码列表中没有的新编码，这个新的编码必须是&lt;code&gt;rtpengine&lt;/code&gt;支持的&lt;code&gt;fully supported&lt;/code&gt;的&lt;code&gt;codecs&lt;/code&gt;.
 此时会启用转码功能。另外也可以通过&lt;code&gt;opus/48000/2/32000&lt;/code&gt;这样，设置采样率，声道数。&lt;/p&gt;
 &lt;h4 id=&#34;验证&#34;&gt;验证
-&lt;/h4&gt;&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;收到&lt;code&gt;INVITE&lt;/code&gt;的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959936153 3959936153 IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 4004 RTP/AVP 0 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:4005 IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:13774595 cname:5e6c1f45683b7a88
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;在收到&lt;code&gt;INVITE&lt;/code&gt;请求转发时，分别设置:&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;codec-transcode-PCMU&lt;/code&gt;(源sdp含有的codecs)&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959936153 3959936153 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30978 RTP/AVP 0 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:13774595 cname:5e6c1f45683b7a88
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30979
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;/li&gt;
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-transcode-PCMU&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;可以看到，源&lt;code&gt;sdp&lt;/code&gt;中有&lt;code&gt;PCMU&lt;/code&gt;,所以&lt;code&gt;codec-transcode-PCMU&lt;/code&gt;其实不起作用.&lt;/p&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到，&lt;code&gt;codec-transcode-PCMU&lt;/code&gt;其实不起作用.&lt;/p&gt;
 &lt;ol start=&#34;2&#34;&gt;
-&lt;li&gt;&lt;code&gt;codec-transcode-G722&lt;/code&gt;(源sdp没有的codecs)
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959936715 3959936715 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 32292 RTP/AVP 0 8 9 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:9 G722/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:521813100 cname:25e0395673a04af0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:32293
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;codec-transcode-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;可以看到新增了&lt;code&gt;G722&lt;/code&gt;编码&lt;/p&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,G722,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
 &lt;p&gt;当和&lt;code&gt;codec-strip-all codec-mask-all&lt;/code&gt;一起使用时,&lt;code&gt;codec-transcode-PCMU&lt;/code&gt;不会启用转码,&lt;code&gt;codec-transcode-G722&lt;/code&gt;会启用转码.&lt;/p&gt;
 &lt;h3 id=&#34;codec-strip&#34;&gt;codec-strip
 &lt;/h3&gt;&lt;h4 id=&#34;介绍-1&#34;&gt;介绍
@@ -356,130 +257,53 @@ for a similar mechanism that affects the offer codecs.&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;意思就是： 从&lt;code&gt;sdp&lt;/code&gt;中移除指定的编码. 可以是具体的某个编码,也可以是&lt;code&gt;all&lt;/code&gt;or&lt;code&gt;full&lt;/code&gt;移除所有编码.&lt;/p&gt;
 &lt;h4 id=&#34;验证-1&#34;&gt;验证
-&lt;/h4&gt;&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;收到&lt;code&gt;INVITE&lt;/code&gt;的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959936153 3959936153 IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 4004 RTP/AVP 0 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:4005 IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:13774595 cname:5e6c1f45683b7a88
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;codec-strip-PCMU&lt;/code&gt;(源sdp含有的codecs)&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959938742 3959938742 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 31172 RTP/AVP 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:511262327 cname:3746229c63e96846
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:31173
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;可以看到&lt;code&gt;PCMU&lt;/code&gt;被删除了.&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;codec-strip-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959938899 3959938899 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30892 RTP/AVP 0 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:1565081695 cname:50952bd21cbd44c8
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30893
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;可以看到没有任何变化.&lt;/p&gt;
-&lt;/li&gt;
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-PCMU&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-PCMA codec-transcode-G722&lt;/code&gt;(uas使用&lt;code&gt;G722&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,G722,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: G722,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,telephone-event
+&lt;/pre&gt;
+
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;ol start=&#34;4&#34;&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;codec-strip-all&lt;/code&gt;(删除所有)&lt;/p&gt;
 &lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
@@ -591,254 +415,299 @@ for transcoding.&lt;/p&gt;
 但是如果想改变&lt;code&gt;opensips---A&lt;/code&gt;的&lt;code&gt;200OK&lt;/code&gt;编码，就需要设置&lt;code&gt;mask&lt;/code&gt;。&lt;/p&gt;
 &lt;p&gt;目前实际测试情况不太一样，并没有达到官方描述的效果，不知道是否是使用方法问题。&lt;/p&gt;
 &lt;h4 id=&#34;验证-2&#34;&gt;验证
-&lt;/h4&gt;&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;收到&lt;code&gt;INVITE&lt;/code&gt;的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959936153 3959936153 IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 4004 RTP/AVP 0 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:4005 IN IP4 172.16.80.13
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:13774595 cname:5e6c1f45683b7a88
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;&lt;code&gt;codec-mask-PCMA&lt;/code&gt;(源sdp含有的codecs)&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3959940641 3959940641 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 32792 RTP/AVP 0 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:88031142 cname:45af19894aea3926
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:32793
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;可以看到&lt;code&gt;PCMA&lt;/code&gt;被删除了, 如果和&lt;code&gt;codec-transcode-G722&lt;/code&gt;一起使用(&lt;code&gt;codec-mask-PCMU codec-transcode-G722&lt;/code&gt;).&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3960007402 3960007402 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 32762 RTP/AVP 8 9 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:9 G722/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:692681591 cname:3de5725421f15ecd
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:32763
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;可以看到&lt;code&gt;PCMU&lt;/code&gt;被删除了，这点和&lt;code&gt;strip&lt;/code&gt;功能一样.&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;接收&lt;code&gt;200OK&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=FreeSWITCH 1750959462 1750959463 IN IP4 172.16.4.114
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=FreeSWITCH
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.114
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30016 RTP/AVP 9 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:9 G722/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ptime:20
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30017 IN IP4 172.16.4.114
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;此时&lt;code&gt;B-leg&lt;/code&gt;选择的是&lt;code&gt;G722&lt;/code&gt;,这个编码是&lt;code&gt;A-leg&lt;/code&gt;发送&lt;code&gt;INVITE&lt;/code&gt;时没有的编码,
-此时&lt;code&gt;rtpengine&lt;/code&gt;会默认选择收到&lt;code&gt;INVITE&lt;/code&gt;中第一个编码&lt;code&gt;PCMU&lt;/code&gt;返回。
-&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;200OK&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=FreeSWITCH 1750959462 1750959463 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=FreeSWITCH
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30292 RTP/AVP 0 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30293
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ptime:20
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;我试过了就算设置成&lt;code&gt;codec-mask-PCMA&lt;/code&gt;,这里返回的还是&lt;code&gt;PCMU&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;此场景下, 还测了&lt;code&gt;codec-strip-PCMU codec-transcode-G722&lt;/code&gt;,效果是一样的，还是使用默认编码&lt;code&gt;PCMU&lt;/code&gt;。&lt;/p&gt;
-&lt;p&gt;如果&lt;code&gt;B-leg&lt;/code&gt;选择的是&lt;code&gt;PCMA&lt;/code&gt;,情况如下:
-&lt;code&gt;opensips&lt;/code&gt;接收&lt;code&gt;200OK&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=FreeSWITCH 1750959265 1750959266 IN IP4 172.16.4.114
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=FreeSWITCH
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.114
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30000 RTP/AVP 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ptime:20
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30001 IN IP4 172.16.4.114
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;200OK&lt;/code&gt;时的&lt;code&gt;sdp&lt;/code&gt;信息:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
-&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
-&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
-&lt;td class=&#34;lntd&#34;&gt;
-&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=FreeSWITCH 1750959265 1750959266 IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=FreeSWITCH
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 32536 RTP/AVP 8 101
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:32537
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ptime:20
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-&lt;/div&gt;
-&lt;/div&gt;&lt;p&gt;可以看到转发&lt;code&gt;A-leg&lt;/code&gt;时的&lt;code&gt;200OK&lt;/code&gt;选择的是&lt;code&gt;PCMA&lt;/code&gt;。&lt;/p&gt;
-&lt;/li&gt;
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-mask-PCMA&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
 &lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到&lt;code&gt;PCMA&lt;/code&gt;被删除了。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-mask-PCMA codec-transcode-G722&lt;/code&gt;(uas使用&lt;code&gt;G722&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,G722,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: G722,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,telephone-event
+&lt;/pre&gt;
+
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-mask-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;h3 id=&#34;codec-accept&#34;&gt;codec-accept
+&lt;/h3&gt;&lt;h4 id=&#34;介绍-3&#34;&gt;介绍
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;accept&lt;/code&gt; 官方的解释是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Similar to &lt;code&gt;mask&lt;/code&gt; and &lt;code&gt;consume&lt;/code&gt; but doesn&amp;rsquo;t remove the codec from the list of
+offered codecs. This means that a codec listed under &lt;code&gt;accept&lt;/code&gt; will still be offered
+to the remote peer, but if the remote peer rejects it, it will still be accepted
+towards the original offerer and then used for transcoding. It is a more selective
+version of what the &lt;code&gt;always transcode&lt;/code&gt; flag does.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;意思是： 和&lt;code&gt;mask&lt;/code&gt;功能一样,但是不会删除codec, 当双向不一致会转码.&lt;/p&gt;
+&lt;h4 id=&#34;验证-3&#34;&gt;验证
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-accept-PCMA&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,&amp;lt;br/&amp;gt;telephone-event
+    opensips-&amp;gt;&amp;gt;+uas: INVITE
+    Note over opensips,uas: PCMU, PCMA,&amp;lt;br/&amp;gt;telephone-event
+    uas--&amp;gt;&amp;gt;-opensips: 200OK 
+    Note over uas,opensips: PCMU,&amp;lt;br/&amp;gt;telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,&amp;lt;br/&amp;gt;telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到，这种方式设置了&lt;code&gt;A-leg&lt;/code&gt;的编码, &lt;code&gt;A-leg&lt;/code&gt;和&lt;code&gt;B-leg&lt;/code&gt;之间实现转码.&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-accept-PCMA codec-transcode-G722&lt;/code&gt;(uas使用G722)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,&amp;lt;br/&amp;gt;telephone-event
+    opensips-&amp;gt;&amp;gt;+uas: INVITE
+    Note over opensips,uas: PCMU, PCMA,&amp;lt;br/&amp;gt;telephone-event
+    uas--&amp;gt;&amp;gt;-opensips: 200OK 
+    Note over uas,opensips: G722,&amp;lt;br/&amp;gt;telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,&amp;lt;br/&amp;gt;telephone-event
+&lt;/pre&gt;
+
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-accept-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,&amp;lt;br/&amp;gt;telephone-event
+    opensips-&amp;gt;&amp;gt;+uas: INVITE
+    Note over opensips,uas: PCMU, PCMA,&amp;lt;br/&amp;gt;telephone-event
+    uas--&amp;gt;&amp;gt;-opensips: 200OK 
+    Note over uas,opensips: PCMU,&amp;lt;br/&amp;gt;telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,&amp;lt;br/&amp;gt;telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;h3 id=&#34;codec-consume&#34;&gt;codec-consume
+&lt;/h3&gt;&lt;h4 id=&#34;介绍-4&#34;&gt;介绍
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;consume&lt;/code&gt; 官方的解释是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Identical to &lt;code&gt;mask&lt;/code&gt; but enables the transcoding engine even if no other transcoding
+related options are given.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;意思是: 和&lt;code&gt;mask&lt;/code&gt;功能一样，但是会开启转码引擎，即使没有其他转码相关的选项。&lt;/p&gt;
+&lt;h4 id=&#34;验证-4&#34;&gt;验证
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-consume-PCMA&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到,&lt;code&gt;consume-PCMA&lt;/code&gt;设置后, 转发到&lt;code&gt;B-leg&lt;/code&gt;的&lt;code&gt;INVITE&lt;/code&gt;删除了&lt;code&gt;PCMA&lt;/code&gt;,但是转发到&lt;code&gt;A-leg&lt;/code&gt;的&lt;code&gt;200OK&lt;/code&gt;,选择了&lt;code&gt;PCMA&lt;/code&gt;, &lt;code&gt;A-leg&lt;/code&gt;和&lt;code&gt;B-leg&lt;/code&gt;实现转码。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-consume-PCMA codec-transcode-G722&lt;/code&gt;(uas使用G722)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,G722,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: G722,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-consume-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU, telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;h3 id=&#34;codec-except&#34;&gt;codec-except
+&lt;/h3&gt;&lt;h4 id=&#34;介绍-5&#34;&gt;介绍
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;except&lt;/code&gt; 官方的解释是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Contains a list of strings. Each string is the name of a codec that should be
+included in the list of codecs offered. This is primarily useful to block all
+codecs (&lt;code&gt;strip -&amp;gt; all&lt;/code&gt; or &lt;code&gt;mask -&amp;gt; all&lt;/code&gt;) except the ones given in the &lt;code&gt;except&lt;/code&gt;
+whitelist.  Codecs that were not present in the original list of codecs
+offered by the client will be ignored.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;意思就是: 白名单，和&lt;code&gt;codec-strip-all&lt;/code&gt;or&lt;code&gt;codec-mask-all&lt;/code&gt;一起使用才有效。&lt;/p&gt;
+&lt;h4 id=&#34;验证-5&#34;&gt;验证
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-all codec-except-PCMA&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMA
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA
+&lt;/pre&gt;
+
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-all codec-except-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;h3 id=&#34;codec-offer&#34;&gt;codec-offer
+&lt;/h3&gt;&lt;h4 id=&#34;介绍-6&#34;&gt;介绍
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;offer&lt;/code&gt; 官方的解释是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;This is identical to &lt;code&gt;except&lt;/code&gt; but additionally allows the codec order to be
+changed. So the first codec listed in &lt;code&gt;offer&lt;/code&gt; will be the primary (preferred)
+codec in the output SDP, even if it wasn&amp;rsquo;t originally so.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;意思就是：和&lt;code&gt;except&lt;/code&gt;一样，但是会改变编码顺序.&lt;/p&gt;
+&lt;h4 id=&#34;验证-6&#34;&gt;验证
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-all codec-offer-PCMA codec-offer-PCMU&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMA,PCMU
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMA,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMA
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到,转发&lt;code&gt;B-leg&lt;/code&gt;的&lt;code&gt;INVITE&lt;/code&gt;时，编码顺序改变了。
+&lt;code&gt; codec-strip-all codec-except-PCMA codec-except-PCMU&lt;/code&gt;在转发&lt;code&gt;B-leg&lt;/code&gt;的&lt;code&gt;INVITE&lt;/code&gt;时, &lt;code&gt;PCMU PCMA&lt;/code&gt;编码顺序不会变.&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;codec-strip-all codec-offer-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;h3 id=&#34;codec-ignore&#34;&gt;codec-ignore
+&lt;/h3&gt;&lt;h4 id=&#34;介绍-7&#34;&gt;介绍
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;ignore&lt;/code&gt; 官方的解释是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Similar to the &lt;code&gt;strip&lt;/code&gt; option below, but affects only codecs listed in the
+incoming received SDP. Codecs listed here are treated as if they were never
+offered, and so will not be used for media towards the offerer. Note that
+codecs listed here would still be used in the outgoing rewritten offer SDP,
+unless the same codecs are also listed under &lt;code&gt;strip&lt;/code&gt;. This means that if a
+codec is only ignored but not stripped, and if that codec is then accepted
+by the answerer, transcoding will necessarily be enabled.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;验证-7&#34;&gt;验证
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;codec-ignore-PCMA&lt;/code&gt;(源sdp含有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips,microSIP: PCMA,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到，转发&lt;code&gt;A-leg&lt;/code&gt;的&lt;code&gt;200OK&lt;/code&gt;,使用了&lt;code&gt;PCMA&lt;/code&gt;,实现转码. 其效果和&lt;code&gt;accept&lt;/code&gt;一样&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt; codec-ignore-G722&lt;/code&gt;(源sdp没有的codecs)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP-&amp;gt;&amp;gt;opensips: INVITE 
+    Note over microSIP,opensips: PCMU,PCMA,telephone-event
+    opensips-&amp;gt;&amp;gt;uas: INVITE
+    Note over opensips,uas: PCMU,PCMA,telephone-event
+    uas--&amp;gt;&amp;gt;opensips: 200OK 
+    Note over uas,opensips: PCMU,telephone-event
+    opensips--&amp;gt;&amp;gt; microSIP: 200OK 
+    Note over opensips, microSIP: PCMU,telephone-event
+&lt;/pre&gt;
+
+&lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
 </description>
         </item>
         <item>
