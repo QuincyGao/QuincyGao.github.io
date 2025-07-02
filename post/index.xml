@@ -923,6 +923,8 @@
 &lt;p&gt;当通话接通之后，整个流程都不需要设置，只设置&lt;code&gt;$socket_out&lt;/code&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
+&lt;p&gt;问题:  可以看到&lt;code&gt;uac&lt;/code&gt;在收到&lt;code&gt;200OK&lt;/code&gt;时,&lt;code&gt;Contact&lt;/code&gt;是&lt;code&gt;uas&lt;/code&gt;的地址,我们并不希望&lt;code&gt;uac&lt;/code&gt;知道&lt;code&gt;uas&lt;/code&gt;的地址。
+&lt;code&gt;uac&lt;/code&gt;后续的&lt;code&gt;Request-URI&lt;/code&gt;都使用&lt;code&gt;uas&lt;/code&gt;的地址，这个是不安全的, 需要修改&lt;code&gt;Contact&lt;/code&gt;为&lt;code&gt;opensips&lt;/code&gt;的地址。&lt;/p&gt;
 </description>
         </item>
         <item>

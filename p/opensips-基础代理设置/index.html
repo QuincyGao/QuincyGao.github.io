@@ -484,7 +484,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 4 分钟,共1788 字
+                    阅读时长: 4 分钟,共1900 字
                 </time>
             </div>
         
@@ -1423,6 +1423,8 @@
 <p>当通话接通之后，整个流程都不需要设置，只设置<code>$socket_out</code>。</p>
 </li>
 </ol>
+<p>问题:  可以看到<code>uac</code>在收到<code>200OK</code>时,<code>Contact</code>是<code>uas</code>的地址,我们并不希望<code>uac</code>知道<code>uas</code>的地址。
+<code>uac</code>后续的<code>Request-URI</code>都使用<code>uas</code>的地址，这个是不安全的, 需要修改<code>Contact</code>为<code>opensips</code>的地址。</p>
 
 </section>
 
@@ -1777,7 +1779,7 @@
         
         
         发表了47篇文章 · 
-        总计81.22k字
+        总计81.34k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
