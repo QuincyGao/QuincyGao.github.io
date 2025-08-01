@@ -492,7 +492,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 2 分钟,共610 字
+                    阅读时长: 3 分钟,共1072 字
                 </time>
             </div>
         
@@ -640,10 +640,13 @@
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="nf">mohqueues</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">name</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">uri</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">mohdir</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">moh_file</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">debug</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sip:172.16.4.111&#39;</span><span class="p">,</span><span class="s1">&#39;/var/kamailio/MOH/&#39;</span><span class="p">,</span><span class="s1">&#39;test.pcm&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
+<pre tabindex="0" class="chroma"><code class="language-mysql" data-lang="mysql"><span class="line"><span class="cl"><span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="nf">mohqueues</span><span class="w"> </span><span class="p">(</span><span class="o">`</span><span class="n">name</span><span class="o">`</span><span class="p">,</span><span class="w"> </span><span class="o">`</span><span class="n">uri</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">mohdir</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">moh_file</span><span class="o">`</span><span class="p">,</span><span class="o">`</span><span class="n">debug</span><span class="o">`</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;abc&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;sip:1008@172.16.4.111:5461&#39;</span><span class="p">,</span><span class="s1">&#39;/var/kamailio/MOH/&#39;</span><span class="p">,</span><span class="s1">&#39;test.pcm&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span><span class="w">
 </span></span></span></code></pre></td></tr></table>
 </div>
-</div><ol start="2">
+</div><blockquote>
+<p>uri很重要, 要和Request-URI保持一致,不然会无法触发mohq_process</p>
+</blockquote>
+<ol start="2">
 <li>上传音频文件到<code>/var/kamailio/MOH/</code>目录下</li>
 </ol>
 <div class="highlight"><div class="chroma">
@@ -662,19 +665,115 @@
 <blockquote>
 <p>音频文件的名称比<code>mohqueues</code>表中的<code>moh_file</code>字段的值多了&rsquo;.type'</p>
 </blockquote>
-<h3 id="测试">测试
-</h3><p>使用软电话拨打时，一直没能触发<code>mohq_process</code>函数, 查看日志发现如下信息:</p>
+<ol start="3">
+<li>
+<p>如果<code>kamailio</code>和<code>rtpproxy</code>使用两个容器部署, 那么<code>rtpproxy</code>也要有<code>/var/kamailio/MOH</code>目录和相关的文件.</p>
+</li>
+<li>
+<p><code>rtpproxy</code>的运行命令为:</p>
+</li>
+</ol>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1
-</span><span class="lnt">2
 </span></code></pre></td>
 <td class="lntd">
-<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">12(9537) INFO: &lt;script&gt;: abc queue has 0 calls!
-</span></span><span class="line"><span class="cl">12(9537) INFO: &lt;script&gt;: mohq_process error
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">rtpproxy -l 0.0.0.0 -L 4096 -m 40000 -M 40100 -s udp:172.16.4.111:3333 -d DBUG -f -F
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p>目前没能成功使用该功能， 后续需要继续排查原因。</p>
+</div><h3 id="测试">测试
+</h3><p>使用软电话拨打1008, 可以听到录音文件的内容,但是有滋滋啦啦的声音,应该是音频格式问题，具体的格式需要后续再排查。</p>
+<p>kamailio的日志为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">10(10390) INFO: &lt;script&gt;: ------172.16.80.13:56855|172.16.4.111:5461|udp|INVITE
+</span></span><span class="line"><span class="cl">10(10390) INFO: &lt;script&gt;: abc queue has 0 calls!
+</span></span><span class="line"><span class="cl">10(10390) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): create_call: Added call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5) to queue (abc)
+</span></span><span class="line"><span class="cl">10(10390) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): mohq_process: Processing INVITE, queue (abc)
+</span></span><span class="line"><span class="cl">10(10390) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): first_invite_msg: Making offer for RTP link for call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5) from queue (abc)
+</span></span><span class="line"><span class="cl">10(10390) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): send_rtp_answer: Answering RTP link for call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5)
+</span></span><span class="line"><span class="cl">10(10390) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): start_stream: Starting RTP link for call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5)
+</span></span><span class="line"><span class="cl">10(10390) ERROR: dialog [dlg_handlers.c:542]: dlg_onreply(): Faked reply!
+</span></span><span class="line"><span class="cl">10(10390) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): send_rtp_answer: Responded to INVITE with RTP for call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5)
+</span></span><span class="line"><span class="cl">10(10390) INFO: &lt;script&gt;: process done
+</span></span><span class="line"><span class="cl">11(10391) INFO: &lt;script&gt;: ------172.16.80.13:56855|172.16.4.111:5461|udp|ACK
+</span></span><span class="line"><span class="cl">34(10414) ERROR: mohqueue [mohq_funcs.c:1348]: invite_cb(): invite_cb: INVITE failed for call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5), code=20000, callstate=68!
+</span></span><span class="line"><span class="cl">34(10414) DEBUG: mohqueue [mohq_funcs.c:2554]: mohq_debug(): delete_call: Deleting call (&lt;sip:1004@172.16.4.111&gt;;tag=af5ea1bf874f4a7187d1587fd1542ec5) from queue (abc)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>rtpproxy</code>的日志为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpp_command_split</span><span class="p">:</span><span class="mi">375</span><span class="p">:</span> <span class="n">received</span> <span class="n">command</span> <span class="s2">&#34;10390_4 Uc8,0,101 5595d7f92e294c03abc42c4d31928d2d 172.16.80.13 4028 af5ea1bf874f4a7187d1587fd1542ec5;1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpp_command_ul_handle</span><span class="p">:</span><span class="mi">527</span><span class="p">:</span> <span class="n">new</span> <span class="n">IPv4</span><span class="o">/</span><span class="n">IPv4</span> <span class="n">session</span> <span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">,</span> <span class="n">tag</span> <span class="n">af5ea1bf874f4a7187d1587fd1542ec5</span><span class="p">;</span><span class="mi">1</span> <span class="n">requested</span><span class="p">,</span> <span class="n">type</span> <span class="n">strong</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_command_ul_handle</span><span class="p">:</span><span class="mi">592</span><span class="p">:</span> <span class="n">new</span> <span class="n">session</span> <span class="n">on</span> <span class="n">IPv4</span> <span class="n">port</span> <span class="mi">40082</span> <span class="n">created</span><span class="p">,</span> <span class="n">tag</span> <span class="n">af5ea1bf874f4a7187d1587fd1542ec5</span><span class="p">;</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_stream_prefill_addr</span><span class="p">:</span><span class="mi">862</span><span class="p">:</span> <span class="n">pre</span><span class="o">-</span><span class="n">filling</span> <span class="n">caller</span><span class="s1">&#39;s RTP address with 172.16.80.13:4028</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_stream_prefill_addr</span><span class="p">:</span><span class="mi">862</span><span class="p">:</span> <span class="n">pre</span><span class="o">-</span><span class="n">filling</span> <span class="n">caller</span><span class="s1">&#39;s RTCP address with 172.16.80.13:4029</span>
+</span></span><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpc_reply_deliver</span><span class="p">:</span><span class="mi">136</span><span class="p">:</span> <span class="n">sending</span> <span class="n">reply</span> <span class="s2">&#34;10390_4 40082</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpp_command_split</span><span class="p">:</span><span class="mi">375</span><span class="p">:</span> <span class="n">received</span> <span class="n">command</span> <span class="s2">&#34;10390_5 LZ20c0 5595d7f92e294c03abc42c4d31928d2d 172.16.80.13 1 af5ea1bf874f4a7187d1587fd1542ec5;1 f5ce571b08e47ce350df4b28201d4d1c-3a37ea7f;1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_command_ul_handle</span><span class="p">:</span><span class="mi">517</span><span class="p">:</span> <span class="n">lookup</span> <span class="n">on</span> <span class="n">ports</span> <span class="mi">40082</span><span class="o">/</span><span class="mi">40058</span><span class="p">,</span> <span class="n">session</span> <span class="n">timer</span> <span class="n">restarted</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_stream_prefill_addr</span><span class="p">:</span><span class="mi">862</span><span class="p">:</span> <span class="n">pre</span><span class="o">-</span><span class="n">filling</span> <span class="n">callee</span><span class="s1">&#39;s RTP address with 172.16.80.13:1</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_stream_prefill_addr</span><span class="p">:</span><span class="mi">862</span><span class="p">:</span> <span class="n">pre</span><span class="o">-</span><span class="n">filling</span> <span class="n">callee</span><span class="s1">&#39;s RTCP address with 172.16.80.13:2</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_command_ul_handle</span><span class="p">:</span><span class="mi">663</span><span class="p">:</span> <span class="n">RTP</span> <span class="n">packets</span> <span class="n">from</span> <span class="n">callee</span> <span class="n">will</span> <span class="n">be</span> <span class="n">resized</span> <span class="n">to</span> <span class="mi">20</span> <span class="n">milliseconds</span>
+</span></span><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpc_reply_deliver</span><span class="p">:</span><span class="mi">136</span><span class="p">:</span> <span class="n">sending</span> <span class="n">reply</span> <span class="s2">&#34;10390_5 40058</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpp_command_split</span><span class="p">:</span><span class="mi">375</span><span class="p">:</span> <span class="n">received</span> <span class="n">command</span> <span class="s2">&#34;10390_6 P-1 5595d7f92e294c03abc42c4d31928d2d /var/kamailio/MOH//test.pcm session af5ea1bf874f4a7187d1587fd1542ec5;1 f5ce571b08e47ce350df4b28201d4d1c-3a37ea7f;1&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_stream_handle_play</span><span class="p">:</span><span class="mi">482</span><span class="p">:</span> <span class="n">rtpp_server_ctor</span><span class="p">(</span><span class="s2">&#34;/var/kamailio/MOH//test.pcm&#34;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">failed</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">rtpp_stream_handle_play</span><span class="p">:</span><span class="mi">511</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="n">times</span> <span class="n">playing</span> <span class="n">prompt</span> <span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">kamailio</span><span class="o">/</span><span class="n">MOH</span><span class="o">//</span><span class="n">test</span><span class="o">.</span><span class="n">pcm</span> <span class="n">codec</span> <span class="mi">0</span><span class="p">:</span> <span class="n">SSRC</span><span class="o">=</span><span class="mh">0x98AD6626</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="n">DBUG</span><span class="p">:</span><span class="n">GLOBAL</span><span class="p">:</span><span class="n">rtpc_reply_deliver</span><span class="p">:</span><span class="mi">136</span><span class="p">:</span> <span class="n">sending</span> <span class="n">reply</span> <span class="s2">&#34;10390_6 0</span><span class="se">\n</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">_rtpp_stream_latch</span><span class="p">:</span><span class="mi">652</span><span class="p">:</span> <span class="n">caller</span><span class="s1">&#39;s address latched in: 172.16.80.13:4029 (RTCP), SSRC=UNKNOWN, Seq=UNKNOWN</span>
+</span></span><span class="line"><span class="cl"><span class="n">INFO</span><span class="p">:</span><span class="mi">5595</span><span class="n">d7f92e294c03abc42c4d31928d2d</span><span class="p">:</span><span class="n">_rtpp_stream_latch</span><span class="p">:</span><span class="mi">652</span><span class="p">:</span> <span class="n">caller</span><span class="s1">&#39;s address latched in: 172.16.80.13:4028 (RTP), SSRC=0x09F61E88, Seq=8611</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>相关的sip信令为:
+<img src="/p/kamailio-mohqueue-%E6%A8%A1%E5%9D%97/sip.png"
+	width="1349"
+	height="722"
+	srcset="/p/kamailio-mohqueue-%E6%A8%A1%E5%9D%97/sip_hu16862002272476587410.png 480w, /p/kamailio-mohqueue-%E6%A8%A1%E5%9D%97/sip_hu11533169961949189214.png 1024w"
+	loading="lazy"
+	
+		alt="sip"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="186"
+		data-flex-basis="448px"
+	
+></p>
 
 </section>
 
@@ -1039,7 +1138,7 @@
         
         
         发表了52篇文章 · 
-        总计85.94k字
+        总计86.40k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
