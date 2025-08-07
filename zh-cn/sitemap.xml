@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -16,19 +16,19 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/kamailio-path%E6%A8%A1%E5%9D%97/</loc>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/rtpproxy%E5%88%9D%E4%BD%93%E9%AA%8C/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +41,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
+    <lastmod>2025-08-07T09:34:12+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -52,6 +52,9 @@
                 hreflang="zh-cn"
                 href="https://QuincyGao.github.io/categories/"
                 />
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/rtpproxy%E5%88%9D%E4%BD%93%E9%AA%8C/</loc>
+    <lastmod>2025-08-04T09:45:19+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/kamailio-mohqueue-%E6%A8%A1%E5%9D%97/</loc>
     <lastmod>2025-07-31T09:16:00+08:00</lastmod>
