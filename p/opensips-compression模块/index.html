@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景\r问题\r">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景 compression模块用于对 SIP 消息进行压缩，以减少网络传输量。 相比于上一章kamailio, opensips不仅可以压缩body,还能压缩header和调整压缩率,使用上更灵活。 依赖外部模块:zlib。 官方文档地址: compression模块\n">
 <title>opensips compression模块</title>
 
-<link rel='canonical' href='http://localhost:1313/p/opensips-compression%E6%A8%A1%E5%9D%97/'>
+<link rel='canonical' href='https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/'>
 
-<link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="opensips compression模块">
-<meta property='og:description' content="背景\r问题\r">
-<meta property='og:url' content='http://localhost:1313/p/opensips-compression%E6%A8%A1%E5%9D%97/'>
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="opensips compression模块">
+<meta property='og:description' content="背景 compression模块用于对 SIP 消息进行压缩，以减少网络传输量。 相比于上一章kamailio, opensips不仅可以压缩body,还能压缩header和调整压缩率,使用上更灵活。 依赖外部模块:zlib。 官方文档地址: compression模块\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='kamailio' /><meta property='article:published_time' content='2025-08-11T15:02:14&#43;08:00'/><meta property='article:modified_time' content='2025-08-11T15:02:14&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/20250812/backup.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='opensips' /><meta property='article:published_time' content='2025-08-13T10:50:15&#43;08:00'/><meta property='article:modified_time' content='2025-08-13T10:50:15&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/backup.jpg' />
 <meta name="twitter:title" content="opensips compression模块">
-<meta name="twitter:description" content="背景\r问题\r"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='http://localhost:1313/p/20250812/backup.jpg' />
+<meta name="twitter:description" content="背景 compression模块用于对 SIP 消息进行压缩，以减少网络传输量。 相比于上一章kamailio, opensips不仅可以压缩body,还能压缩header和调整压缩率,使用上更灵活。 依赖外部模块:zlib。 官方文档地址: compression模块\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/backup.jpg' />
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -343,9 +343,9 @@
 
                             <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
                                 
-                                    <option value="http://localhost:1313/" selected>Chinese</option>
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
                                 
-                                    <option value="http://localhost:1313/en/" >English</option>
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
                                 
                             </select>
                         </li>
@@ -401,7 +401,26 @@
             <nav id="TableOfContents">
   <ol>
     <li><a href="#背景">背景</a></li>
-    <li><a href="#问题">问题</a></li>
+    <li><a href="#重要参数解析">重要参数解析</a></li>
+    <li><a href="#重要函数">重要函数</a>
+      <ol>
+        <li><a href="#mc_compressalgo-flags-whitelist">mc_compress([algo], flags, [whitelist])</a></li>
+        <li><a href="#mc_compactwhitelist-flags">mc_compact([whitelist], flags)</a></li>
+        <li><a href="#mc_decompress">mc_decompress()</a></li>
+      </ol>
+    </li>
+    <li><a href="#实战">实战</a>
+      <ol>
+        <li><a href="#配置示例">配置示例</a></li>
+        <li><a href="#测试">测试</a>
+          <ol>
+            <li><a href="#mc_compress">mc_compress</a></li>
+            <li><a href="#mc_compact">mc_compact</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
   </ol>
 </nav>
         </div>
@@ -417,10 +436,10 @@
     <header class="article-header">
         <div class="article-image">
             <a href="/p/opensips-compression%E6%A8%A1%E5%9D%97/">
-                <img src="/p/20250812/backup_hu11018813663094086390.jpg"
-                        srcset="/p/20250812/backup_hu11018813663094086390.jpg 800w, /p/20250812/backup_hu1961623728621244541.jpg 1600w"
+                <img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/backup_hu3187733029019087598.jpg"
+                        srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/backup_hu3187733029019087598.jpg 800w, /p/opensips-compression%E6%A8%A1%E5%9D%97/backup_hu7842006228513355850.jpg 1600w"
                         width="800" 
-                        height="450" 
+                        height="533" 
                         loading="lazy"
                         alt="Featured image of post opensips compression模块" />
                 
@@ -432,8 +451,8 @@
     
     <header class="article-category">
         
-            <a href="/categories/kamailio/" style="background-color: #d09daa; color: #fff;">
-                kamailio
+            <a href="/categories/opensips/" style="background-color: #d09daa; color: #fff;">
+                opensips
             </a>
         
     </header>
@@ -463,7 +482,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2025-08-11</time>
+                <time class="article-time--published">2025-08-13</time>
             </div>
         
 
@@ -478,7 +497,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 1 分钟,共4 字
+                    阅读时长: 4 分钟,共1927 字
                 </time>
             </div>
         
@@ -515,8 +534,494 @@
     
     
     <h2 id="背景">背景
-</h2><h2 id="问题">问题
-</h2>
+</h2><p><code>compression</code>模块用于对 SIP 消息进行压缩，以减少网络传输量。
+相比于上一章<code>kamailio</code>, <code>opensips</code>不仅可以压缩<code>body</code>,还能压缩<code>header</code>和调整压缩率,使用上更灵活。
+依赖外部模块:<code>zlib</code>。
+官方文档地址: <a class="link" href="https://opensips.org/docs/modules/3.5.x/compression.html"  target="_blank" rel="noopener"
+    >compression模块</a></p>
+<p>本次测试的opensips版本信息为:</p>
+<blockquote>
+<p>version: opensips 3.5.5 (x86_64/linux)</p>
+</blockquote>
+<h2 id="重要参数解析">重要参数解析
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 压缩等级1-9, 默认是6,等级越高，压缩耗时越长.
+</span></span><span class="line"><span class="cl">modparam(&#34;compression&#34;, &#34;compression_level&#34;, 6)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>官方文档写的是: <code>modparam(&quot;mc&quot;, &quot;mc_level&quot;, &quot;3&quot;)</code>,这个是错的，已提<code>issue</code>修正。</p>
+<h2 id="重要函数">重要函数
+</h2><h3 id="mc_compressalgo-flags-whitelist">mc_compress([algo], flags, [whitelist])
+</h3><p>压缩当前的SIP消息</p>
+<ul>
+<li><code>algo</code> 压缩算法, 可选值为<code>0(deflate)</code>, <code>1(gzip)</code></li>
+<li><code>flags</code> 压缩参数,设置压缩的范围
+<ul>
+<li><code>b</code> 压缩<code>body</code>,如果没有<code>body</code>,则不压缩</li>
+<li><code>h</code> 压缩所有<code>header</code>,除了白名单中的</li>
+<li><code>s</code> <code>header</code>和<code>body</code>可以分开压缩,将创建新的<code>Comp-Hdrs</code>头存储压缩后的<code>header</code></li>
+<li><code>e</code> 指定base64编码</li>
+</ul>
+</li>
+<li><code>whitelist</code> 不压缩的白名单, 头可以使用&quot;|&ldquo;分隔。</li>
+</ul>
+<h3 id="mc_compactwhitelist-flags">mc_compact([whitelist], flags)
+</h3><p><code>flags</code>: &rsquo;n&rsquo;不使用缩短名, 此函数有四种功能:</p>
+<ol>
+<li>没有在白名单中的<code>header</code>会被移除</li>
+<li>相同类型的<code>header</code>会合并,使用&rdquo;,&ldquo;分隔</li>
+<li>有短名的<code>header</code>会变成缩短名</li>
+<li><code>sdp</code>中小于<code>96</code>的<code>rtpmap</code>会被移除。</li>
+</ol>
+<h3 id="mc_decompress">mc_decompress()
+</h3><p>进行base64解码和gzip/deflate解压, 只能被用在<code>REQUEST_ROUTE</code>,<code>LOCAL_ROUTE</code>,<code>FAILURE_ROUTE</code>上.</p>
+<h2 id="实战">实战
+</h2><h3 id="配置示例">配置示例
+</h3><p>整体配置使用<code>opensips-基础代理设置</code>章节的配置, 并添加如下配置:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">loadmodule</span> <span class="s2">&#34;compression.so&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">route</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="o">...</span> 
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">$</span><span class="n">si</span> <span class="o">!=</span> <span class="s2">&#34;172.16.4.114&#34;</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="n">du</span> <span class="o">=</span> <span class="s2">&#34;sip:172.16.4.114:5060&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">$</span><span class="n">socket_out</span><span class="o">=</span><span class="s2">&#34;udp:172.16.4.111:5260&#34;</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">mc_compress</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;b&#34;</span><span class="p">))</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">xlog</span><span class="p">(</span><span class="s2">&#34;L_DBG&#34;</span><span class="p">,</span><span class="s2">&#34;[$cfg_line][$ci]---main--: compress failed.</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#    # do lookup with method filtering</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#    if (!lookup(&#34;location&#34;,&#34;method-filtering&#34;)) {</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#         t_newtran();</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#         t_reply(404, &#34;Not Found&#34;);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#         exit;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#    }</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">route</span><span class="p">(</span><span class="n">relay</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>在发送<code>INVITE</code>时, 设置<code>mc_compress(0, &quot;b&quot;)</code>。</p>
+<h3 id="测试">测试
+</h3><p>测试的<code>sip</code>信令图为:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip.png"
+	width="1509"
+	height="951"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip_hu12056703508171881986.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/sip_hu16940571034673327616.png 1024w"
+	loading="lazy"
+	
+		alt="测试"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="158"
+		data-flex-basis="380px"
+	
+></p>
+<h4 id="mc_compress">mc_compress
+</h4><p>关于<code>flags</code>参数,</p>
+<ol>
+<li><code>s</code>只有和<code>bh</code>一起使用,才有效果,即:<code>bhs</code>。 此时消息体为：
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip1.png"
+	width="1679"
+	height="660"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip1_hu6307884993703636729.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/sip1_hu11078745054461204655.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="254"
+		data-flex-basis="610px"
+	
+></li>
+</ol>
+<p>新增了<code>Comp-Hdrs</code>,<code>Headers-Encoding</code>。</p>
+<ol start="2">
+<li><code>h</code>,<code>e</code>: 单独用没有任何效果.</li>
+<li><code>b</code>: 压缩<code>body</code>,此时消息体为:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip2.png"
+	width="1751"
+	height="646"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip2_hu18019505310775308078.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/sip2_hu5149627455469413690.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="271"
+		data-flex-basis="650px"
+	
+></li>
+</ol>
+<p>目前发送给<code>freeswitch</code>报错<code>400 Bad Session Description</code>:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip4.png"
+	width="1564"
+	height="525"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip4_hu10267590752901001386.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/sip4_hu14537862722952776848.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="297"
+		data-flex-basis="714px"
+	
+></p>
+<p>已提交<code>issue</code>, 和<code>kamailio</code>对比了一下源码，虽然都是<code>zlib</code>库，但是<code>kamailio</code>用的是<code>compress函数</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ret = compress(
+</span></span><span class="line"><span class="cl">			(unsigned char *)nbody.s, &amp;nlen, (unsigned char *)obody.s, olen);
+</span></span><span class="line"><span class="cl">	if(ret != Z_OK) {
+</span></span><span class="line"><span class="cl">		LM_ERR(&#34;error compressing body (%d)\n&#34;, ret);
+</span></span><span class="line"><span class="cl">		goto done;
+</span></span><span class="line"><span class="cl">	}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>opensips</code>用的是<code>compress2函数</code>:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">rc = compress2((unsigned char*)bufcompressed.s,
+</span></span><span class="line"><span class="cl">		&amp;temp,
+</span></span><span class="line"><span class="cl">		(unsigned char*)buf2compress.s,
+</span></span><span class="line"><span class="cl">		(unsigned long)buf2compress.len,
+</span></span><span class="line"><span class="cl">		mc_level);
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="4">
+<li><code>be</code>: 以<code>base64</code>展示压缩后的<code>body</code>, 此时消息体为:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip3.png"
+	width="1758"
+	height="664"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip3_hu2290720179367739449.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/sip3_hu5774078287850127387.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="264"
+		data-flex-basis="635px"
+	
+></li>
+</ol>
+<p>发送给<code>freeswitch</code>报错<code>415 Unsupported Media Type</code>:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip5.png"
+	width="1526"
+	height="480"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/sip5_hu1173837750168991462.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/sip5_hu2527839023859059597.png 1024w"
+	loading="lazy"
+	
+		alt="invite"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="317"
+		data-flex-basis="763px"
+	
+></p>
+<p>说明<code>freeswitch</code>不支持这样的压缩方式。</p>
+<h4 id="mc_compact">mc_compact
+</h4><p>把上面的<code>mc_compress(0,&quot;b&quot;)</code>换成<code>mc_compact()</code>。</p>
+<p>原始的<code>INVITE</code>的数据为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2025/08/13 13:53:16.834540 172.16.4.111:5260 -&gt; 172.16.4.114:5060
+</span></span><span class="line"><span class="cl">INVITE sip:1008@172.16.4.111:5261 SIP/2.0
+</span></span><span class="line"><span class="cl">Record-Route: &lt;sip:172.16.4.111:5260;lr&gt;
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/UDP 172.16.4.111:5260;branch=z9hG4bK072a.b15e8867.0
+</span></span><span class="line"><span class="cl">Via: SIP/2.0/UDP 172.16.80.13:58807;received=172.16.80.13;rport=58807;branch=z9hG4bKPjf13de5761ca54d1895886f961b23ff64
+</span></span><span class="line"><span class="cl">Max-Forwards: 69
+</span></span><span class="line"><span class="cl">From: &lt;sip:1005@172.16.4.111&gt;;tag=9769c9c2b927412aaecd915eec7b1fb1
+</span></span><span class="line"><span class="cl">To: &lt;sip:1008@172.16.4.111&gt;
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1005@172.16.80.13:58807;ob&gt;
+</span></span><span class="line"><span class="cl">Call-ID: 970d5f96986b4b2aa5fa069dba9e2948
+</span></span><span class="line"><span class="cl">CSeq: 3216 INVITE
+</span></span><span class="line"><span class="cl">Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS
+</span></span><span class="line"><span class="cl">Supported: replaces, 100rel, norefersub
+</span></span><span class="line"><span class="cl">User-Agent: MicroSIP/3.21.6
+</span></span><span class="line"><span class="cl">Content-Type: application/sdp
+</span></span><span class="line"><span class="cl">Content-Length: 321
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">v=0
+</span></span><span class="line"><span class="cl">o=- 3964082099 3964082099 IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">s=pjmedia
+</span></span><span class="line"><span class="cl">b=AS:84
+</span></span><span class="line"><span class="cl">t=0 0
+</span></span><span class="line"><span class="cl">a=X-nat:0
+</span></span><span class="line"><span class="cl">m=audio 30988 RTP/AVP 8 0 101
+</span></span><span class="line"><span class="cl">c=IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">b=TIAS:64000
+</span></span><span class="line"><span class="cl">a=rtpmap:8 PCMA/8000
+</span></span><span class="line"><span class="cl">a=rtpmap:0 PCMU/8000
+</span></span><span class="line"><span class="cl">a=rtpmap:101 telephone-event/8000
+</span></span><span class="line"><span class="cl">a=fmtp:101 0-16
+</span></span><span class="line"><span class="cl">a=ssrc:580466598 cname:31a747bc699122c1
+</span></span><span class="line"><span class="cl">a=sendrecv
+</span></span><span class="line"><span class="cl">a=rtcp:30989
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>使用<code>mc_compact()</code>后的<code>INVITE</code>数据为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2025/08/13 13:46:24.616445 172.16.4.111:5260 -&gt; 172.16.4.114:5060
+</span></span><span class="line"><span class="cl">INVITE sip:1008@172.16.4.111:5261 SIP/2.0
+</span></span><span class="line"><span class="cl">v: SIP/2.0/UDP 172.16.4.111:5260;branch=z9hG4bKf914.0b281385.0, SIP/2.0/UDP 172.16.80.13:58807;received=172.16.80.13;rport=58807;
+</span></span><span class="line"><span class="cl">anch=z9hG4bKPj07898ec3e16c4350843b1a4de4a89ceb
+</span></span><span class="line"><span class="cl">t: &lt;sip:1008@172.16.4.111&gt;
+</span></span><span class="line"><span class="cl">f: &lt;sip:1005@172.16.4.111&gt;;tag=2b204cd2db594ce0bca55e8e525a1c14
+</span></span><span class="line"><span class="cl">CSeq: 6255 INVITE
+</span></span><span class="line"><span class="cl">i: 9a37bdb33bb7418d9b6e5c088c8312af
+</span></span><span class="line"><span class="cl">m: &lt;sip:1005@172.16.80.13:58807;ob&gt;
+</span></span><span class="line"><span class="cl">Record-Route: &lt;sip:172.16.4.111:5260;lr&gt;
+</span></span><span class="line"><span class="cl">c: application/sdp
+</span></span><span class="line"><span class="cl">l: 278
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">v=0
+</span></span><span class="line"><span class="cl">o=- 3964081686 3964081686 IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">s=pjmedia
+</span></span><span class="line"><span class="cl">b=AS:84
+</span></span><span class="line"><span class="cl">t=0 0
+</span></span><span class="line"><span class="cl">a=X-nat:0
+</span></span><span class="line"><span class="cl">m=audio 31614 RTP/AVP 8 0 101
+</span></span><span class="line"><span class="cl">c=IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">b=TIAS:64000
+</span></span><span class="line"><span class="cl">a=rtpmap:101 telephone-event/8000
+</span></span><span class="line"><span class="cl">a=fmtp:101 0-16
+</span></span><span class="line"><span class="cl">a=ssrc:1957038347 cname:2c067dcd05730c02
+</span></span><span class="line"><span class="cl">a=sendrecv
+</span></span><span class="line"><span class="cl">a=rtcp:31615
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到在<code>opensips</code>转发<code>INVITE</code>时，<code>Via</code>,<code>From</code>,<code>To</code>,<code>Call-id</code>,<code>Contact</code>等都被换成了缩略参数,
+并且<code>sdp</code>中的<code>rtpmap:PCMU/PCMA</code>删除了.</p>
+<p>在<code>freeswitch</code>往<code>opensips</code>发送<code>183</code>,<code>200OK</code>时，也带了缩略参数:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2025/08/13 13:46:25.451770 172.16.4.114:5060 -&gt; 172.16.4.111:5260
+</span></span><span class="line"><span class="cl">SIP/2.0 183 Session Progress
+</span></span><span class="line"><span class="cl">v: SIP/2.0/UDP 172.16.4.111:5260;branch=z9hG4bKf914.0b281385.0, SIP/2.0/UDP 172.16.80.13:58807;received=172.16.80.13;rport=58807;
+</span></span><span class="line"><span class="cl">anch=z9hG4bKPj07898ec3e16c4350843b1a4de4a89ceb
+</span></span><span class="line"><span class="cl">Record-Route: &lt;sip:172.16.4.111:5260;lr&gt;
+</span></span><span class="line"><span class="cl">f: &lt;sip:1005@172.16.4.111&gt;;tag=2b204cd2db594ce0bca55e8e525a1c14
+</span></span><span class="line"><span class="cl">To: &lt;sip:1008@172.16.4.111&gt;;tag=tZ2epK6U1Dtae
+</span></span><span class="line"><span class="cl">i: 9a37bdb33bb7418d9b6e5c088c8312af
+</span></span><span class="line"><span class="cl">CSeq: 6255 INVITE
+</span></span><span class="line"><span class="cl">Contact: &lt;sip:1008@172.16.4.114:5060;transport=udp&gt;
+</span></span><span class="line"><span class="cl">User-Agent: FreeSWITCH-mod_sofia/1.10.2-release+git~20230615T110520Z~4ce1b74880~64bit
+</span></span><span class="line"><span class="cl">Accept: application/sdp
+</span></span><span class="line"><span class="cl">Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY, PUBLISH, SUBSCRIBE
+</span></span><span class="line"><span class="cl">Supported: timer, path, replaces
+</span></span><span class="line"><span class="cl">Allow-Events: talk, hold, conference, presence, as-feature-event, dialog, line-seize, call-info, sla, include-session-description
+</span></span><span class="line"><span class="cl">presence.winfo, message-summary, refer
+</span></span><span class="line"><span class="cl">Content-Type: application/sdp
+</span></span><span class="line"><span class="cl">Content-Disposition: session
+</span></span><span class="line"><span class="cl">Content-Length: 254
+</span></span><span class="line"><span class="cl">Remote-Party-ID: &#34;1008&#34; &lt;sip:1008@172.16.4.111&gt;;party=calling;privacy=off;screen=no
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">v=0
+</span></span><span class="line"><span class="cl">o=FreeSWITCH 1755033712 1755033713 IN IP4 172.16.4.114
+</span></span><span class="line"><span class="cl">s=FreeSWITCH
+</span></span><span class="line"><span class="cl">c=IN IP4 172.16.4.114
+</span></span><span class="line"><span class="cl">t=0 0
+</span></span><span class="line"><span class="cl">m=audio 30016 RTP/AVP 8 101
+</span></span><span class="line"><span class="cl">a=rtpmap:8 PCMA/8000
+</span></span><span class="line"><span class="cl">a=rtpmap:101 telephone-event/8000
+</span></span><span class="line"><span class="cl">a=fmtp:101 0-16
+</span></span><span class="line"><span class="cl">a=ptime:20
+</span></span><span class="line"><span class="cl">a=rtcp:30017 IN IP4 172.16.4.114
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到<code>From</code>,<code>To</code>, <code>Via</code>还是之前的缩略参数,其他的<code>header</code>参数被恢复了.</p>
+<h2 id="总结">总结
+</h2><ol>
+<li>虽然<code>opensips</code>说可以压缩<code>Header</code>,但是实际测试过程中，并未生效此功能，但是缩略<code>Header</code>参数功能Ok.</li>
+<li><code>opensips</code>的压缩<code>body</code>, 确实是压缩了，但是压缩后的<code>body</code>,<code>freeswitch</code>并不能解析.应该是有问题的。
+分别对比<code>kamailio</code>和<code>opensips</code>的压缩<code>body</code>功能抓包，发现<code>kamailio</code>的消息体能够被<code>tcpdump</code>正确解析，
+但是<code>opensips</code>的消息体被<code>tcpdump</code>解析失败.</li>
+</ol>
+<p><code>kamailio</code>的压缩<code>body</code>功能抓包:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/dump.png"
+	width="1420"
+	height="879"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/dump_hu10064315555410091429.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/dump_hu3120828428704473369.png 1024w"
+	loading="lazy"
+	
+		alt="tcpdump"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="161"
+		data-flex-basis="387px"
+	
+></p>
+<p><code>opensips</code>的压缩<code>body</code>功能抓包:
+<img src="/p/opensips-compression%E6%A8%A1%E5%9D%97/dump1.png"
+	width="1373"
+	height="719"
+	srcset="/p/opensips-compression%E6%A8%A1%E5%9D%97/dump1_hu6137990894665974990.png 480w, /p/opensips-compression%E6%A8%A1%E5%9D%97/dump1_hu14484246666142349003.png 1024w"
+	loading="lazy"
+	
+		alt="tcpdump"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="190"
+		data-flex-basis="458px"
+	
+></p>
+
 </section>
 
 
@@ -525,7 +1030,7 @@
     
     <section class="article-tags">
         
-            <a href="/tags/kamailio/">Kamailio</a>
+            <a href="/tags/opensips/">Opensips</a>
         
     </section>
 
@@ -599,23 +1104,23 @@
             
                 
 <article class="has-image">
-    <a href="/p/kamailio-path%E6%A8%A1%E5%9D%97/">
+    <a href="/p/opensips-drouting-%E6%A8%A1%E5%9D%97/">
         
         
             <div class="article-image">
-                <img src="/p/kamailio-path%E6%A8%A1%E5%9D%97/backup.2686908087e0b694b49d782c9493cf35.2686908087e0b694b49d782c9493cf35_hu14637643584761334989.jpg" 
+                <img src="/p/opensips-drouting-%E6%A8%A1%E5%9D%97/backup.d3df6be3812cc1e44c0d26f6a1d4f2de_hu5805876896702721746.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post kamailio path模块"
+                        alt="Featured image of post opensips drouting 模块"
                         
-                        data-hash="md5-JoaQgIfgtpS0nXgslJPPNQ==">
+                        data-hash="md5-099r44EsweRMDSb2odTy3g==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">kamailio path模块</h2>
+            <h2 class="article-title">opensips drouting 模块</h2>
         </div>
     </a>
 </article>
@@ -623,23 +1128,23 @@
             
                 
 <article class="has-image">
-    <a href="/p/rtpproxy%E5%88%9D%E4%BD%93%E9%AA%8C/">
+    <a href="/p/opensips-mi_script%E6%A8%A1%E5%9D%97/">
         
         
             <div class="article-image">
-                <img src="/p/rtpproxy%E5%88%9D%E4%BD%93%E9%AA%8C/backup.0707d731aaf4382474ab80a1195e4715.0707d731aaf4382474ab80a1195e4715_hu11292873627864631291.jpg" 
+                <img src="/p/opensips-mi_script%E6%A8%A1%E5%9D%97/backup.bd1f9707a2b891c5b33e75c2483dd227_hu17631628150378701439.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post rtpproxy初体验"
+                        alt="Featured image of post opensips mi_script模块"
                         
-                        data-hash="md5-BwfXMar0OCR0q4ChGV5HFQ==">
+                        data-hash="md5-vR&#43;XB6K4kcWzPnXCSD3SJw==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">rtpproxy初体验</h2>
+            <h2 class="article-title">opensips mi_script模块</h2>
         </div>
     </a>
 </article>
@@ -647,23 +1152,23 @@
             
                 
 <article class="has-image">
-    <a href="/p/kamailio-mohqueue-%E6%A8%A1%E5%9D%97/">
+    <a href="/p/opensips-%E5%9F%BA%E7%A1%80%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/">
         
         
             <div class="article-image">
-                <img src="/p/kamailio-mohqueue-%E6%A8%A1%E5%9D%97/backup.fcb50981a84ed24218a86d365936e2cd.fcb50981a84ed24218a86d365936e2cd_hu5075657033688970538.jpg" 
+                <img src="/p/opensips-%E5%9F%BA%E7%A1%80%E4%BB%A3%E7%90%86%E8%AE%BE%E7%BD%AE/backup.2a309daf5fa14838e1b50e4916dc5e79_hu6976010692268768763.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post kamailio mohqueue 模块"
+                        alt="Featured image of post opensips 基础代理设置"
                         
-                        data-hash="md5-/LUJgahO0kIYqG02WTbizQ==">
+                        data-hash="md5-KjCdr1&#43;hSDjhtQ5JFtxeeQ==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">kamailio mohqueue 模块</h2>
+            <h2 class="article-title">opensips 基础代理设置</h2>
         </div>
     </a>
 </article>
@@ -671,23 +1176,23 @@
             
                 
 <article class="has-image">
-    <a href="/p/kamailio-msilo-%E6%A8%A1%E5%9D%97/">
+    <a href="/p/opensips-call_center%E6%A8%A1%E5%9D%97/">
         
         
             <div class="article-image">
-                <img src="/p/kamailio-msilo-%E6%A8%A1%E5%9D%97/backup.b11af6904611f23c969f7ab7c64467be.b11af6904611f23c969f7ab7c64467be_hu18086235705764233361.jpg" 
+                <img src="/p/opensips-call_center%E6%A8%A1%E5%9D%97/backup.d9caf8ffa35cb6c7621dc789100d7c04_hu12503666975078667582.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post kamailio msilo 模块"
+                        alt="Featured image of post opensips call_center模块"
                         
-                        data-hash="md5-sRr2kEYR8jyWn3q3xkRnvg==">
+                        data-hash="md5-2cr4/6NctsdiHceJEA18BA==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">kamailio msilo 模块</h2>
+            <h2 class="article-title">opensips call_center模块</h2>
         </div>
     </a>
 </article>
@@ -695,23 +1200,23 @@
             
                 
 <article class="has-image">
-    <a href="/p/kamailio-ratelimit%E6%A8%A1%E5%9D%97/">
+    <a href="/p/opensips-ratelimit%E6%A8%A1%E5%9D%97/">
         
         
             <div class="article-image">
-                <img src="/p/kamailio-ratelimit%E6%A8%A1%E5%9D%97/backup.abb9c3e801a555af6dc005ee2225869a.abb9c3e801a555af6dc005ee2225869a_hu17573755876035871359.jpg" 
+                <img src="/p/opensips-ratelimit%E6%A8%A1%E5%9D%97/backup.f771a84223ac6dffa8b0ddace4679376_hu2047855013819170936.jpg" 
                         width="250" 
                         height="150" 
                         loading="lazy"
-                        alt="Featured image of post kamailio ratelimit模块"
+                        alt="Featured image of post opensips ratelimit模块"
                         
-                        data-hash="md5-q7nD6AGlVa9twAXuIiWGmg==">
+                        data-hash="md5-93GoQiOsbf&#43;osN2s5GeTdg==">
                 
             </div>
         
 
         <div class="article-details">
-            <h2 class="article-title">kamailio ratelimit模块</h2>
+            <h2 class="article-title">opensips ratelimit模块</h2>
         </div>
     </a>
 </article>
@@ -739,7 +1244,7 @@
     }
 </style><script type="module">
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8365","visitor":"true"});
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
 </script>
 
     
@@ -748,13 +1253,13 @@
     <script type="module">
         import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
         pageviewCount({
-          serverURL: "https:\/\/blog.xiaopeng.site:8365"
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
         });
     </script>
     <script type="module">
         import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
         commentCount({
-            serverURL: "https:\/\/blog.xiaopeng.site:8365"
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
         });
     </script>
     
@@ -884,9 +1389,11 @@
         
             
         
+            
         
-        发表了55篇文章 · 
-        总计89.32k字
+        
+        发表了56篇文章 · 
+        总计93.09k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
@@ -985,7 +1492,7 @@
 
             </main>
         </div>
-        <script type="text/javascript" src="/ts/main.9588b5e63ce3e1815e9dd7bd78c514d91e83e1660843be9935f0702315b11b89.js" defer></script>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

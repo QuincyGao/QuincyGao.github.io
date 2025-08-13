@@ -6,7 +6,503 @@
         <description>Recent content on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 12 Aug 2025 10:02:14 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 13 Aug 2025 10:50:15 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>opensips compression模块</title>
+        <link>https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/</link>
+        <pubDate>Wed, 13 Aug 2025 10:50:15 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/backup.jpg" alt="Featured image of post opensips compression模块" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;compression&lt;/code&gt;模块用于对 SIP 消息进行压缩，以减少网络传输量。
+相比于上一章&lt;code&gt;kamailio&lt;/code&gt;, &lt;code&gt;opensips&lt;/code&gt;不仅可以压缩&lt;code&gt;body&lt;/code&gt;,还能压缩&lt;code&gt;header&lt;/code&gt;和调整压缩率,使用上更灵活。
+依赖外部模块:&lt;code&gt;zlib&lt;/code&gt;。
+官方文档地址: &lt;a class=&#34;link&#34; href=&#34;https://opensips.org/docs/modules/3.5.x/compression.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;compression模块&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本次测试的opensips版本信息为:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;version: opensips 3.5.5 (x86_64/linux)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;重要参数解析&#34;&gt;重要参数解析
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# 压缩等级1-9, 默认是6,等级越高，压缩耗时越长.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;modparam(&amp;#34;compression&amp;#34;, &amp;#34;compression_level&amp;#34;, 6)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;官方文档写的是: &lt;code&gt;modparam(&amp;quot;mc&amp;quot;, &amp;quot;mc_level&amp;quot;, &amp;quot;3&amp;quot;)&lt;/code&gt;,这个是错的，已提&lt;code&gt;issue&lt;/code&gt;修正。&lt;/p&gt;
+&lt;h2 id=&#34;重要函数&#34;&gt;重要函数
+&lt;/h2&gt;&lt;h3 id=&#34;mc_compressalgo-flags-whitelist&#34;&gt;mc_compress([algo], flags, [whitelist])
+&lt;/h3&gt;&lt;p&gt;压缩当前的SIP消息&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;algo&lt;/code&gt; 压缩算法, 可选值为&lt;code&gt;0(deflate)&lt;/code&gt;, &lt;code&gt;1(gzip)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;flags&lt;/code&gt; 压缩参数,设置压缩的范围
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;b&lt;/code&gt; 压缩&lt;code&gt;body&lt;/code&gt;,如果没有&lt;code&gt;body&lt;/code&gt;,则不压缩&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;h&lt;/code&gt; 压缩所有&lt;code&gt;header&lt;/code&gt;,除了白名单中的&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt; &lt;code&gt;header&lt;/code&gt;和&lt;code&gt;body&lt;/code&gt;可以分开压缩,将创建新的&lt;code&gt;Comp-Hdrs&lt;/code&gt;头存储压缩后的&lt;code&gt;header&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;e&lt;/code&gt; 指定base64编码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;whitelist&lt;/code&gt; 不压缩的白名单, 头可以使用&amp;quot;|&amp;ldquo;分隔。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;mc_compactwhitelist-flags&#34;&gt;mc_compact([whitelist], flags)
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;flags&lt;/code&gt;: &amp;rsquo;n&amp;rsquo;不使用缩短名, 此函数有四种功能:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;没有在白名单中的&lt;code&gt;header&lt;/code&gt;会被移除&lt;/li&gt;
+&lt;li&gt;相同类型的&lt;code&gt;header&lt;/code&gt;会合并,使用&amp;rdquo;,&amp;ldquo;分隔&lt;/li&gt;
+&lt;li&gt;有短名的&lt;code&gt;header&lt;/code&gt;会变成缩短名&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sdp&lt;/code&gt;中小于&lt;code&gt;96&lt;/code&gt;的&lt;code&gt;rtpmap&lt;/code&gt;会被移除。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;mc_decompress&#34;&gt;mc_decompress()
+&lt;/h3&gt;&lt;p&gt;进行base64解码和gzip/deflate解压, 只能被用在&lt;code&gt;REQUEST_ROUTE&lt;/code&gt;,&lt;code&gt;LOCAL_ROUTE&lt;/code&gt;,&lt;code&gt;FAILURE_ROUTE&lt;/code&gt;上.&lt;/p&gt;
+&lt;h2 id=&#34;实战&#34;&gt;实战
+&lt;/h2&gt;&lt;h3 id=&#34;配置示例&#34;&gt;配置示例
+&lt;/h3&gt;&lt;p&gt;整体配置使用&lt;code&gt;opensips-基础代理设置&lt;/code&gt;章节的配置, 并添加如下配置:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;loadmodule&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;compression.so&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;route&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;si&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;172.16.4.114&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;du&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;sip:172.16.4.114:5060&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;socket_out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;udp:172.16.4.111:5260&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mc_compress&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;b&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;xlog&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;L_DBG&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;[$cfg_line][$ci]---main--: compress failed.&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\n&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#    # do lookup with method filtering&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#    if (!lookup(&amp;#34;location&amp;#34;,&amp;#34;method-filtering&amp;#34;)) {&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#         t_newtran();&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#         t_reply(404, &amp;#34;Not Found&amp;#34;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#         exit;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;#    }&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;route&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;relay&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;在发送&lt;code&gt;INVITE&lt;/code&gt;时, 设置&lt;code&gt;mc_compress(0, &amp;quot;b&amp;quot;)&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;测试&#34;&gt;测试
+&lt;/h3&gt;&lt;p&gt;测试的&lt;code&gt;sip&lt;/code&gt;信令图为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip.png&#34;
+	width=&#34;1509&#34;
+	height=&#34;951&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip_hu12056703508171881986.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip_hu16940571034673327616.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;测试&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;158&#34;
+		data-flex-basis=&#34;380px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;mc_compress&#34;&gt;mc_compress
+&lt;/h4&gt;&lt;p&gt;关于&lt;code&gt;flags&lt;/code&gt;参数,&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt;只有和&lt;code&gt;bh&lt;/code&gt;一起使用,才有效果,即:&lt;code&gt;bhs&lt;/code&gt;。 此时消息体为：
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip1.png&#34;
+	width=&#34;1679&#34;
+	height=&#34;660&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip1_hu6307884993703636729.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip1_hu11078745054461204655.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;254&#34;
+		data-flex-basis=&#34;610px&#34;
+	
+&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;新增了&lt;code&gt;Comp-Hdrs&lt;/code&gt;,&lt;code&gt;Headers-Encoding&lt;/code&gt;。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;h&lt;/code&gt;,&lt;code&gt;e&lt;/code&gt;: 单独用没有任何效果.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;b&lt;/code&gt;: 压缩&lt;code&gt;body&lt;/code&gt;,此时消息体为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip2.png&#34;
+	width=&#34;1751&#34;
+	height=&#34;646&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip2_hu18019505310775308078.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip2_hu5149627455469413690.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;271&#34;
+		data-flex-basis=&#34;650px&#34;
+	
+&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;目前发送给&lt;code&gt;freeswitch&lt;/code&gt;报错&lt;code&gt;400 Bad Session Description&lt;/code&gt;:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip4.png&#34;
+	width=&#34;1564&#34;
+	height=&#34;525&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip4_hu10267590752901001386.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip4_hu14537862722952776848.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;297&#34;
+		data-flex-basis=&#34;714px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;已提交&lt;code&gt;issue&lt;/code&gt;, 和&lt;code&gt;kamailio&lt;/code&gt;对比了一下源码，虽然都是&lt;code&gt;zlib&lt;/code&gt;库，但是&lt;code&gt;kamailio&lt;/code&gt;用的是&lt;code&gt;compress函数&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ret = compress(
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;			(unsigned char *)nbody.s, &amp;amp;nlen, (unsigned char *)obody.s, olen);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	if(ret != Z_OK) {
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		LM_ERR(&amp;#34;error compressing body (%d)\n&amp;#34;, ret);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		goto done;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	}
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;用的是&lt;code&gt;compress2函数&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;rc = compress2((unsigned char*)bufcompressed.s,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		&amp;amp;temp,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		(unsigned char*)buf2compress.s,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		(unsigned long)buf2compress.len,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		mc_level);
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol start=&#34;4&#34;&gt;
+&lt;li&gt;&lt;code&gt;be&lt;/code&gt;: 以&lt;code&gt;base64&lt;/code&gt;展示压缩后的&lt;code&gt;body&lt;/code&gt;, 此时消息体为:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip3.png&#34;
+	width=&#34;1758&#34;
+	height=&#34;664&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip3_hu2290720179367739449.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip3_hu5774078287850127387.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;264&#34;
+		data-flex-basis=&#34;635px&#34;
+	
+&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;发送给&lt;code&gt;freeswitch&lt;/code&gt;报错&lt;code&gt;415 Unsupported Media Type&lt;/code&gt;:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip5.png&#34;
+	width=&#34;1526&#34;
+	height=&#34;480&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip5_hu1173837750168991462.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/sip5_hu2527839023859059597.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;invite&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;317&#34;
+		data-flex-basis=&#34;763px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;说明&lt;code&gt;freeswitch&lt;/code&gt;不支持这样的压缩方式。&lt;/p&gt;
+&lt;h4 id=&#34;mc_compact&#34;&gt;mc_compact
+&lt;/h4&gt;&lt;p&gt;把上面的&lt;code&gt;mc_compress(0,&amp;quot;b&amp;quot;)&lt;/code&gt;换成&lt;code&gt;mc_compact()&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;原始的&lt;code&gt;INVITE&lt;/code&gt;的数据为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;33
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2025/08/13 13:53:16.834540 172.16.4.111:5260 -&amp;gt; 172.16.4.114:5060
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;INVITE sip:1008@172.16.4.111:5261 SIP/2.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Record-Route: &amp;lt;sip:172.16.4.111:5260;lr&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Via: SIP/2.0/UDP 172.16.4.111:5260;branch=z9hG4bK072a.b15e8867.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Via: SIP/2.0/UDP 172.16.80.13:58807;received=172.16.80.13;rport=58807;branch=z9hG4bKPjf13de5761ca54d1895886f961b23ff64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Max-Forwards: 69
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;From: &amp;lt;sip:1005@172.16.4.111&amp;gt;;tag=9769c9c2b927412aaecd915eec7b1fb1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;To: &amp;lt;sip:1008@172.16.4.111&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Contact: &amp;lt;sip:1005@172.16.80.13:58807;ob&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Call-ID: 970d5f96986b4b2aa5fa069dba9e2948
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CSeq: 3216 INVITE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Allow: PRACK, INVITE, ACK, BYE, CANCEL, UPDATE, INFO, SUBSCRIBE, NOTIFY, REFER, MESSAGE, OPTIONS
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Supported: replaces, 100rel, norefersub
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;User-Agent: MicroSIP/3.21.6
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Content-Type: application/sdp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Content-Length: 321
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3964082099 3964082099 IN IP4 172.16.4.111
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30988 RTP/AVP 8 0 101
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:0 PCMU/8000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:580466598 cname:31a747bc699122c1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30989
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;使用&lt;code&gt;mc_compact()&lt;/code&gt;后的&lt;code&gt;INVITE&lt;/code&gt;数据为:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2025/08/13 13:46:24.616445 172.16.4.111:5260 -&amp;gt; 172.16.4.114:5060
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;INVITE sip:1008@172.16.4.111:5261 SIP/2.0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v: SIP/2.0/UDP 172.16.4.111:5260;branch=z9hG4bKf914.0b281385.0, SIP/2.0/UDP 172.16.80.13:58807;received=172.16.80.13;rport=58807;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;anch=z9hG4bKPj07898ec3e16c4350843b1a4de4a89ceb
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t: &amp;lt;sip:1008@172.16.4.111&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;f: &amp;lt;sip:1005@172.16.4.111&amp;gt;;tag=2b204cd2db594ce0bca55e8e525a1c14
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CSeq: 6255 INVITE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;i: 9a37bdb33bb7418d9b6e5c088c8312af
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m: &amp;lt;sip:1005@172.16.80.13:58807;ob&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Record-Route: &amp;lt;sip:172.16.4.111:5260;lr&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c: application/sdp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;l: 278
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=- 3964081686 3964081686 IN IP4 172.16.4.111
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=pjmedia
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=AS:84
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=X-nat:0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 31614 RTP/AVP 8 0 101
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.111
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;b=TIAS:64000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ssrc:1957038347 cname:2c067dcd05730c02
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=sendrecv
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:31615
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以看到在&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;INVITE&lt;/code&gt;时，&lt;code&gt;Via&lt;/code&gt;,&lt;code&gt;From&lt;/code&gt;,&lt;code&gt;To&lt;/code&gt;,&lt;code&gt;Call-id&lt;/code&gt;,&lt;code&gt;Contact&lt;/code&gt;等都被换成了缩略参数,
+并且&lt;code&gt;sdp&lt;/code&gt;中的&lt;code&gt;rtpmap:PCMU/PCMA&lt;/code&gt;删除了.&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;freeswitch&lt;/code&gt;往&lt;code&gt;opensips&lt;/code&gt;发送&lt;code&gt;183&lt;/code&gt;,&lt;code&gt;200OK&lt;/code&gt;时，也带了缩略参数:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;24
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;25
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;26
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;27
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;28
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;29
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;30
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;31
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;32
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2025/08/13 13:46:25.451770 172.16.4.114:5060 -&amp;gt; 172.16.4.111:5260
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;SIP/2.0 183 Session Progress
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v: SIP/2.0/UDP 172.16.4.111:5260;branch=z9hG4bKf914.0b281385.0, SIP/2.0/UDP 172.16.80.13:58807;received=172.16.80.13;rport=58807;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;anch=z9hG4bKPj07898ec3e16c4350843b1a4de4a89ceb
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Record-Route: &amp;lt;sip:172.16.4.111:5260;lr&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;f: &amp;lt;sip:1005@172.16.4.111&amp;gt;;tag=2b204cd2db594ce0bca55e8e525a1c14
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;To: &amp;lt;sip:1008@172.16.4.111&amp;gt;;tag=tZ2epK6U1Dtae
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;i: 9a37bdb33bb7418d9b6e5c088c8312af
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;CSeq: 6255 INVITE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Contact: &amp;lt;sip:1008@172.16.4.114:5060;transport=udp&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;User-Agent: FreeSWITCH-mod_sofia/1.10.2-release+git~20230615T110520Z~4ce1b74880~64bit
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Accept: application/sdp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Allow: INVITE, ACK, BYE, CANCEL, OPTIONS, MESSAGE, INFO, UPDATE, REGISTER, REFER, NOTIFY, PUBLISH, SUBSCRIBE
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Supported: timer, path, replaces
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Allow-Events: talk, hold, conference, presence, as-feature-event, dialog, line-seize, call-info, sla, include-session-description
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;presence.winfo, message-summary, refer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Content-Type: application/sdp
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Content-Disposition: session
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Content-Length: 254
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Remote-Party-ID: &amp;#34;1008&amp;#34; &amp;lt;sip:1008@172.16.4.111&amp;gt;;party=calling;privacy=off;screen=no
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;v=0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;o=FreeSWITCH 1755033712 1755033713 IN IP4 172.16.4.114
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;s=FreeSWITCH
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;c=IN IP4 172.16.4.114
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;t=0 0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;m=audio 30016 RTP/AVP 8 101
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:8 PCMA/8000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtpmap:101 telephone-event/8000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=fmtp:101 0-16
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=ptime:20
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;a=rtcp:30017 IN IP4 172.16.4.114
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以看到&lt;code&gt;From&lt;/code&gt;,&lt;code&gt;To&lt;/code&gt;, &lt;code&gt;Via&lt;/code&gt;还是之前的缩略参数,其他的&lt;code&gt;header&lt;/code&gt;参数被恢复了.&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;虽然&lt;code&gt;opensips&lt;/code&gt;说可以压缩&lt;code&gt;Header&lt;/code&gt;,但是实际测试过程中，并未生效此功能，但是缩略&lt;code&gt;Header&lt;/code&gt;参数功能Ok.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;opensips&lt;/code&gt;的压缩&lt;code&gt;body&lt;/code&gt;, 确实是压缩了，但是压缩后的&lt;code&gt;body&lt;/code&gt;,&lt;code&gt;freeswitch&lt;/code&gt;并不能解析.应该是有问题的。
+分别对比&lt;code&gt;kamailio&lt;/code&gt;和&lt;code&gt;opensips&lt;/code&gt;的压缩&lt;code&gt;body&lt;/code&gt;功能抓包，发现&lt;code&gt;kamailio&lt;/code&gt;的消息体能够被&lt;code&gt;tcpdump&lt;/code&gt;正确解析，
+但是&lt;code&gt;opensips&lt;/code&gt;的消息体被&lt;code&gt;tcpdump&lt;/code&gt;解析失败.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;kamailio&lt;/code&gt;的压缩&lt;code&gt;body&lt;/code&gt;功能抓包:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/dump.png&#34;
+	width=&#34;1420&#34;
+	height=&#34;879&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/dump_hu10064315555410091429.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/dump_hu3120828428704473369.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;161&#34;
+		data-flex-basis=&#34;387px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;的压缩&lt;code&gt;body&lt;/code&gt;功能抓包:
+&lt;img src=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/dump1.png&#34;
+	width=&#34;1373&#34;
+	height=&#34;719&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/dump1_hu6137990894665974990.png 480w, https://QuincyGao.github.io/p/opensips-compression%E6%A8%A1%E5%9D%97/dump1_hu14484246666142349003.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;tcpdump&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;190&#34;
+		data-flex-basis=&#34;458px&#34;
+	
+&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>kamailio gzcompress模块</title>
         <link>https://QuincyGao.github.io/p/kamailio-gzcompress%E6%A8%A1%E5%9D%97/</link>
         <pubDate>Tue, 12 Aug 2025 10:02:14 +0800</pubDate>
