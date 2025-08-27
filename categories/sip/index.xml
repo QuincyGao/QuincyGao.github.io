@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Sip on QuincyGao Blog</title>
+        <link>http://localhost:1313/categories/sip/</link>
+        <description>Recent content in Sip on QuincyGao Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Mon, 25 Aug 2025 09:51:31 +0800</lastBuildDate><atom:link href="http://localhost:1313/categories/sip/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>20250826</title>
+        <link>http://localhost:1313/p/20250826/</link>
+        <pubDate>Mon, 25 Aug 2025 09:51:31 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/20250826/</guid>
+        <description>&lt;img src="http://localhost:1313/p/20250826/backup.jpg" alt="Featured image of post 20250826" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;h2 id=&#34;体验&#34;&gt;体验
+&lt;/h2&gt;</description>
+        </item>
+        
+    </channel>
+</rss>

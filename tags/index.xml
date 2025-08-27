@@ -6,7 +6,15 @@
         <description>Recent content in 标签 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 19 Aug 2025 14:43:27 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 27 Aug 2025 09:51:31 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Kamailio</title>
+        <link>https://QuincyGao.github.io/tags/kamailio/</link>
+        <pubDate>Wed, 27 Aug 2025 09:51:31 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/tags/kamailio/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Sip</title>
         <link>https://QuincyGao.github.io/tags/sip/</link>
         <pubDate>Tue, 19 Aug 2025 14:43:27 +0800</pubDate>
@@ -20,14 +28,6 @@
         <pubDate>Wed, 13 Aug 2025 10:50:15 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/tags/opensips/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Kamailio</title>
-        <link>https://QuincyGao.github.io/tags/kamailio/</link>
-        <pubDate>Tue, 12 Aug 2025 10:02:14 +0800</pubDate>
-        
-        <guid>https://QuincyGao.github.io/tags/kamailio/</guid>
         <description></description>
         </item>
         <item>
