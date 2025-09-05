@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,20 +15,17 @@
                 href="https://QuincyGao.github.io/"
                 />
   </url><url>
-    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/kamailio-kemix-%E6%A8%A1%E5%9D%97/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+    <loc>https://QuincyGao.github.io/categories/opensips/</loc>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/rtpengine/</loc>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -41,7 +38,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -53,6 +50,18 @@
                 href="https://QuincyGao.github.io/categories/"
                 />
   </url><url>
+    <loc>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</loc>
+    <lastmod>2025-09-05T09:31:00+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/categories/kamailio/</loc>
+    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/kamailio/</loc>
+    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/kamailio-kemix-%E6%A8%A1%E5%9D%97/</loc>
+    <lastmod>2025-08-27T09:51:31+08:00</lastmod>
+  </url><url>
     <loc>https://QuincyGao.github.io/p/homer10%E5%88%9D%E4%BD%93%E9%AA%8C/</loc>
     <lastmod>2025-08-19T14:43:27+08:00</lastmod>
   </url><url>
@@ -61,9 +70,6 @@
   </url><url>
     <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
     <lastmod>2025-08-19T14:43:27+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/categories/opensips/</loc>
-    <lastmod>2025-08-13T10:50:15+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/opensips/</loc>
     <lastmod>2025-08-13T10:50:15+08:00</lastmod>
@@ -103,12 +109,6 @@
   </url><url>
     <loc>https://QuincyGao.github.io/p/opensips-call_center%E6%A8%A1%E5%9D%97/</loc>
     <lastmod>2025-07-01T15:17:57+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/tags/rtpengine/</loc>
-    <lastmod>2025-06-30T09:31:00+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</loc>
-    <lastmod>2025-06-30T09:31:00+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/p/opensips-ratelimit%E6%A8%A1%E5%9D%97/</loc>
     <lastmod>2025-06-24T17:01:58+08:00</lastmod>

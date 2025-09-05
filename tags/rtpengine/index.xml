@@ -6,10 +6,10 @@
         <description>Recent content in Rtpengine on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 30 Jun 2025 09:31:00 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/rtpengine/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 05 Sep 2025 09:31:00 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/rtpengine/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>关于rtpengine的几个小知识</title>
         <link>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</link>
-        <pubDate>Mon, 30 Jun 2025 09:31:00 +0800</pubDate>
+        <pubDate>Fri, 05 Sep 2025 09:31:00 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</guid>
         <description>&lt;img src="https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/backup.jpg" alt="Featured image of post 关于rtpengine的几个小知识" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景 
@@ -708,6 +708,68 @@ by the answerer, transcoding will necessarily be enabled.&lt;/p&gt;
 &lt;/pre&gt;
 
 &lt;p&gt;这种方式下,&lt;code&gt;codec-accept-G722&lt;/code&gt;不起作用.&lt;/p&gt;
+&lt;h2 id=&#34;rtpengine-interface设置&#34;&gt;rtpengine interface设置
+&lt;/h2&gt;&lt;p&gt;当我们使用 &lt;code&gt;opensips&lt;/code&gt;或者&lt;code&gt;kamailio&lt;/code&gt;+&lt;code&gt;rtpengine&lt;/code&gt;做&lt;code&gt;sbc&lt;/code&gt;网关时, 需要根据内外网环境自动切换媒体ip,
+此时&lt;code&gt;rtpengine&lt;/code&gt;的监听&lt;code&gt;interface&lt;/code&gt;设置就至关重要。下面是&lt;code&gt;rtpengine.conf&lt;/code&gt;的设置介绍:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;### legacy interface config syntax:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# interface = any
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;### a single interface:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# interface = 123.234.345.456
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;### separate multiple interfaces with semicolons:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# interface = internal/12.23.34.45;external/23.34.45.54
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;### for different advertised address:
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;# interface = 12.23.34.45!23.34.45.56
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol&gt;
+&lt;li&gt;当有多个网卡时, 可以使用&lt;code&gt;interface = internal/192.168.2.234;external/23.34.45.54&lt;/code&gt;设置。&lt;/li&gt;
+&lt;li&gt;当有多个外网ip时,可以使用&lt;code&gt;interface = 23.34.45.54!23.34.45.55&lt;/code&gt;设置。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;但是实际在使用过程中， &lt;code&gt;sbc&lt;/code&gt;都是在内网部署，网关或者路由器做&lt;code&gt;nat&lt;/code&gt;转换, 转发请求到&lt;code&gt;sbc&lt;/code&gt;上。
+此时&lt;code&gt;rtpengine&lt;/code&gt;是单网卡，监听的ip是内网ip, 如何设置外网ip呢, 主要有两种方式:&lt;/p&gt;
+&lt;h3 id=&#34;interface--local_ippublic_ip&#34;&gt;interface = LOCAL_IP!PUBLIC_IP 
+&lt;/h3&gt;&lt;p&gt;这种方式设置,默认生成的&lt;code&gt;SDP&lt;/code&gt;信息中的&lt;code&gt;c=&lt;/code&gt;,&lt;code&gt;o=&lt;/code&gt;会是&lt;code&gt;PUBLIC_IP&lt;/code&gt;,
+但是当我们想要&lt;code&gt;c=&lt;/code&gt;,&lt;code&gt;o=&lt;/code&gt;换成&lt;code&gt;LOCAL_IP&lt;/code&gt;, 可以在&lt;code&gt;rtpengine_manager(&amp;quot;media-address=LOCAL_IP&amp;quot;)&lt;/code&gt;强转成&lt;code&gt;LOCAL_IP&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;但是这种只会改变&lt;code&gt;c=&lt;/code&gt;为&lt;code&gt;LOCAL_IP&lt;/code&gt;, &lt;code&gt;o=&lt;/code&gt;还是&lt;code&gt;PUBLIC_IP&lt;/code&gt;。实际也不会有什么影响。毕竟真正使用的是&lt;code&gt;c=&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&#34;interfacepublocal_ippublic_ipprivlocal_ip&#34;&gt;interface=pub/LOCAL_IP!PUBLIC_IP;priv/LOCAL_IP 
+&lt;/h3&gt;&lt;p&gt;这种是最佳方式,&lt;code&gt;pub&lt;/code&gt;,&lt;code&gt;priv&lt;/code&gt;这两个名字你可以随便起，但是当你使用&lt;code&gt;rtpengine_manager()&lt;/code&gt;时，一定要和这两个名字一致。&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;rtpengine&lt;/code&gt;的&lt;code&gt;ng_control&lt;/code&gt;中，用的参数是&lt;code&gt;direction=[&amp;quot;priv&amp;quot;,&amp;quot;pub&amp;quot;]&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;需要注意的是当我们使用&lt;code&gt;opensips&lt;/code&gt;时,要用&lt;code&gt;in-iface=priv out-iface=pub&lt;/code&gt;,这样往&lt;code&gt;rtpengine&lt;/code&gt;发送的&lt;code&gt;offer&lt;/code&gt;才会转成&lt;code&gt;direction=[&amp;quot;priv&amp;quot;,&amp;quot;pub&amp;quot;]&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;opensips&lt;/code&gt;的官方文档&lt;code&gt;rtpengine&lt;/code&gt;模块中介绍用的是&lt;code&gt;in-iface=internal out-iface=external&lt;/code&gt;,
+我们在&lt;code&gt;rtpengine.conf&lt;/code&gt;中设置的是&lt;code&gt;pub/LOCAL_IP!PUBLIC_IP;priv/LOCAL_IP&lt;/code&gt;, 要灵活变通，改成&lt;code&gt;in-iface=priv out-iface=pub&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;in-iface=priv out-iface=pub&lt;/code&gt;的含义是: 进来请求的sdp用的是&lt;code&gt;priv&lt;/code&gt;的ip, 转发请求的sdp用的是&lt;code&gt;pub&lt;/code&gt;的ip,这种是外呼的情况。&lt;/p&gt;
+&lt;p&gt;我们只需要在转发&lt;code&gt;INVITE&lt;/code&gt;时,设置此参数即可, 收到&lt;code&gt;183&lt;/code&gt;或者&lt;code&gt;200OK&lt;/code&gt;时，不需要再设置。&lt;/p&gt;
+&lt;h3 id=&#34;interface--internallocal_ipexternalpublic_ip&#34;&gt;interface = internal/LOCAL_IP;external/PUBLIC_IP
+&lt;/h3&gt;&lt;p&gt;这种只能在&lt;code&gt;双网卡&lt;/code&gt;的环境下才能使用, &lt;code&gt;单网卡&lt;/code&gt;的环境下，这样使用会报错。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[1756439280.576834] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Failure while trying to bind a port to the socket
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[1756439280.576856] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Failed to get 2 consecutive ports on interface 10.64.65.46 for media relay (last error: Cannot assign requested address)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[1756439280.576868] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Failed to get 2 consecutive ports on all locals of logical &amp;#39;external&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[1756439280.576872] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Error allocating media ports
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;[1756439280.576885] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Destroying call
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;即使在&lt;code&gt;/etc/sysctl.conf&lt;/code&gt;中添加&lt;code&gt;net.ipv4.ip_nonlocal_bind=1&lt;/code&gt;,能解决报错问题, 因为没有&lt;code&gt;PUBLIC_IP&lt;/code&gt;网卡,还是会出现没有声音情况。&lt;/p&gt;
 </description>
         </item>
         <item>

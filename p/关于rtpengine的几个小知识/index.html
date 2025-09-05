@@ -10,7 +10,7 @@
 <meta property='og:description' content="背景 rtpengine提供媒体代理功能, 和sip代理(opensips或者kamailio)一起组成完整的代理服务。\n针对rtpengine的使用，记录几个常用方法。 rtpengine的官方文档: rtpengine\n">
 <meta property='og:url' content='https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='rtpengine' /><meta property='article:published_time' content='2025-06-30T09:31:00&#43;08:00'/><meta property='article:modified_time' content='2025-06-30T09:31:00&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/backup.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='rtpengine' /><meta property='article:published_time' content='2025-09-05T09:31:00&#43;08:00'/><meta property='article:modified_time' content='2025-09-05T09:31:00&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/backup.jpg' />
 <meta name="twitter:title" content="关于rtpengine的几个小知识">
 <meta name="twitter:description" content="背景 rtpengine提供媒体代理功能, 和sip代理(opensips或者kamailio)一起组成完整的代理服务。\n针对rtpengine的使用，记录几个常用方法。 rtpengine的官方文档: rtpengine\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/backup.jpg' />
@@ -454,6 +454,13 @@
         </li>
       </ol>
     </li>
+    <li><a href="#rtpengine-interface设置">rtpengine interface设置</a>
+      <ol>
+        <li><a href="#interface--local_ippublic_ip">interface = LOCAL_IP!PUBLIC_IP </a></li>
+        <li><a href="#interfacepublocal_ippublic_ipprivlocal_ip">interface=pub/LOCAL_IP!PUBLIC_IP;priv/LOCAL_IP </a></li>
+        <li><a href="#interface--internallocal_ipexternalpublic_ip">interface = internal/LOCAL_IP;external/PUBLIC_IP</a></li>
+      </ol>
+    </li>
   </ol>
 </nav>
         </div>
@@ -515,7 +522,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2025-06-30</time>
+                <time class="article-time--published">2025-09-05</time>
             </div>
         
 
@@ -530,7 +537,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 8 分钟,共3901 字
+                    阅读时长: 11 分钟,共5169 字
                 </time>
             </div>
         
@@ -1262,6 +1269,68 @@ by the answerer, transcoding will necessarily be enabled.</p>
 </pre>
 
 <p>这种方式下,<code>codec-accept-G722</code>不起作用.</p>
+<h2 id="rtpengine-interface设置">rtpengine interface设置
+</h2><p>当我们使用 <code>opensips</code>或者<code>kamailio</code>+<code>rtpengine</code>做<code>sbc</code>网关时, 需要根据内外网环境自动切换媒体ip,
+此时<code>rtpengine</code>的监听<code>interface</code>设置就至关重要。下面是<code>rtpengine.conf</code>的设置介绍:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">### legacy interface config syntax:
+</span></span><span class="line"><span class="cl"># interface = any
+</span></span><span class="line"><span class="cl">### a single interface:
+</span></span><span class="line"><span class="cl"># interface = 123.234.345.456
+</span></span><span class="line"><span class="cl">### separate multiple interfaces with semicolons:
+</span></span><span class="line"><span class="cl"># interface = internal/12.23.34.45;external/23.34.45.54
+</span></span><span class="line"><span class="cl">### for different advertised address:
+</span></span><span class="line"><span class="cl"># interface = 12.23.34.45!23.34.45.56
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>当有多个网卡时, 可以使用<code>interface = internal/192.168.2.234;external/23.34.45.54</code>设置。</li>
+<li>当有多个外网ip时,可以使用<code>interface = 23.34.45.54!23.34.45.55</code>设置。</li>
+</ol>
+<p>但是实际在使用过程中， <code>sbc</code>都是在内网部署，网关或者路由器做<code>nat</code>转换, 转发请求到<code>sbc</code>上。
+此时<code>rtpengine</code>是单网卡，监听的ip是内网ip, 如何设置外网ip呢, 主要有两种方式:</p>
+<h3 id="interface--local_ippublic_ip">interface = LOCAL_IP!PUBLIC_IP 
+</h3><p>这种方式设置,默认生成的<code>SDP</code>信息中的<code>c=</code>,<code>o=</code>会是<code>PUBLIC_IP</code>,
+但是当我们想要<code>c=</code>,<code>o=</code>换成<code>LOCAL_IP</code>, 可以在<code>rtpengine_manager(&quot;media-address=LOCAL_IP&quot;)</code>强转成<code>LOCAL_IP</code>。</p>
+<p>但是这种只会改变<code>c=</code>为<code>LOCAL_IP</code>, <code>o=</code>还是<code>PUBLIC_IP</code>。实际也不会有什么影响。毕竟真正使用的是<code>c=</code></p>
+<h3 id="interfacepublocal_ippublic_ipprivlocal_ip">interface=pub/LOCAL_IP!PUBLIC_IP;priv/LOCAL_IP 
+</h3><p>这种是最佳方式,<code>pub</code>,<code>priv</code>这两个名字你可以随便起，但是当你使用<code>rtpengine_manager()</code>时，一定要和这两个名字一致。</p>
+<p>在<code>rtpengine</code>的<code>ng_control</code>中，用的参数是<code>direction=[&quot;priv&quot;,&quot;pub&quot;]</code>。</p>
+<p>需要注意的是当我们使用<code>opensips</code>时,要用<code>in-iface=priv out-iface=pub</code>,这样往<code>rtpengine</code>发送的<code>offer</code>才会转成<code>direction=[&quot;priv&quot;,&quot;pub&quot;]</code>。</p>
+<p><code>opensips</code>的官方文档<code>rtpengine</code>模块中介绍用的是<code>in-iface=internal out-iface=external</code>,
+我们在<code>rtpengine.conf</code>中设置的是<code>pub/LOCAL_IP!PUBLIC_IP;priv/LOCAL_IP</code>, 要灵活变通，改成<code>in-iface=priv out-iface=pub</code>。</p>
+<p><code>in-iface=priv out-iface=pub</code>的含义是: 进来请求的sdp用的是<code>priv</code>的ip, 转发请求的sdp用的是<code>pub</code>的ip,这种是外呼的情况。</p>
+<p>我们只需要在转发<code>INVITE</code>时,设置此参数即可, 收到<code>183</code>或者<code>200OK</code>时，不需要再设置。</p>
+<h3 id="interface--internallocal_ipexternalpublic_ip">interface = internal/LOCAL_IP;external/PUBLIC_IP
+</h3><p>这种只能在<code>双网卡</code>的环境下才能使用, <code>单网卡</code>的环境下，这样使用会报错。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[1756439280.576834] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Failure while trying to bind a port to the socket
+</span></span><span class="line"><span class="cl">[1756439280.576856] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Failed to get 2 consecutive ports on interface 10.64.65.46 for media relay (last error: Cannot assign requested address)
+</span></span><span class="line"><span class="cl">[1756439280.576868] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Failed to get 2 consecutive ports on all locals of logical &#39;external&#39;
+</span></span><span class="line"><span class="cl">[1756439280.576872] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Error allocating media ports
+</span></span><span class="line"><span class="cl">[1756439280.576885] ERR: [ccb5793a-ff2d-123e-8d9c-000c29684ffd]: [core] Destroying call
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>即使在<code>/etc/sysctl.conf</code>中添加<code>net.ipv4.ip_nonlocal_bind=1</code>,能解决报错问题, 因为没有<code>PUBLIC_IP</code>网卡,还是会出现没有声音情况。</p>
 
 </section>
 
@@ -1643,7 +1712,7 @@ by the answerer, transcoding will necessarily be enabled.</p>
         
         
         发表了58篇文章 · 
-        总计98.08k字
+        总计99.35k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
