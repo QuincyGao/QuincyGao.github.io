@@ -481,7 +481,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 3 分钟,共1273 字
+                    阅读时长: 3 分钟,共1362 字
                 </time>
             </div>
         
@@ -751,7 +751,9 @@
 </span></span><span class="line"><span class="cl"><span class="n">CMD</span> <span class="p">[</span><span class="s2">&#34;/usr/local/freeswitch/bin/freeswitch&#34;</span><span class="p">,</span> <span class="s2">&#34;-nonat&#34;</span><span class="p">]</span>
 </span></span></code></pre></td></tr></table>
 </div>
-</div><p><code>check-libs.sh</code>的脚本为:</p>
+</div><p>说明: <code>lua-iconv</code>是<code>lua</code>的一个扩展库, 如果你不需要可以删掉。
+如果需要,下载到源码之后还要改它的<code>Makefile</code>里的<code>LUAPKG = lua5.2</code>为<code>LUAPKG = lua5.3</code>。</p>
+<p><code>check-libs.sh</code>的脚本为:</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt"> 1
@@ -1249,7 +1251,7 @@
         
         
         发表了59篇文章 · 
-        总计100.62k字
+        总计100.71k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
