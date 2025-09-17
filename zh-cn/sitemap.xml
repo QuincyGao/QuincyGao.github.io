@@ -3,7 +3,7 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://QuincyGao.github.io/</loc>
-    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -15,17 +15,17 @@
                 href="https://QuincyGao.github.io/"
                 />
   </url><url>
-    <loc>https://QuincyGao.github.io/tags/freeswitch/</loc>
-    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
-  </url><url>
-    <loc>https://QuincyGao.github.io/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/</loc>
-    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
-  </url><url>
     <loc>https://QuincyGao.github.io/post/</loc>
-    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/stun/</loc>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/stun%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/</loc>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/tags/</loc>
-    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -38,7 +38,7 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/</loc>
-    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="en"
@@ -51,6 +51,12 @@
                 />
   </url><url>
     <loc>https://QuincyGao.github.io/categories/daily-life/</loc>
+    <lastmod>2025-09-17T09:55:53+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/tags/freeswitch/</loc>
+    <lastmod>2025-09-12T09:44:01+08:00</lastmod>
+  </url><url>
+    <loc>https://QuincyGao.github.io/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/</loc>
     <lastmod>2025-09-12T09:44:01+08:00</lastmod>
   </url><url>
     <loc>https://QuincyGao.github.io/categories/opensips/</loc>

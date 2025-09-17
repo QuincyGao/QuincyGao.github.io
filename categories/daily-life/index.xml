@@ -6,7 +6,257 @@
         <description>Recent content in 技术生活 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 12 Sep 2025 09:44:01 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 17 Sep 2025 09:55:53 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>stun协议要点纪要</title>
+        <link>https://QuincyGao.github.io/p/stun%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/</link>
+        <pubDate>Wed, 17 Sep 2025 09:55:53 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/stun%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/stun%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/backup.jpg" alt="Featured image of post stun协议要点纪要" /&gt;&lt;h2 id=&#34;stun协议介绍&#34;&gt;stun协议介绍
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;stun&lt;/code&gt;协议提供了一种机制, 用于发现和定位客户端在&lt;code&gt;NAT&lt;/code&gt;后的IP地址和端口号。
+可以检查两个节点的连接并保活&lt;code&gt;NAT&lt;/code&gt;的绑定。它不提供NAT穿透功能, 只能用于发现和定位&lt;code&gt;NAT&lt;/code&gt;后的IP地址和端口号。&lt;/p&gt;
+&lt;p&gt;最新的&lt;code&gt;stun&lt;/code&gt;协议版本是&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc8489&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RFC 8489&lt;/a&gt;,已经过时: &lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc5389&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RFC 5389&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;stun&lt;/code&gt;配合使用的场景有两个：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc8445&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;ICE&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc5626&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;sip oubound&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;要点&#34;&gt;要点
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;stun&lt;/code&gt;是客户端-服务端协议, 支持两种事务：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端发送请求，服务端响应&lt;/li&gt;
+&lt;li&gt;客户端发送不需要服务端响应的消息&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;stun消息结构&#34;&gt;STUN消息结构
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;stun Message&lt;/code&gt;采用网络字节序编码, 即大端字节序。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0                   1                   2                   3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|0 0|     STUN Message Type     |         Message Length        |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                         Magic Cookie                          |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                                                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                     Transaction ID (96 bits)                  |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                                                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;最高的两位字节必须为0,当&lt;code&gt;stun&lt;/code&gt;和其他协议在同一个端口上复用时，可以使用这两位来区分协议。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Message Type&lt;/code&gt;: 用来定义&lt;code&gt;message class&lt;/code&gt;和&lt;code&gt;message method&lt;/code&gt;。&lt;code&gt;message method&lt;/code&gt;为&lt;code&gt;Binding(0b000000000001)&lt;/code&gt;, &lt;code&gt;message class&lt;/code&gt;主要分为:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;request&lt;/code&gt; 客户端发送请求, 服务端响应&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;response&lt;/code&gt; 服务端发送响应, 客户端接收&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;error response&lt;/code&gt; 服务端发送错误响应, 客户端接收&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;indication&lt;/code&gt; 客户端发送通知, 服务端不响应&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;Magic Cookie&lt;/code&gt;: 必须包括&lt;code&gt;0x2112A442&lt;/code&gt;,它是&lt;code&gt;Transaction ID&lt;/code&gt;的一部分.&lt;/p&gt;
+&lt;p&gt;对于通过&lt;code&gt;UDP&lt;/code&gt;或者&lt;code&gt;DTLS-over-UDP&lt;/code&gt;发送的&lt;code&gt;stun&lt;/code&gt;消息,大小必须小于&lt;code&gt;MTU&lt;/code&gt;。
+如果不知道&lt;code&gt;MTU&lt;/code&gt;, 使用&lt;code&gt;udp&lt;/code&gt;发送, &lt;code&gt;ipv4&lt;/code&gt;情况下,&lt;code&gt;stun&lt;/code&gt;的udp包必须小于&lt;code&gt;548&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;request/response&lt;/code&gt;这样的事务, 发送中如果丢包，会间隔初始值&lt;code&gt;RTO(500ms)&lt;/code&gt;时间重传,
+&lt;code&gt;indication&lt;/code&gt;这样的事务, 发送中如果丢包, 不会重传。 默认最大重传次数为&lt;code&gt;7&lt;/code&gt;次。&lt;/p&gt;
+&lt;h3 id=&#34;stun-url&#34;&gt;STUN URL
+&lt;/h3&gt;&lt;p&gt;当客户端希望使用&lt;code&gt;TLS/DTLS&lt;/code&gt;加密，那么&lt;code&gt;stun server&lt;/code&gt;的&lt;code&gt;URI&lt;/code&gt;的&lt;code&gt;scheme&lt;/code&gt;为:&lt;code&gt;stuns&lt;/code&gt;,否则为:&lt;code&gt;stun&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;stun&lt;/code&gt;URI的&lt;code&gt;host&lt;/code&gt;为&lt;code&gt;ip&lt;/code&gt;, &lt;code&gt;stuns&lt;/code&gt;URI的&lt;code&gt;host&lt;/code&gt;必须为&lt;code&gt;域名&lt;/code&gt;,&lt;code&gt;ip&lt;/code&gt;会报错。&lt;/p&gt;
+&lt;p&gt;默认的&lt;code&gt;stun&lt;/code&gt;端口为&lt;code&gt;3478&lt;/code&gt;, &lt;code&gt;stuns&lt;/code&gt;端口为&lt;code&gt;5349&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;当使用&lt;code&gt;TLS-over-TCP&lt;/code&gt;或者&lt;code&gt;DTLS-over-UDP&lt;/code&gt;时, &lt;code&gt;TLS_DHE_RSA_WITH_AES_128_GCM_SHA256&lt;/code&gt;和&lt;code&gt;TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256&lt;/code&gt;必须有。&lt;/p&gt;
+&lt;h3 id=&#34;requestresponse关于未知attributes的处理&#34;&gt;request/response关于未知attributes的处理
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;如果&lt;code&gt;request&lt;/code&gt;中包含未知的&lt;code&gt;attributes&lt;/code&gt;, 服务端报错&lt;code&gt;420(Unkown Attribute)&lt;/code&gt;。
+对于错误的&lt;code&gt;response&lt;/code&gt;,错误码必须有，错误信息要和错误码匹配。&lt;/li&gt;
+&lt;li&gt;如果&lt;code&gt;indication&lt;/code&gt;请求包括未知的&lt;code&gt;attributes&lt;/code&gt;, 服务端会丢弃此命令,处理停止。&lt;/li&gt;
+&lt;li&gt;如果成功的&lt;code&gt;response&lt;/code&gt;中带有未知的&lt;code&gt;attributes&lt;/code&gt;, 客户端会丢弃此&lt;code&gt;response&lt;/code&gt;,并认为事务处理失败。&lt;/li&gt;
+&lt;li&gt;如果错误的&lt;code&gt;response&lt;/code&gt;中包含未知的&lt;code&gt;attributes&lt;/code&gt;或者未带错误码，客户端初步认为事务处理失败。需要再结合错误码来判断:
+&lt;code&gt;300-499&lt;/code&gt;: 客户端认为事务处理失败。
+&lt;code&gt;500-599&lt;/code&gt;: 客户端可能会重新发送请求,重试的次数应该被限制到4。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;fingerprint-机制&#34;&gt;FINGERPRINT 机制
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;FINGERPRINT&lt;/code&gt;机制是为了和其他的消息进行区分，&lt;code&gt;stun Header&lt;/code&gt;头有时候不够用，所以需要添加&lt;code&gt;FINGERPRINT&lt;/code&gt;属性。&lt;/p&gt;
+&lt;p&gt;认证机制主要有两种: &lt;code&gt;短期凭证机制&lt;/code&gt;和&lt;code&gt;长期凭证机制&lt;/code&gt;。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;短期凭证机制&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;在进行事务之前，客户端和服务端已使用其他协议交换了用户名和密码形式的凭证,此凭证是有时效的,
+此凭证主要用在每个请求和多个响应中形成消息完整性检查。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;对于&lt;code&gt;request&lt;/code&gt;或者&lt;code&gt;indication&lt;/code&gt;消息，必须有&lt;code&gt;USERNAME&lt;/code&gt;, &lt;code&gt;MESSAGE-INTERGITY-SHA256&lt;/code&gt;,&lt;code&gt;MESSAGE-INTERGRITY&lt;/code&gt;。
+除非双方已通过其他方式知道了对方支持的完整性算法，这种情况下,&lt;code&gt;MESSAGE-INTERGITY-SHA256&lt;/code&gt;和&lt;code&gt;MESSAGE-INTERGRITY&lt;/code&gt;必须有一个。
+密码一定不能在消息中。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;服务端收到&lt;code&gt;request&lt;/code&gt;或者&lt;code&gt;indication&lt;/code&gt;消息, 必须验证&lt;code&gt;USERNAME&lt;/code&gt;和&lt;code&gt;MESSAGE-INTERGITY-SHA256&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTERGRITY&lt;/code&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;消息中不包括&lt;code&gt;USERNAME&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTERGITY-SHA256&lt;/code&gt;和&lt;code&gt;MESSAGE-INTERGRITY&lt;/code&gt;中的一个, 服务端必须返回&lt;code&gt;400(Bad Request)&lt;/code&gt;错误响应。&lt;/li&gt;
+&lt;li&gt;如果&lt;code&gt;USERNAME&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTERGITY-SHA256&lt;/code&gt;和&lt;code&gt;MESSAGE-INTERGRITY&lt;/code&gt;中的一个验证失败, 服务端必须返回&lt;code&gt;401(Unauthorized)&lt;/code&gt;错误响应。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;客户端收到&lt;code&gt;response&lt;/code&gt;之后，检查参数&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;, 如果不匹配，&lt;code&gt;response&lt;/code&gt;丢弃。
+然后，客户端使用和请求相同的密码，根据&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;对&lt;code&gt;response&lt;/code&gt;的消息完整性计算,
+如果结果和&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;的内容一致，就认为匹配.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;后续的其他的请求都要带&lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;或者&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;属性.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;长期凭证机制&lt;/code&gt;
+客户端和服务端共享用户名和密码，长期有效，直到用户不再是系统订阅者或者凭证改变。
+它的认证过程为:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;客户端发送不带任何凭证的&lt;code&gt;request&lt;/code&gt;或者&lt;code&gt;indication&lt;/code&gt;消息到服务端&lt;/li&gt;
+&lt;li&gt;服务端拒绝请求并带上&lt;code&gt;realm(引导用户选择用户名和密码)&lt;/code&gt;和&lt;code&gt;nonce(服务端cookie)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;客户端会重新发送请求带上&lt;code&gt;username&lt;/code&gt;,&lt;code&gt;realm&lt;/code&gt;和&lt;code&gt;nonce&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;服务端验证&lt;code&gt;nonce&lt;/code&gt;和消息完整性.&lt;/li&gt;
+&lt;li&gt;之后的其他请求客户端都要带上&lt;code&gt;username&lt;/code&gt;,&lt;code&gt;realm&lt;/code&gt;和&lt;code&gt;nonce&lt;/code&gt;,直到服务端的&lt;code&gt;nonce&lt;/code&gt;失效。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;第一个请求必须包括: &lt;code&gt;USERNAME&lt;/code&gt;, &lt;code&gt;USERHASH&lt;/code&gt;,&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;, &lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;,
+&lt;code&gt;REALM&lt;/code&gt;, &lt;code&gt;NONCE&lt;/code&gt;, &lt;code&gt;PASSWORD-ALGORITHMS&lt;/code&gt;, &lt;code&gt;PASSWORD-ALGORITHM&lt;/code&gt;
+一旦服务端验证了&lt;code&gt;nonce&lt;/code&gt;和消息完整性, 后续的请求都必须包括&lt;code&gt;USERNAME&lt;/code&gt;or&lt;code&gt;USERHASH&lt;/code&gt;,&lt;code&gt;REALM&lt;/code&gt;,&lt;code&gt;NONCE&lt;/code&gt;,
+&lt;code&gt;PASSWORD-ALGORITHM&lt;/code&gt;,&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;or&lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;备用服务器-机制&#34;&gt;备用服务器 机制
+&lt;/h3&gt;&lt;p&gt;服务端返回错误码&lt;code&gt;300(Try Alternate)&lt;/code&gt;并带&lt;code&gt;ALTERNATE-SERVER&lt;/code&gt;属性。&lt;/p&gt;
+&lt;h3 id=&#34;stun的部分参数&#34;&gt;stun的部分参数
+&lt;/h3&gt;&lt;h4 id=&#34;mapped-address&#34;&gt;MAPPED-ADDRESS
+&lt;/h4&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0                   1                   2                   3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|0 0 0 0 0 0 0 0|    Family     |           Port                |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                                                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                 Address (32 bits or 128 bits)                 |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                                                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;客户端&lt;code&gt;nat&lt;/code&gt;的地址, 包括8位&lt;code&gt;family&lt;/code&gt;和16位&lt;code&gt;port&lt;/code&gt;, 32位&lt;code&gt;ipv4&lt;/code&gt;或者128位&lt;code&gt;ipv6&lt;/code&gt;。&lt;/p&gt;
+&lt;h4 id=&#34;xor-mapped-address&#34;&gt;XOR-MAPPED-ADDRESS
+&lt;/h4&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0                   1                   2                   3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|0 0 0 0 0 0 0 0|    Family     |         X-Port                |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                X-Address (Variable)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;反传输的地址,和&lt;code&gt;MAPPED-ADDRESS&lt;/code&gt;差别在于传输地址的编码,
+&lt;code&gt;XOR-MAPPED-ADDRESS&lt;/code&gt;通过和&lt;code&gt;magic cookie&lt;/code&gt;按位异或来编码地址,
+&lt;code&gt;MAPPED-ADDRESS&lt;/code&gt;直接以二进制形式编码地址.&lt;/p&gt;
+&lt;h4 id=&#34;username&#34;&gt;USERNAME
+&lt;/h4&gt;&lt;p&gt;用于标识消息完整性检查使用用户名和密码的方式. 必须是&lt;code&gt;utf-8&lt;/code&gt;并且少于&lt;code&gt;509&lt;/code&gt;个字节。&lt;/p&gt;
+&lt;h4 id=&#34;userhash&#34;&gt;USERHASH
+&lt;/h4&gt;&lt;p&gt;当支持用户名匿名时，使用此字段替换&lt;code&gt;USERNAME&lt;/code&gt;,&lt;code&gt;32&lt;/code&gt;个字节。&lt;/p&gt;
+&lt;h4 id=&#34;fingerprint&#34;&gt;FINGERPRINT
+&lt;/h4&gt;&lt;p&gt;如果有该字段，那么此字段必须在&lt;code&gt;MESSAGE-INTEGRITY&lt;/code&gt;and&lt;code&gt;MESSAGE-INTEGRITY-SHA256&lt;/code&gt;后面.&lt;/p&gt;
+&lt;h4 id=&#34;password-algorithms&#34;&gt;PASSWORD-ALGORITHMS
+&lt;/h4&gt;&lt;p&gt;包括服务端可以使用的算法列表。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;                   &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;                   &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;                   &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;         &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parameters&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Length&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parameters&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;variable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;         &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parameters&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Length&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parameters&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;variable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;                                                             &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;password-algorithm&#34;&gt;PASSWORD-ALGORITHM
+&lt;/h4&gt;&lt;p&gt;服务端要用的算法&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;                   &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;                   &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;                   &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;          &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt;           &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parameters&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Length&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;|&lt;/span&gt;                    &lt;span class=&#34;n&#34;&gt;Algorithm&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Parameters&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;variable&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>freeswitch1.10.7缩减镜像包大小</title>
         <link>https://QuincyGao.github.io/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/</link>
         <pubDate>Fri, 12 Sep 2025 09:44:01 +0800</pubDate>
