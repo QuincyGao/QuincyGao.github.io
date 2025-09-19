@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Turn on QuincyGao Blog</title>
+        <link>http://localhost:1313/tags/turn/</link>
+        <description>Recent content in Turn on QuincyGao Blog</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Thu, 18 Sep 2025 16:14:45 +0800</lastBuildDate><atom:link href="http://localhost:1313/tags/turn/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>turn协议要点纪要</title>
+        <link>http://localhost:1313/p/turn%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/</link>
+        <pubDate>Thu, 18 Sep 2025 16:14:45 +0800</pubDate>
+        
+        <guid>http://localhost:1313/p/turn%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/</guid>
+        <description>&lt;img src="http://localhost:1313/p/turn%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/backup.jpg" alt="Featured image of post turn协议要点纪要" /&gt;&lt;h2 id=&#34;turn协议介绍&#34;&gt;turn协议介绍
+&lt;/h2&gt;&lt;p&gt;当主机ip在&lt;code&gt;NAT&lt;/code&gt;后面，某些情况下，它不可能直接和其他的主机通信，此时就需要一个中继服务来连接两个节点。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;turn&lt;/code&gt;协议提供了这样的功能，虽然可以单独使用，但是它常常作为&lt;code&gt;ICE&lt;/code&gt;的一部分。&lt;/p&gt;
+&lt;p&gt;最新的协议地址:&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc8656&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RFC 8656&lt;/a&gt;, 过时的协议:&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc6156&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;RFC 6156&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;turn协议要点&#34;&gt;turn协议要点
+&lt;/h2&gt;&lt;h3 id=&#34;传输协议&#34;&gt;传输协议
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;TURN client to TURN server&lt;/th&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;TURN server to peer&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;UDP&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;UDP&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;TCP&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;UDP&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;TLS-over-TCP&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;UDP&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;DTLS-over-UDP&lt;/td&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;UDP&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;因为&lt;code&gt;turn server&lt;/code&gt;和其他的&lt;code&gt;peer&lt;/code&gt;使用&lt;code&gt;udp&lt;/code&gt;通信，所以推荐&lt;code&gt;turn client&lt;/code&gt;和&lt;code&gt;turn server&lt;/code&gt;也用&lt;code&gt;udp&lt;/code&gt;方式，
+除非有其他原因，比如：防火墙拦截&lt;code&gt;udp&lt;/code&gt;等。&lt;/p&gt;
+&lt;h3 id=&#34;allocations&#34;&gt;Allocations
+&lt;/h3&gt;&lt;p&gt;客户端发送请求到服务端获取到中继地址之后，客户端要保持此地址活跃，默认的生命周期是&lt;code&gt;10分钟&lt;/code&gt;,
+客户端要在此时间内刷新请求，如果不想使用了，就发送生命周期为0的请求。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;TURN                                 TURN          Peer         Peer
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;client                               server         A            B
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |-- Allocate request ---------------&amp;gt;|            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |   (invalid or missing credentials) |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |                                    |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |&amp;lt;--------------- Allocate failure --|            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |              (401 Unauthenticated) |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |                                    |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |-- Allocate request ---------------&amp;gt;|            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |               (valid credentials)  |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |                                    |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |&amp;lt;---------- Allocate success resp --|            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |            (192.0.2.15:50000)      |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  //                                   //           //           //
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |                                    |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |-- Refresh request ----------------&amp;gt;|            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |                                    |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |&amp;lt;----------- Refresh success resp --|            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  |                                    |            |            |
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;uri-scheme&#34;&gt;URI Scheme
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;turns&lt;/code&gt;必须是&lt;code&gt;TLS-over-TCP&lt;/code&gt;or&lt;code&gt;DTLS-over-UDP&lt;/code&gt;,端口默认: &lt;code&gt;5349&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;turn&lt;/code&gt;必须是&lt;code&gt;UDP&lt;/code&gt;or&lt;code&gt;TCP&lt;/code&gt;,&lt;code&gt;host&lt;/code&gt;为&lt;code&gt;turn server&lt;/code&gt;ip。 端口默认:&lt;code&gt;3478&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;turn&lt;/code&gt;是&lt;code&gt;stun&lt;/code&gt;的扩展，所有的&lt;code&gt;turn&lt;/code&gt;消息除了&lt;code&gt;ChannelData&lt;/code&gt;之外，都是&lt;code&gt;stun&lt;/code&gt;格式的消息。&lt;/p&gt;
+&lt;h3 id=&#34;权限&#34;&gt;权限
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;turn server&lt;/code&gt;存在权限列表，包括&lt;code&gt;ip&lt;/code&gt;和分配的&lt;code&gt;过期时间&lt;/code&gt;, 如果有权限，所有的&lt;code&gt;peer&lt;/code&gt;可以使用该&lt;code&gt;ip&lt;/code&gt;来发送数据到&lt;code&gt;client&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;客户端可以通过&lt;code&gt;CreatePermission&lt;/code&gt;or&lt;code&gt;CHannelBind&lt;/code&gt;请求来申请或者刷新给定ip的服务端权限。
+权限的生命周期为:&lt;code&gt;5分钟&lt;/code&gt;。当&lt;code&gt;udp&lt;/code&gt;数据到达&lt;code&gt;turn server&lt;/code&gt;时，会检查数据的&lt;code&gt;src ip&lt;/code&gt;是否在权限列表中，&lt;code&gt;port&lt;/code&gt;不检查。
+如果不匹配，&lt;code&gt;udp&lt;/code&gt;数据丢弃。&lt;/p&gt;
+&lt;h4 id=&#34;createpermission&#34;&gt;CreatePermission 
+&lt;/h4&gt;&lt;p&gt;这个请求必须包括:&lt;code&gt;XOR-PEER-ADDRESS(需要赋权限的ip)&lt;/code&gt;,此字段可以有多个,但是&lt;code&gt;ip&lt;/code&gt;不能重复。&lt;/p&gt;
+&lt;h4 id=&#34;channel-bindings&#34;&gt;Channel bindings
+&lt;/h4&gt;&lt;p&gt;&lt;code&gt;Channel bindings&lt;/code&gt;和一个&lt;code&gt;allocation&lt;/code&gt;绑定，如果某个&lt;code&gt;allocation&lt;/code&gt;过期，那么&lt;code&gt;Channel bindings&lt;/code&gt;也一起失效。&lt;/p&gt;
+&lt;p&gt;一个&lt;code&gt;channel binding&lt;/code&gt;包括:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;channel number&lt;/li&gt;
+&lt;li&gt;transport address&lt;/li&gt;
+&lt;li&gt;过期时间&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;一个&lt;code&gt;channel binding&lt;/code&gt; 以 &lt;code&gt;channel number&lt;/code&gt;或者&lt;code&gt;transport address&lt;/code&gt;为唯一标识。
+因此, 相同的&lt;code&gt;channel&lt;/code&gt;不能绑定到两个不同的&lt;code&gt;transport address&lt;/code&gt;, 相同的&lt;code&gt;transport address&lt;/code&gt;也不能绑定到两个不同的&lt;code&gt;channel&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;channel binding&lt;/code&gt;持续&lt;code&gt;10分钟&lt;/code&gt;, 一旦&lt;code&gt;channel binding&lt;/code&gt;过期，客户端必须等&lt;code&gt;5分钟&lt;/code&gt;之后,才能把这&lt;code&gt;channel number&lt;/code&gt;绑定到不同的&lt;code&gt;transport address&lt;/code&gt;,
+或者这个&lt;code&gt;transport address&lt;/code&gt;绑定到不同的&lt;code&gt;channel number&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;channeldata&#34;&gt;ChannelData
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0                   1                   2                   3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|         Channel Number        |            Length             |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                                                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/                       Application Data                        /
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;/                                                               /
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                                                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                               +-------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;|                               |
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+-------------------------------+
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;如果使用&lt;code&gt;TCP&lt;/code&gt;or&lt;code&gt;TLS-over-TCP&lt;/code&gt;传输, 为了保持对齐，&lt;code&gt;ChannelData&lt;/code&gt;的长度必须是&lt;code&gt;4字节&lt;/code&gt;的倍数。
+这个填充不反映在&lt;code&gt;Length&lt;/code&gt;字段中。&lt;code&gt;UDP&lt;/code&gt;没有这样的要求。&lt;/p&gt;
+&lt;h3 id=&#34;stun-methods&#34;&gt;STUN methods
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;address&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Method&lt;/th&gt;
+          &lt;th&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x003&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;Allocate&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;(only request/response semantics defined)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x004&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;Refresh&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;(only request/response semantics defined)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x006&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;Send&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;(only indication semantics defined)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x007&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;Data&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;(only indication semantics defined)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x008&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;CreatePermission&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;(only request/response semantics defined)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x009&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;&lt;code&gt;ChannelBind&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;(only request/response semantics defined)&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;stun-attributes&#34;&gt;STUN attributes
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th style=&#34;text-align: center&#34;&gt;attribute&lt;/th&gt;
+          &lt;th style=&#34;text-align: left&#34;&gt;Description&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x000C&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;CHANNEL-NUMBER&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x000D&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;LIFETIME&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0010&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Reserved (was BANDWIDTH)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0012&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;XOR-PEER-ADDRESS&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0013&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;DATA&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0016&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;XOR-RELAYED-ADDRESS&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0017&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;REQUESTED-ADDRESS-FAMILY&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0018&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;EVEN-PORT&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0019&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;REQUESTED-TRANSPORT&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x001A&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;DONT-FRAGMENT&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0021&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;Reserved (was TIMER-VAL)&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x0022&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;RESERVATION-TOKEN&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x8000&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;ADDITIONAL-ADDRESS-FAMILY&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x8001&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;ADDRESS-ERROR-CODE&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td style=&#34;text-align: center&#34;&gt;0x8004&lt;/td&gt;
+          &lt;td style=&#34;text-align: left&#34;&gt;ICMP&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
