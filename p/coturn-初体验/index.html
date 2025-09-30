@@ -490,7 +490,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 4 分钟,共1843 字
+                    阅读时长: 4 分钟,共1934 字
                 </time>
             </div>
         
@@ -808,8 +808,16 @@
 <ul>
 <li>
 <p><code>username:password</code></p>
-<p><code>password</code>是使用<code>HMAC-SHA1</code>算法来计算的, 密钥随便填，可以使用此地址: <a class="link" href="https://www.lddgo.net/encrypt/hmac"  target="_blank" rel="noopener"
+<ol>
+<li>
+<p>如果用的是<code>lt-cred-mech</code>, 密码就是登录时填写的密码。</p>
+</li>
+<li>
+<p>如果用的是<code>use-auth-secret</code>, 密码就是<code>HMAC-SHA1</code>算法计算的结果, 密钥是<code>static-auth-secret</code>的值。
+<code>password</code>是使用<code>HMAC-SHA1</code>算法来计算的, 可以使用此地址: <a class="link" href="https://www.lddgo.net/encrypt/hmac"  target="_blank" rel="noopener"
     >hmac计算</a></p>
+</li>
+</ol>
 </li>
 </ul>
 <p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac.png"
@@ -1428,7 +1436,7 @@
         
         
         发表了64篇文章 · 
-        总计109.54k字
+        总计109.63k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>

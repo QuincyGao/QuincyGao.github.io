@@ -294,8 +294,16 @@
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;code&gt;username:password&lt;/code&gt;&lt;/p&gt;
-&lt;p&gt;&lt;code&gt;password&lt;/code&gt;是使用&lt;code&gt;HMAC-SHA1&lt;/code&gt;算法来计算的, 密钥随便填，可以使用此地址: &lt;a class=&#34;link&#34; href=&#34;https://www.lddgo.net/encrypt/hmac&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;如果用的是&lt;code&gt;lt-cred-mech&lt;/code&gt;, 密码就是登录时填写的密码。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;如果用的是&lt;code&gt;use-auth-secret&lt;/code&gt;, 密码就是&lt;code&gt;HMAC-SHA1&lt;/code&gt;算法计算的结果, 密钥是&lt;code&gt;static-auth-secret&lt;/code&gt;的值。
+&lt;code&gt;password&lt;/code&gt;是使用&lt;code&gt;HMAC-SHA1&lt;/code&gt;算法来计算的, 可以使用此地址: &lt;a class=&#34;link&#34; href=&#34;https://www.lddgo.net/encrypt/hmac&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;hmac计算&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac.png&#34;
