@@ -6,7 +6,524 @@
         <description>Recent content in 技术生活 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 23 Sep 2025 10:17:39 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 30 Sep 2025 13:47:33 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>coturn 初体验</title>
+        <link>https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
+        <pubDate>Tue, 30 Sep 2025 13:47:33 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup.jpg" alt="Featured image of post coturn 初体验" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;前面我们介绍了&lt;code&gt;stun&lt;/code&gt;,&lt;code&gt;turn&lt;/code&gt;相关的协议， 本章节来介绍实现了这两个协议的&lt;code&gt;coturn&lt;/code&gt;服务。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;coturn&lt;/code&gt;是一个开源的&lt;code&gt;turn&lt;/code&gt;服务器， 支持&lt;code&gt;stun&lt;/code&gt;和&lt;code&gt;turn&lt;/code&gt;协议。&lt;a class=&#34;link&#34; href=&#34;https://github.com/coturn/coturn.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;代码地址&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;本次测试&lt;code&gt;coturn&lt;/code&gt;的版本为: &lt;code&gt;4.7.0&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&#34;部署&#34;&gt;部署
+&lt;/h2&gt;&lt;p&gt;使用&lt;code&gt;docker&lt;/code&gt;来部署&lt;code&gt;coturn&lt;/code&gt;服务,  因为还有管理平台，所以需要:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;数据库: &lt;code&gt;mysql&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;域名,nginx证书: 因为使用&lt;code&gt;tls&lt;/code&gt;来访问, 所以需要有一个域名, 并配置好证书。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;拉取&lt;code&gt;coturn&lt;/code&gt;的镜像&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker pull coturn/coturn:4.7.0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;运行&lt;code&gt;coturn&lt;/code&gt;容器&lt;/p&gt;
+&lt;p&gt;因为会修改&lt;code&gt;turnserver.conf&lt;/code&gt;, 所以需要挂载&lt;code&gt;turnserver.conf&lt;/code&gt;到容器中。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;run&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;d&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;home&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tmp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;home&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;turnserver&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;conf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;etc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;turnserver&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;conf&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;home&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;data&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;docker&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tls&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;etc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ssl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tls&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;--&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;network&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;host&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;--&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;root&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;--&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;privileged&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;--&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;restart&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;always&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;--&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;  &lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;coturn&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;4.7&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;验证&lt;code&gt;coturn&lt;/code&gt;服务是否运行&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker logs coturn
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以看到类似如下的日志:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: System cpu num is 8
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: System cpu num is 8
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: System enable num is 8
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: Listener address to use: 172.16.4.113
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: Coturn Version Coturn-4.7.0 &amp;#39;Gorst&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: Max number of open files/sockets allowed for this process: 4096
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: Due to the open files/sockets limitation, max supported number of TURN Sessions possible is: 2000 (approximately)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;0: (1): INFO: 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;测试&#34;&gt;测试
+&lt;/h2&gt;&lt;h3 id=&#34;web管理平台&#34;&gt;web管理平台
+&lt;/h3&gt;&lt;p&gt;取消&lt;code&gt;turnserver.conf&lt;/code&gt;中的注释:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;mysql-userdb=&amp;#34;host=172.16.4.113 dbname=coturn user=root password=123456 port=3306 connect_timeout=15 read_timeout=10&amp;#34;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;web-admin
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;web-admin-ip=172.16.4.113
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;web-admin-port=8080
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为要使用数据库, 所以需要先创建数据库&lt;code&gt;coturn&lt;/code&gt;和相关的表,表在源码的位置:&lt;code&gt;docker/mysql/schema.sql&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;主要有以下几个表:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/sql.png&#34;
+	width=&#34;368&#34;
+	height=&#34;282&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/sql_hu17552273108409551744.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/sql_hu16587782871244300004.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sql&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;130&#34;
+		data-flex-basis=&#34;313px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;admin_user&lt;/code&gt;表是用来登录管理平台的用户表, 有&lt;code&gt;name&lt;/code&gt;,&lt;code&gt;realm&lt;/code&gt;,&lt;code&gt;password&lt;/code&gt;三个字段。
+其中&lt;code&gt;name&lt;/code&gt;是用户名, &lt;code&gt;realm&lt;/code&gt;是域名, &lt;code&gt;password&lt;/code&gt;是密码。
+可以使用&lt;code&gt;turnadmin&lt;/code&gt;工具来添加用户, 工具在&lt;code&gt;docker&lt;/code&gt;镜像中, 可以进入容器执行。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;turnadmin -A -M &amp;#34;host=172.16.4.113 dbname=coturn user=root password=123456&amp;#34; -u test -p 123456 -r example.com 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;-r&lt;/code&gt;域名一定要有, 就能在数据表中看到生成的用户信息。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/admin.png&#34;
+	width=&#34;1193&#34;
+	height=&#34;156&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/admin_hu12693346422985424646.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/admin_hu1742199667290889800.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;admin&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;764&#34;
+		data-flex-basis=&#34;1835px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;然后浏览器访问&lt;code&gt;https://exmaple.com:8080&lt;/code&gt;, 输入用户名密码登录。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login.png&#34;
+	width=&#34;704&#34;
+	height=&#34;512&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login_hu13632367652728257577.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login_hu1179272774152681238.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;login&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;137&#34;
+		data-flex-basis=&#34;330px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;存在的问题&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;密码如果是:&lt;code&gt;123456&lt;/code&gt;, 登录填&lt;code&gt;123456&lt;/code&gt;,登录不了，但是填&lt;code&gt;1234&lt;/code&gt;或者其他的，只要比&lt;code&gt;123456&lt;/code&gt;短, 就可以登录。已提issue。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;登录后, 可以看到如下的界面:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login1.png&#34;
+	width=&#34;794&#34;
+	height=&#34;715&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login1_hu13793274852412749008.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login1_hu4786004065836738184.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;web&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;111&#34;
+		data-flex-basis=&#34;266px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;通过查看&lt;code&gt;TURN session&lt;/code&gt;可以看到当前的&lt;code&gt;turn&lt;/code&gt;会话信息。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ss.png&#34;
+	width=&#34;2133&#34;
+	height=&#34;1059&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ss_hu12898842684973301614.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ss_hu18014743737465206103.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;session&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;201&#34;
+		data-flex-basis=&#34;483px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;因为这块数据没写入数据库，所以只能显示当时的会话信息。&lt;/p&gt;
+&lt;h3 id=&#34;turn测试&#34;&gt;turn测试
+&lt;/h3&gt;&lt;p&gt;条件说明:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;测试页面使用的是&lt;a class=&#34;link&#34; href=&#34;https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;webrtc.github.io&lt;/a&gt; 提供的页面。&lt;/li&gt;
+&lt;li&gt;由于设备有限,&lt;code&gt;coturn&lt;/code&gt;部署的服务上只有内网ip:&lt;code&gt;172.16.4.113&lt;/code&gt;, 域名也是绑在此ip上的,以&lt;code&gt;turn.example.com&lt;/code&gt;代替。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;turnserverconf-配置&#34;&gt;turnserver.conf 配置
+&lt;/h4&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;listening&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3478&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;tls&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;listening&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5349&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;listening&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ip&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;172.16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;4.113&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;external&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ip&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;172.16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;4.113&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;min&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;49152&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;max&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;65535&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;fingerprint&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;lt&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cred&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mech&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1758880920&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;v7SRsGuqqovL1clY&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ydY78zCdOA&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;mysql&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;userdb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;host=172.16.4.113 dbname=coturn user=root password=123456 port=3306 connect_timeout=15 read_timeout=10&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;realm&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;turn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;example&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;com&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;cert&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;etc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ssl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tls&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;turn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;example&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;com&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;pem&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;pkey&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;etc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ssl&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tls&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;turn&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;example&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;com&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;no&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cli&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;web&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;admin&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;web&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;admin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ip&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;172.16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;4.113&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;web&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;admin&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;port&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8080&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;file&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=/&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;turnserver&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;timestamp&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;new&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;timestamp&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;format&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%F&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;T%T%z&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;关于&lt;code&gt;user&lt;/code&gt;配置，有两种方式:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;username:key&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;这种方式要使用&lt;code&gt;turnadmin&lt;/code&gt;来生成&lt;code&gt;key&lt;/code&gt;,&lt;code&gt;key&lt;/code&gt;是以&lt;code&gt;0x&lt;/code&gt;开头的字符串,例如:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;turnadmin -k -u 1758880920 -r turn.example.com  -p 123456
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;生成的&lt;code&gt;key&lt;/code&gt;为:&lt;code&gt;0xaa6a346a717d5152bab065c41fe0264d&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;然后在&lt;code&gt;turnserver.conf&lt;/code&gt;中添加:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;user=1758880920:0xaa6a346a717d5152bab065c41fe0264d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;但是在测试时,填写&lt;code&gt;123456&lt;/code&gt;作为&lt;code&gt;password&lt;/code&gt;:&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice.png&#34;
+	width=&#34;1023&#34;
+	height=&#34;585&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice_hu4095968597347889994.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice_hu6632270771458910758.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;key&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;174&#34;
+		data-flex-basis=&#34;419px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; 所以如果使用`key`方式, 你忘记了密码(配置中没写密码),那么就没办法了，只能重新生成`key`。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;username:password&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;password&lt;/code&gt;是使用&lt;code&gt;HMAC-SHA1&lt;/code&gt;算法来计算的, 密钥随便填，可以使用此地址: &lt;a class=&#34;link&#34; href=&#34;https://www.lddgo.net/encrypt/hmac&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;hmac计算&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac.png&#34;
+	width=&#34;1729&#34;
+	height=&#34;949&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac_hu5687136893446634206.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac_hu9410749284760491646.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;hmac&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;182&#34;
+		data-flex-basis=&#34;437px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;然后在`turnserver.conf`中添加: `user=1758880920:wLvieDRiCi7eCE0MwDr/+YTCNtk=`
+
+但是在测试时,填写`wLvieDRiCi7eCE0MwDr/+YTCNtk=`作为`password`:
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice1.png&#34;
+	width=&#34;897&#34;
+	height=&#34;503&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice1_hu5458293822240089740.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice1_hu6543783212929527953.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;ice&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;178&#34;
+		data-flex-basis=&#34;427px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;turn测试结果&#34;&gt;turn测试结果
+&lt;/h4&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;turn&lt;/code&gt;地址为:&lt;code&gt;turn:turn.example.com:5349?transport=tcp&lt;/code&gt;, 测试的结果:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice2.png&#34;
+	width=&#34;1807&#34;
+	height=&#34;1190&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice2_hu1292754942854381924.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice2_hu14077122776367587193.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;turn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;151&#34;
+		data-flex-basis=&#34;364px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到&lt;code&gt;relay&lt;/code&gt;即是&lt;code&gt;turnserver&lt;/code&gt;分配的转发的&lt;code&gt;ip&lt;/code&gt;和&lt;code&gt;port&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;抓包结果:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun.png&#34;
+	width=&#34;2099&#34;
+	height=&#34;995&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun_hu3284154062337912541.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun_hu18017722447962872704.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;turn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;210&#34;
+		data-flex-basis=&#34;506px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;目前的请求发送了两次,抓包和测试结果都印证了此情况。 通过抓包可以看到请求的逻辑:&lt;/p&gt;
+&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    stun client -&amp;gt;&amp;gt;stun server: Allocate Request  
+    stun server -&amp;gt;&amp;gt;stun client: Allocate Error Response 401
+    stun client -&amp;gt;&amp;gt;stun server: Allocate Request  with user 
+    stun server -&amp;gt;&amp;gt;stun client: Allocat Success Response  
+    Note over stun server,stun client: XOR-RELAYED-ADDRESS,XOR-MAPPED-ADDRESS,lifetime
+    stun client -&amp;gt;&amp;gt;stun server: Refresh Request
+    Note over stun server,stun client: lifetime,user,realm
+    stun server -&amp;gt;&amp;gt;stun client: Refresh Success Response
+&lt;/pre&gt;
+
+&lt;p&gt;详细的信令如下:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Allocate Request&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req.png&#34;
+	width=&#34;1216&#34;
+	height=&#34;479&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req_hu10876003115931703759.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req_hu5655568488644932138.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;allocate&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;253&#34;
+		data-flex-basis=&#34;609px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Allocate Error Response&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp.png&#34;
+	width=&#34;1275&#34;
+	height=&#34;915&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp_hu3251639705359042561.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp_hu6331089098071134922.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;401&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;139&#34;
+		data-flex-basis=&#34;334px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Allocate Request  with user&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req1.png&#34;
+	width=&#34;1215&#34;
+	height=&#34;874&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req1_hu17017611824760091562.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req1_hu2437553724801259111.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;request&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;139&#34;
+		data-flex-basis=&#34;333px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Allocate Success Response&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp1.png&#34;
+	width=&#34;1159&#34;
+	height=&#34;539&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp1_hu1367691480271130126.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp1_hu3053664395718219311.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;200&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;215&#34;
+		data-flex-basis=&#34;516px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;XOR-RELAYED-ADDRESS&lt;/code&gt;: 是&lt;code&gt;turnserver&lt;/code&gt;分配的转发的&lt;code&gt;ip&lt;/code&gt;和&lt;code&gt;port&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;XOR-MAPPED-ADDRESS&lt;/code&gt;: 是&lt;code&gt;turn client&lt;/code&gt;的&lt;code&gt;NAT&lt;/code&gt;后地址,因为是内网访问，所以显示的是内网&lt;code&gt;ip&lt;/code&gt;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Refresh Request&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req2.png&#34;
+	width=&#34;1209&#34;
+	height=&#34;511&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req2_hu1900888745296625786.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req2_hu6117173585217767050.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;refresh&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;236&#34;
+		data-flex-basis=&#34;567px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Refresh Success Response&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp2.png&#34;
+	width=&#34;1175&#34;
+	height=&#34;468&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp2_hu11863592129627053933.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp2_hu8339185341810671310.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;200&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;251&#34;
+		data-flex-basis=&#34;602px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;turn&lt;/code&gt;地址为:&lt;code&gt;turn:turn.example.com:5349&lt;/code&gt;, 不带&lt;code&gt;transport&lt;/code&gt;,默认是&lt;code&gt;udp&lt;/code&gt;, 测试的结果:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice3.png&#34;
+	width=&#34;1565&#34;
+	height=&#34;780&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice3_hu13591506303813005276.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice3_hu5978202074268841495.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;turn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;200&#34;
+		data-flex-basis=&#34;481px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到有报错:&lt;code&gt;STUN binding request timed out.&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;但是抓的包返回都是成功的,相对于&lt;code&gt;tcp&lt;/code&gt;测试, 多了&lt;code&gt;Binding Request&lt;/code&gt;信令。&lt;/p&gt;
+&lt;p&gt;抓包结果:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun1.png&#34;
+	width=&#34;2153&#34;
+	height=&#34;575&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun1_hu4502938173482442318.png 480w, https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun1_hu11893898441238642876.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;turn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;374&#34;
+		data-flex-basis=&#34;898px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;现在的&lt;code&gt;4.7.0&lt;/code&gt;版本，请求成功没有任何日志，只有报错日志，这块不太友好。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;turn&lt;/code&gt;测试,不管是用域名还是ip, &lt;code&gt;tcp&lt;/code&gt;请求ok, &lt;code&gt;udp&lt;/code&gt;请求会报错，暂时还未找到原因。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>containerd &#43; nerdctl 初体验</title>
         <link>https://QuincyGao.github.io/p/containerd--nerdctl-%E5%88%9D%E4%BD%93%E9%AA%8C/</link>
         <pubDate>Tue, 23 Sep 2025 10:17:39 +0800</pubDate>

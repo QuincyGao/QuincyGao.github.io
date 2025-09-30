@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景 前面我们介绍了stun,turn相关的协议， 本章节来介绍实现了这两个协议的coturn服务。\ncoturn是一个开源的turn服务器， 支持stun和turn协议。代码地址\n">
+<title>coturn 初体验</title>
+
+<link rel='canonical' href='https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/'>
+
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="coturn 初体验">
+<meta property='og:description' content="背景 前面我们介绍了stun,turn相关的协议， 本章节来介绍实现了这两个协议的coturn服务。\ncoturn是一个开源的turn服务器， 支持stun和turn协议。代码地址\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/'>
+<meta property='og:site_name' content='QuincyGao Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='coturn' /><meta property='article:published_time' content='2025-09-30T13:47:33&#43;08:00'/><meta property='article:modified_time' content='2025-09-30T13:47:33&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup.jpg' />
+<meta name="twitter:title" content="coturn 初体验">
+<meta name="twitter:description" content="背景 前面我们介绍了stun,turn相关的协议， 本章节来介绍实现了这两个协议的coturn服务。\ncoturn是一个开源的turn服务器， 支持stun和turn协议。代码地址\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup.jpg' />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/QuincyGao_hu9863765197253960442.jpg" width="300"
+                            height="225" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">QuincyGao Blog</a></h1>
+            <h2 class="site-description">事在人为，境由心造</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://bilibili.com'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Bilibili-Logo--Streamline-Ultimate.svg" height="24" width="24"><desc>Bilibili Logo Streamline Icon: https://streamlinehq.com</desc><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.90263 6.93445H19.0575s1.4674 0 1.4674 1.46739v9.27356s0 1.4673 -1.4674 1.4673H4.90263s-1.46739 0 -1.46739 -1.4673V8.40184s0 -1.46739 1.46739 -1.46739Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M14.7251 15.8387c-0.0599 0.2695 -0.3493 0.6189 -0.9982 0.6189 -1.1779 0 -1.707 -1.4674 -1.707 -1.4674s-0.529 1.4674 -1.7069 1.4674c-0.68879 0 -0.99824 -0.3494 -0.99824 -0.6189" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.65306 4.24927c-1.03607 0.00264 -2.02881 0.41607 -2.76049 1.14962C1.16089 6.13245 0.749997 7.12623 0.75 8.16231V17.925c0 1.0351 0.41121 2.0279 1.14318 2.7598 0.73197 0.732 1.72472 1.1432 2.75988 1.1432h0.99823v0.2196c0.0276 0.3053 0.16838 0.5892 0.39465 0.7959 0.22627 0.2067 0.52168 0.3213 0.82817 0.3213 0.30649 0 0.6019 -0.1146 0.82818 -0.3213 0.22627 -0.2067 0.36704 -0.4906 0.39465 -0.7959v-0.2495h7.80616v0.2495c0.0276 0.3053 0.1683 0.5892 0.3946 0.7959 0.2263 0.2067 0.5217 0.3213 0.8282 0.3213s0.6019 -0.1146 0.8282 -0.3213c0.2262 -0.2067 0.367 -0.4906 0.3946 -0.7959v-0.2495h0.9982c1.0352 0 2.028 -0.4112 2.7599 -1.1432 0.732 -0.732 1.1432 -1.7247 1.1432 -2.7599V8.16231c0 -1.03608 -0.4109 -2.02986 -1.1426 -2.76342 -0.7317 -0.73355 -1.7244 -1.14698 -2.7605 -1.14962H4.65306Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m5.72116 11.6761 3.84317 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m18.2389 11.6761 -3.8431 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.12045 0.835205 9.53438 4.24914" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M17.8396 0.835205 14.4257 4.24914" stroke-width="1.5"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/QuincyGao'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>github [#142]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 507.93 507.93" xml:space="preserve">
+<g>
+	<rect x="103.527" y="225.828" style="fill:#FFFFFF;" width="300.9" height="253.9"/>
+	<polygon style="fill:#FFFFFF;" points="53.427,197.528 454.427,197.528 253.927,32.428 	"/>
+</g>
+<path style="fill:#56ACE0;" d="M253.927,68.928l-20.1,16.6h12.7c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-47l-21,17.3h19.9
+	c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-53.2c-0.3,0-0.5-0.1-0.8-0.1l-12.4,10.2h243.8L253.927,68.928z"/>
+<rect x="202.427" y="337.028" style="fill:#FFC10D;" width="103" height="142.6"/>
+<path style="fill:#194F82;" d="M501.627,199.828l-238.7-196.6c-5.2-4.3-12.7-4.3-17.9,0l-239.9,197.6c-4.6,3.8-6.3,10-4.3,15.7
+	c2,5.6,7.3,9.3,13.3,9.3h61.1v268c0,7.8,6.3,14.1,14.1,14.1h329.2c7.8,0,14.1-6.3,14.1-14.1v-268h61.1c0.1,0,0.1,0,0.1,0
+	c7.8,0,14.1-6.3,14.1-14.1C508.027,206.728,505.427,202.328,501.627,199.828z M305.427,479.628h-103v-142.6h103V479.628z
+	 M404.427,479.628h-70.8v-156.7c0-7.8-6.3-14.1-14.1-14.1h-131.2c-7.8,0-14.1,6.3-14.1,14.1v156.7h-70.8v-253.8h300.9v253.8H404.427
+	z M53.427,197.528l200.5-165.1l200.5,165.2h-401V197.528z"/>
+</svg>
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M76.412,326.853h85.075c6.012,0,10.925-4.848,10.925-10.925V32.97
+	c0-6.012-4.848-10.925-10.925-10.925H76.412c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C65.487,322.004,70.4,326.853,76.412,326.853z"/>
+<path style="fill:#FFC10D;" d="M231.564,326.853h85.075c5.107,0,9.374-3.556,10.602-8.275l0.388-285.608
+	c0-6.012-4.848-10.925-10.925-10.925h-85.139c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C220.574,322.004,225.552,326.853,231.564,326.853z"/>
+<g>
+	<path style="fill:#FFFFFF;" d="M118.885,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C128.711,260.073,124.315,255.677,118.885,255.677z"/>
+	<path style="fill:#FFFFFF;" d="M274.036,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C283.863,260.073,279.467,255.677,274.036,255.677z"/>
+</g>
+<g>
+	<path style="fill:#194F82;" d="M118.885,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C87.273,282.828,101.495,296.921,118.885,296.921z M118.885,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826S113.519,255.547,118.885,255.547z"/>
+	<path style="fill:#194F82;" d="M98.198,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,82.295,92.186,87.143,98.198,87.143z"/>
+	<path style="fill:#194F82;" d="M98.198,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,136.145,92.186,140.994,98.198,140.994z"/>
+	<path style="fill:#194F82;" d="M274.036,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C242.489,282.828,256.582,296.921,274.036,296.921z M274.036,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826C264.275,259.943,268.671,255.547,274.036,255.547z"/>
+	<path style="fill:#194F82;" d="M253.35,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,82.295,247.337,87.143,253.35,87.143z"/>
+	<path style="fill:#194F82;" d="M253.35,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,136.145,247.337,140.994,253.35,140.994z"/>
+	<path style="fill:#194F82;" d="M381.737,203.378h-32.388V32.97c0-18.036-14.675-32.711-32.711-32.711h-85.075
+		c-18.036,0-32.711,14.675-32.711,32.711v282.958c0,3.879,0.711,7.499,1.939,10.925h-8.404c1.228-3.426,1.939-7.111,1.939-10.925
+		V32.97c0-18.036-14.675-32.711-32.711-32.711H76.412c-18.036,0-32.711,14.675-32.711,32.711v170.473H10.925
+		C4.913,203.442,0,208.291,0,214.368v167.046c0,6.012,4.848,10.925,10.925,10.925h370.747c6.012,0,10.925-4.848,10.925-10.925
+		V214.368C392.598,208.291,387.749,203.378,381.737,203.378z M220.574,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925l-0.388,285.608c-1.164,4.719-5.43,8.275-10.602,8.275h-84.945
+		c-6.012,0-10.925-4.848-10.925-10.925V32.97H220.574z M65.487,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925v282.958c0,6.012-4.848,10.925-10.925,10.925H76.412c-6.012,0-10.925-4.848-10.925-10.925
+		C65.487,315.992,65.487,32.97,65.487,32.97z M370.812,370.424H21.851V225.164h21.786v112.485c0,6.012,4.848,10.925,10.925,10.925
+		h283.539c6.012,0,10.925-4.848,10.925-10.925l0.388-112.485h21.463v145.261H370.812z"/>
+</g>
+<path style="fill:#56ACE0;" d="M349.026,337.778c0,6.012-4.848,10.925-10.925,10.925H54.626c-6.012,0-10.925-4.848-10.925-10.925
+	V225.293H21.851v145.261h348.962V225.228h-21.463L349.026,337.778z"/>
+</svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.609 392.609" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
+	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
+<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
+	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
+	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
+<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
+	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
+	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
+<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
+	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
+	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
+	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
+	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
+	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
+	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
+	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
+</svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#56ACE0;" d="M120.469,49.455c0,15.257-12.412,27.669-27.669,27.669c-15.192,0-27.669-12.412-27.669-27.669
+	S77.543,21.786,92.8,21.786C108.057,21.786,120.469,34.198,120.469,49.455z"/>
+<path style="fill:#FFFFFF;" d="M62.287,265.503h61.026v105.244h-19.588v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.012,0-10.925,4.849-10.925,10.925v42.861H62.287V265.503z"/>
+<path style="fill:#FFC10D;" d="M144.129,181.657v62.061H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C123.572,135.822,144.129,156.38,144.129,181.657z"/>
+<path style="fill:#FFFFFF;" d="M272.129,49.455c0-15.257,12.412-27.669,27.669-27.669c15.257,0,27.669,12.412,27.669,27.669
+	s-12.412,27.669-27.669,27.669C284.606,77.123,272.129,64.711,272.129,49.455z"/>
+<path style="fill:#FFC10D;" d="M269.156,265.503h61.026v105.244h-19.523v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653L269.156,265.503L269.156,265.503z"/>
+<path style="fill:#56ACE0;" d="M351.127,181.657v62.061H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C330.57,135.822,351.127,156.38,351.127,181.657z"/>
+<g>
+	<path style="fill:#194F82;" d="M98.295,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.877c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C165.98,144.356,135.661,113.972,98.295,113.972z M144.129,243.717
+		H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834L144.129,243.717
+		L144.129,243.717z M123.378,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.012,0-10.925,4.849-10.925,10.925
+		v42.861H62.287V265.503h61.026L123.378,370.747L123.378,370.747z"/>
+	<path style="fill:#194F82;" d="M92.8,0C65.519,0,43.281,22.174,43.281,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S120.081,0,92.8,0z M92.8,77.123c-15.192,0-27.669-12.412-27.669-27.669S77.543,21.786,92.8,21.786
+		s27.669,12.412,27.669,27.669S108.057,77.123,92.8,77.123z"/>
+	<path style="fill:#194F82;" d="M305.228,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.941c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C372.913,144.356,342.594,113.972,305.228,113.972z M351.127,243.717
+		H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834V243.717L351.127,243.717z
+		 M330.311,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653
+		V265.503h61.026v105.244H330.311z"/>
+	<path style="fill:#194F82;" d="M299.798,0c-27.281,0-49.455,22.174-49.455,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S327.014,0,299.798,0z M299.798,77.123c-15.192,0-27.669-12.412-27.669-27.669
+		s12.412-27.669,27.669-27.669s27.669,12.412,27.669,27.669S315.055,77.123,299.798,77.123z"/>
+</g>
+</svg>
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.533 392.533" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M196.267,21.851c-96.194,0-174.481,78.287-174.481,174.481s78.287,174.481,174.481,174.481
+	s174.481-78.287,174.481-174.481S292.461,21.851,196.267,21.851z"/>
+<path style="fill:#FFC10D;" d="M196.267,348.962c-84.17,0-152.695-68.461-152.695-152.695s68.525-152.63,152.695-152.63
+	s152.695,68.461,152.695,152.695S280.436,348.962,196.267,348.962z"/>
+<path style="fill:#FFFFFF;" d="M131.814,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	c8.21,0,14.933-6.723,14.933-14.933C146.747,132.267,140.024,125.543,131.814,125.543z"/>
+<path style="fill:#194F82;" d="M131.814,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+	s36.719-16.485,36.719-36.719S152.048,103.758,131.814,103.758z M131.814,155.41c-8.21,0-14.933-6.723-14.933-14.933
+	c0-8.21,6.723-14.933,14.933-14.933c8.21,0,14.933,6.723,14.933,14.933C146.747,148.752,140.024,155.41,131.814,155.41z"/>
+<path style="fill:#FFFFFF;" d="M260.719,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	s14.933-6.723,14.933-14.933S268.994,125.543,260.719,125.543z"/>
+<g>
+	<path style="fill:#194F82;" d="M260.719,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+		c20.234,0,36.719-16.485,36.719-36.719S280.954,103.758,260.719,103.758z M260.719,155.41c-8.21,0-14.933-6.723-14.933-14.933
+		c0-8.21,6.723-14.933,14.933-14.933s14.933,6.723,14.933,14.933C275.653,148.752,268.994,155.41,260.719,155.41z"/>
+	<path style="fill:#194F82;" d="M196.267,0C87.984,0,0,87.984,0,196.267s87.984,196.267,196.267,196.267
+		s196.267-87.984,196.267-196.267S304.549,0,196.267,0z M196.267,370.747c-96.194,0-174.481-78.287-174.481-174.481
+		S100.073,21.786,196.267,21.786s174.481,78.287,174.481,174.481S292.461,370.747,196.267,370.747z"/>
+	<path style="fill:#194F82;" d="M279.079,265.051c-45.64,45.64-119.984,45.64-165.689,0c-4.267-4.267-11.119-4.202-15.451,0
+		c-4.848,4.719-3.943,10.99,0,15.451c55.661,55.467,143.515,53.075,196.525,0c3.685-4.784,5.042-10.731,0-15.451
+		C290.133,260.913,283.345,260.784,279.079,265.051z"/>
+</g>
+</svg>
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#部署">部署</a></li>
+    <li><a href="#测试">测试</a>
+      <ol>
+        <li><a href="#web管理平台">web管理平台</a></li>
+        <li><a href="#turn测试">turn测试</a>
+          <ol>
+            <li><a href="#turnserverconf-配置">turnserver.conf 配置</a></li>
+            <li><a href="#turn测试结果">turn测试结果</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/">
+                <img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup_hu7192048372235840199.jpg"
+                        srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup_hu7192048372235840199.jpg 800w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup_hu13834057484138355966.jpg 1600w"
+                        width="800" 
+                        height="533" 
+                        loading="lazy"
+                        alt="Featured image of post coturn 初体验" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/daily-life/" style="background-color: #d09daa; color: #fff;">
+                技术生活
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/">coturn 初体验</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-09-30</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟,共1843 字
+                </time>
+            </div>
+        
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/">0</span> 次浏览
+            </time>
+        </div>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/">0</span> 条评论
+            </time>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ1MPL226K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YJ1MPL226K');
+</script>
+
+    <section class="article-content">
+    
+    
+    <h2 id="背景">背景
+</h2><p>前面我们介绍了<code>stun</code>,<code>turn</code>相关的协议， 本章节来介绍实现了这两个协议的<code>coturn</code>服务。</p>
+<p><code>coturn</code>是一个开源的<code>turn</code>服务器， 支持<code>stun</code>和<code>turn</code>协议。<a class="link" href="https://github.com/coturn/coturn.git"  target="_blank" rel="noopener"
+    >代码地址</a></p>
+<p>本次测试<code>coturn</code>的版本为: <code>4.7.0</code></p>
+<h2 id="部署">部署
+</h2><p>使用<code>docker</code>来部署<code>coturn</code>服务,  因为还有管理平台，所以需要:</p>
+<ul>
+<li>数据库: <code>mysql</code></li>
+<li>域名,nginx证书: 因为使用<code>tls</code>来访问, 所以需要有一个域名, 并配置好证书。</li>
+</ul>
+<ol>
+<li>
+<p>拉取<code>coturn</code>的镜像</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker pull coturn/coturn:4.7.0
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>运行<code>coturn</code>容器</p>
+<p>因为会修改<code>turnserver.conf</code>, 所以需要挂载<code>turnserver.conf</code>到容器中。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">d</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">coturn</span><span class="o">-</span><span class="n">docker</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="p">:</span><span class="o">/</span><span class="k">var</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">coturn</span><span class="o">-</span><span class="n">docker</span><span class="o">/</span><span class="n">turnserver</span><span class="o">.</span><span class="n">conf</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">coturn</span><span class="o">/</span><span class="n">turnserver</span><span class="o">.</span><span class="n">conf</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">coturn</span><span class="o">-</span><span class="n">docker</span><span class="o">/</span><span class="n">tls</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">tls</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="o">--</span><span class="n">user</span><span class="o">=</span><span class="n">root</span> <span class="o">--</span><span class="n">privileged</span><span class="o">=</span><span class="bp">true</span> <span class="o">--</span><span class="n">restart</span><span class="o">=</span><span class="n">always</span> <span class="o">--</span><span class="n">name</span> <span class="n">coturn</span>  <span class="n">coturn</span><span class="o">/</span><span class="n">coturn</span><span class="p">:</span><span class="mf">4.7</span><span class="o">.</span><span class="mi">0</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>验证<code>coturn</code>服务是否运行</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">docker logs coturn
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到类似如下的日志:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0: (1): INFO: System cpu num is 8
+</span></span><span class="line"><span class="cl">0: (1): INFO: System cpu num is 8
+</span></span><span class="line"><span class="cl">0: (1): INFO: System enable num is 8
+</span></span><span class="line"><span class="cl">0: (1): INFO: Listener address to use: 172.16.4.113
+</span></span><span class="line"><span class="cl">0: (1): INFO: Coturn Version Coturn-4.7.0 &#39;Gorst&#39;
+</span></span><span class="line"><span class="cl">0: (1): INFO: Max number of open files/sockets allowed for this process: 4096
+</span></span><span class="line"><span class="cl">0: (1): INFO: Due to the open files/sockets limitation, max supported number of TURN Sessions possible is: 2000 (approximately)
+</span></span><span class="line"><span class="cl">0: (1): INFO: 
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ol>
+<h2 id="测试">测试
+</h2><h3 id="web管理平台">web管理平台
+</h3><p>取消<code>turnserver.conf</code>中的注释:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mysql-userdb=&#34;host=172.16.4.113 dbname=coturn user=root password=123456 port=3306 connect_timeout=15 read_timeout=10&#34;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">web-admin
+</span></span><span class="line"><span class="cl">web-admin-ip=172.16.4.113
+</span></span><span class="line"><span class="cl">web-admin-port=8080
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为要使用数据库, 所以需要先创建数据库<code>coturn</code>和相关的表,表在源码的位置:<code>docker/mysql/schema.sql</code>。</p>
+<p>主要有以下几个表:</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/sql.png"
+	width="368"
+	height="282"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/sql_hu17552273108409551744.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/sql_hu16587782871244300004.png 1024w"
+	loading="lazy"
+	
+		alt="sql"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="130"
+		data-flex-basis="313px"
+	
+></p>
+<p><code>admin_user</code>表是用来登录管理平台的用户表, 有<code>name</code>,<code>realm</code>,<code>password</code>三个字段。
+其中<code>name</code>是用户名, <code>realm</code>是域名, <code>password</code>是密码。
+可以使用<code>turnadmin</code>工具来添加用户, 工具在<code>docker</code>镜像中, 可以进入容器执行。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">turnadmin -A -M &#34;host=172.16.4.113 dbname=coturn user=root password=123456&#34; -u test -p 123456 -r example.com 
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>-r</code>域名一定要有, 就能在数据表中看到生成的用户信息。</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/admin.png"
+	width="1193"
+	height="156"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/admin_hu12693346422985424646.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/admin_hu1742199667290889800.png 1024w"
+	loading="lazy"
+	
+		alt="admin"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="764"
+		data-flex-basis="1835px"
+	
+></p>
+<p>然后浏览器访问<code>https://exmaple.com:8080</code>, 输入用户名密码登录。</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login.png"
+	width="704"
+	height="512"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login_hu13632367652728257577.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login_hu1179272774152681238.png 1024w"
+	loading="lazy"
+	
+		alt="login"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="137"
+		data-flex-basis="330px"
+	
+></p>
+<p><strong>存在的问题</strong></p>
+<blockquote>
+<p>密码如果是:<code>123456</code>, 登录填<code>123456</code>,登录不了，但是填<code>1234</code>或者其他的，只要比<code>123456</code>短, 就可以登录。已提issue。</p>
+</blockquote>
+<p>登录后, 可以看到如下的界面:</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login1.png"
+	width="794"
+	height="715"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login1_hu13793274852412749008.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/login1_hu4786004065836738184.png 1024w"
+	loading="lazy"
+	
+		alt="web"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="111"
+		data-flex-basis="266px"
+	
+></p>
+<p>通过查看<code>TURN session</code>可以看到当前的<code>turn</code>会话信息。</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ss.png"
+	width="2133"
+	height="1059"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ss_hu12898842684973301614.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ss_hu18014743737465206103.png 1024w"
+	loading="lazy"
+	
+		alt="session"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="201"
+		data-flex-basis="483px"
+	
+></p>
+<p>因为这块数据没写入数据库，所以只能显示当时的会话信息。</p>
+<h3 id="turn测试">turn测试
+</h3><p>条件说明:</p>
+<ol>
+<li>测试页面使用的是<a class="link" href="https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/"  target="_blank" rel="noopener"
+    >webrtc.github.io</a> 提供的页面。</li>
+<li>由于设备有限,<code>coturn</code>部署的服务上只有内网ip:<code>172.16.4.113</code>, 域名也是绑在此ip上的,以<code>turn.example.com</code>代替。</li>
+</ol>
+<h4 id="turnserverconf-配置">turnserver.conf 配置
+</h4><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">listening</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">3478</span>
+</span></span><span class="line"><span class="cl"><span class="n">tls</span><span class="o">-</span><span class="n">listening</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">5349</span>
+</span></span><span class="line"><span class="cl"><span class="n">listening</span><span class="o">-</span><span class="n">ip</span><span class="o">=</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.113</span>
+</span></span><span class="line"><span class="cl"><span class="n">external</span><span class="o">-</span><span class="n">ip</span><span class="o">=</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.113</span>
+</span></span><span class="line"><span class="cl"><span class="nb">min</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">49152</span>
+</span></span><span class="line"><span class="cl"><span class="nb">max</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">65535</span>
+</span></span><span class="line"><span class="cl"><span class="n">fingerprint</span>
+</span></span><span class="line"><span class="cl"><span class="n">lt</span><span class="o">-</span><span class="n">cred</span><span class="o">-</span><span class="n">mech</span>
+</span></span><span class="line"><span class="cl"><span class="n">user</span><span class="o">=</span><span class="mi">1758880920</span><span class="p">:</span><span class="n">v7SRsGuqqovL1clY</span><span class="o">/</span><span class="n">ydY78zCdOA</span><span class="o">=</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">mysql</span><span class="o">-</span><span class="n">userdb</span><span class="o">=</span><span class="s2">&#34;host=172.16.4.113 dbname=coturn user=root password=123456 port=3306 connect_timeout=15 read_timeout=10&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">realm</span><span class="o">=</span><span class="n">turn</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</span></span><span class="line"><span class="cl"><span class="n">cert</span><span class="o">=/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">tls</span><span class="o">/</span><span class="n">turn</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">pem</span>
+</span></span><span class="line"><span class="cl"><span class="n">pkey</span><span class="o">=/</span><span class="n">etc</span><span class="o">/</span><span class="n">ssl</span><span class="o">/</span><span class="n">tls</span><span class="o">/</span><span class="n">turn</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">.</span><span class="n">key</span>
+</span></span><span class="line"><span class="cl"><span class="n">no</span><span class="o">-</span><span class="n">cli</span> 
+</span></span><span class="line"><span class="cl"><span class="n">web</span><span class="o">-</span><span class="n">admin</span>
+</span></span><span class="line"><span class="cl"><span class="n">web</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">ip</span><span class="o">=</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.113</span>
+</span></span><span class="line"><span class="cl"><span class="n">web</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">port</span><span class="o">=</span><span class="mi">8080</span>
+</span></span><span class="line"><span class="cl"><span class="nb">log</span><span class="o">-</span><span class="n">file</span><span class="o">=/</span><span class="k">var</span><span class="o">/</span><span class="nb">log</span><span class="o">/</span><span class="n">turnserver</span><span class="o">.</span><span class="n">log</span>
+</span></span><span class="line"><span class="cl"><span class="n">new</span><span class="o">-</span><span class="nb">log</span><span class="o">-</span><span class="n">timestamp</span>
+</span></span><span class="line"><span class="cl"><span class="n">new</span><span class="o">-</span><span class="nb">log</span><span class="o">-</span><span class="n">timestamp</span><span class="o">-</span><span class="n">format</span> <span class="s2">&#34;</span><span class="si">%F</span><span class="s2">T%T%z&#34;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>关于<code>user</code>配置，有两种方式:</p>
+<ul>
+<li>
+<p><code>username:key</code></p>
+<p>这种方式要使用<code>turnadmin</code>来生成<code>key</code>,<code>key</code>是以<code>0x</code>开头的字符串,例如:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">turnadmin -k -u 1758880920 -r turn.example.com  -p 123456
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>生成的<code>key</code>为:<code>0xaa6a346a717d5152bab065c41fe0264d</code>。</p>
+<p>然后在<code>turnserver.conf</code>中添加:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">user=1758880920:0xaa6a346a717d5152bab065c41fe0264d
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>但是在测试时,填写<code>123456</code>作为<code>password</code>:</p>
+</li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice.png"
+	width="1023"
+	height="585"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice_hu4095968597347889994.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice_hu6632270771458910758.png 1024w"
+	loading="lazy"
+	
+		alt="key"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="174"
+		data-flex-basis="419px"
+	
+></p>
+<pre><code> 所以如果使用`key`方式, 你忘记了密码(配置中没写密码),那么就没办法了，只能重新生成`key`。
+</code></pre>
+<ul>
+<li>
+<p><code>username:password</code></p>
+<p><code>password</code>是使用<code>HMAC-SHA1</code>算法来计算的, 密钥随便填，可以使用此地址: <a class="link" href="https://www.lddgo.net/encrypt/hmac"  target="_blank" rel="noopener"
+    >hmac计算</a></p>
+</li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac.png"
+	width="1729"
+	height="949"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac_hu5687136893446634206.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/hmac_hu9410749284760491646.png 1024w"
+	loading="lazy"
+	
+		alt="hmac"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="182"
+		data-flex-basis="437px"
+	
+></p>
+<pre><code>然后在`turnserver.conf`中添加: `user=1758880920:wLvieDRiCi7eCE0MwDr/+YTCNtk=`
+
+但是在测试时,填写`wLvieDRiCi7eCE0MwDr/+YTCNtk=`作为`password`:
+</code></pre>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice1.png"
+	width="897"
+	height="503"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice1_hu5458293822240089740.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice1_hu6543783212929527953.png 1024w"
+	loading="lazy"
+	
+		alt="ice"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="178"
+		data-flex-basis="427px"
+	
+></p>
+<h4 id="turn测试结果">turn测试结果
+</h4><ol>
+<li><code>turn</code>地址为:<code>turn:turn.example.com:5349?transport=tcp</code>, 测试的结果:</li>
+</ol>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice2.png"
+	width="1807"
+	height="1190"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice2_hu1292754942854381924.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice2_hu14077122776367587193.png 1024w"
+	loading="lazy"
+	
+		alt="turn"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="151"
+		data-flex-basis="364px"
+	
+></p>
+<p>可以看到<code>relay</code>即是<code>turnserver</code>分配的转发的<code>ip</code>和<code>port</code>。</p>
+<p>抓包结果:</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun.png"
+	width="2099"
+	height="995"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun_hu3284154062337912541.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun_hu18017722447962872704.png 1024w"
+	loading="lazy"
+	
+		alt="turn"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="210"
+		data-flex-basis="506px"
+	
+></p>
+<p>目前的请求发送了两次,抓包和测试结果都印证了此情况。 通过抓包可以看到请求的逻辑:</p>
+<pre class="mermaid">
+    sequenceDiagram
+    stun client -&gt;&gt;stun server: Allocate Request  
+    stun server -&gt;&gt;stun client: Allocate Error Response 401
+    stun client -&gt;&gt;stun server: Allocate Request  with user 
+    stun server -&gt;&gt;stun client: Allocat Success Response  
+    Note over stun server,stun client: XOR-RELAYED-ADDRESS,XOR-MAPPED-ADDRESS,lifetime
+    stun client -&gt;&gt;stun server: Refresh Request
+    Note over stun server,stun client: lifetime,user,realm
+    stun server -&gt;&gt;stun client: Refresh Success Response
+</pre>
+
+<p>详细的信令如下:</p>
+<ul>
+<li><code>Allocate Request</code></li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req.png"
+	width="1216"
+	height="479"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req_hu10876003115931703759.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req_hu5655568488644932138.png 1024w"
+	loading="lazy"
+	
+		alt="allocate"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="253"
+		data-flex-basis="609px"
+	
+></p>
+<ul>
+<li><code>Allocate Error Response</code></li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp.png"
+	width="1275"
+	height="915"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp_hu3251639705359042561.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp_hu6331089098071134922.png 1024w"
+	loading="lazy"
+	
+		alt="401"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="139"
+		data-flex-basis="334px"
+	
+></p>
+<ul>
+<li><code>Allocate Request  with user</code></li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req1.png"
+	width="1215"
+	height="874"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req1_hu17017611824760091562.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req1_hu2437553724801259111.png 1024w"
+	loading="lazy"
+	
+		alt="request"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="139"
+		data-flex-basis="333px"
+	
+></p>
+<ul>
+<li><code>Allocate Success Response</code></li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp1.png"
+	width="1159"
+	height="539"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp1_hu1367691480271130126.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp1_hu3053664395718219311.png 1024w"
+	loading="lazy"
+	
+		alt="200"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="215"
+		data-flex-basis="516px"
+	
+></p>
+<p><code>XOR-RELAYED-ADDRESS</code>: 是<code>turnserver</code>分配的转发的<code>ip</code>和<code>port</code>。</p>
+<p><code>XOR-MAPPED-ADDRESS</code>: 是<code>turn client</code>的<code>NAT</code>后地址,因为是内网访问，所以显示的是内网<code>ip</code>。</p>
+<ul>
+<li><code>Refresh Request</code></li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req2.png"
+	width="1209"
+	height="511"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req2_hu1900888745296625786.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/req2_hu6117173585217767050.png 1024w"
+	loading="lazy"
+	
+		alt="refresh"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="236"
+		data-flex-basis="567px"
+	
+></p>
+<ul>
+<li><code>Refresh Success Response</code></li>
+</ul>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp2.png"
+	width="1175"
+	height="468"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp2_hu11863592129627053933.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/rsp2_hu8339185341810671310.png 1024w"
+	loading="lazy"
+	
+		alt="200"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="251"
+		data-flex-basis="602px"
+	
+></p>
+<ol start="2">
+<li><code>turn</code>地址为:<code>turn:turn.example.com:5349</code>, 不带<code>transport</code>,默认是<code>udp</code>, 测试的结果:</li>
+</ol>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice3.png"
+	width="1565"
+	height="780"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice3_hu13591506303813005276.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/ice3_hu5978202074268841495.png 1024w"
+	loading="lazy"
+	
+		alt="turn"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="200"
+		data-flex-basis="481px"
+	
+></p>
+<p>可以看到有报错:<code>STUN binding request timed out.</code>。</p>
+<p>但是抓的包返回都是成功的,相对于<code>tcp</code>测试, 多了<code>Binding Request</code>信令。</p>
+<p>抓包结果:</p>
+<p><img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun1.png"
+	width="2153"
+	height="575"
+	srcset="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun1_hu4502938173482442318.png 480w, /p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/stun1_hu11893898441238642876.png 1024w"
+	loading="lazy"
+	
+		alt="turn"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="374"
+		data-flex-basis="898px"
+	
+></p>
+<h2 id="总结">总结
+</h2><ol>
+<li>现在的<code>4.7.0</code>版本，请求成功没有任何日志，只有报错日志，这块不太友好。</li>
+<li><code>turn</code>测试,不管是用域名还是ip, <code>tcp</code>请求ok, <code>udp</code>请求会报错，暂时还未找到原因。</li>
+</ol>
+
+</section>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+  </script>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/coturn/">Coturn</a>
+        
+    </section>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/containerd--nerdctl-%E5%88%9D%E4%BD%93%E9%AA%8C/">
+        
+        
+            <div class="article-image">
+                <img src="/p/containerd--nerdctl-%E5%88%9D%E4%BD%93%E9%AA%8C/backup.fb8cfa43608d739553f9de1c50c0ff95_hu8790484644845834034.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post containerd &#43; nerdctl 初体验"
+                        
+                        data-hash="md5-&#43;4z6Q2CNc5VT&#43;d4cUMD/lQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">containerd &#43; nerdctl 初体验</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/ice%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/">
+        
+        
+            <div class="article-image">
+                <img src="/p/ice%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/backup.7a72f657f1ea7d471054faf1da2835c8_hu18101607568995658580.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post ICE协议要点纪要"
+                        
+                        data-hash="md5-enL2V/HqfUcQVPrx2ig1yA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ICE协议要点纪要</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/turn%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/">
+        
+        
+            <div class="article-image">
+                <img src="/p/turn%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/backup.521e3fcb4e9390da4e438127bd37ed76_hu5552192592010930711.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post turn协议要点纪要"
+                        
+                        data-hash="md5-Uh4/y06TkNpOQ4EnvTftdg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">turn协议要点纪要</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/stun%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/">
+        
+        
+            <div class="article-image">
+                <img src="/p/stun%E5%8D%8F%E8%AE%AE%E8%A6%81%E7%82%B9%E7%BA%AA%E8%A6%81/backup.f75743c8bd14138c793b716742a70f0a_hu8855524020284400164.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post stun协议要点纪要"
+                        
+                        data-hash="md5-91dDyL0UE4x5O3FnQqcPCg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">stun协议要点纪要</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/">
+        
+        
+            <div class="article-image">
+                <img src="/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/backup.b7a09f496f6a74db97f9ec35084cb3c3_hu10129560867060518036.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post freeswitch1.10.7缩减镜像包大小"
+                        
+                        data-hash="md5-t6CfSW9qdNuX&#43;ew1CEyzww==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">freeswitch1.10.7缩减镜像包大小</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <script type="module">
+        import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
+        pageviewCount({
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    <script type="module">
+        import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+        commentCount({
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        发表了64篇文章 · 
+        总计109.54k字
+    </section>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
+    <span id="busuanzi_container_site_uv">您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者</span>
+    <section class="copyright">
+        &copy; 
+        
+        2025 QuincyGao Blog
+    </section>
+    
+    <section class="powerby">
+        
+        <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025368587号-1| </a>使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script>
+    let s1 = '2025-01-10'; 
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let timeDifference = s2.getTime() - s1.getTime();
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = days + "天" + hours + "小时" + minutes + "分钟";
+    document.getElementById('runningdays').innerHTML = result;
+</script>
+
+
+
+<a href="#" id="back-to-top" title="返回顶部"></a>
+
+
+<style>
+  #back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    width: 55px;
+    height: 55px;
+    border-radius: 7px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: var(--shadow-l2);
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+  }
+
+  #back-to-top:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    height: 10px;
+    width: 10px;
+    border-width: 0 0 2px 2px;
+    border-color: var(--back-to-top-color);
+    border-style: solid;
+  }
+
+  #back-to-top:hover:before {
+    border-color: #2674e0;
+  }
+
+   
+  @media screen and (max-width: 768px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1024px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1280px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 55px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1536px) {
+    #back-to-top {
+      visibility: hidden;
+    }
+  }
+</style>
+
+
+<script>
+  function backToTop() {
+    document.documentElement.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+
+  window.onload = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop > 0) {
+      totopBtn.style.display = 'inline'
+    } else {
+      totopBtn.style.display = 'none'
+    }
+  }
+
+  window.onscroll = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop < 200) {
+      totopBtn.style.display = 'none'
+    } else {
+      totopBtn.style.display = 'inline'
+      totopBtn.addEventListener('click', backToTop, false)
+    }
+  }
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ1MPL226K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YJ1MPL226K');
+</script>
+    </body>
+</html>
