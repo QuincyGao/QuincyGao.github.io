@@ -10,7 +10,7 @@
 <meta property='og:description' content="背景 不管是什么业务服务，当需要做主备方案时，一般都会采用keepalived的虚拟ip方式来切换。\n本章采用容器部署方式，不检查业务服务是否正常，主服务器宕机或者停止keepalived容器来切换虚拟ip到备用机器上。\n">
 <meta property='og:url' content='https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='keepalived' /><meta property='article:published_time' content='2025-10-13T09:01:49&#43;08:00'/><meta property='article:modified_time' content='2025-10-13T09:01:49&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/backup.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='keepalived' /><meta property='article:published_time' content='2025-10-14T09:01:49&#43;08:00'/><meta property='article:modified_time' content='2025-10-14T09:01:49&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/backup.jpg' />
 <meta name="twitter:title" content="keepalived 配置虚拟ip">
 <meta name="twitter:description" content="背景 不管是什么业务服务，当需要做主备方案时，一般都会采用keepalived的虚拟ip方式来切换。\n本章采用容器部署方式，不检查业务服务是否正常，主服务器宕机或者停止keepalived容器来切换虚拟ip到备用机器上。\n"><meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content='https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/backup.jpg' />
@@ -470,7 +470,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2025-10-13</time>
+                <time class="article-time--published">2025-10-14</time>
             </div>
         
 
@@ -485,7 +485,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 6 分钟,共2873 字
+                    阅读时长: 6 分钟,共2930 字
                 </time>
             </div>
         
@@ -1093,6 +1093,9 @@
 <p>如果<code>keepalived</code>的配置中不使用<code>notify_stop</code>这样的钩子，当主服务器<code>keepalived</code>容器停止时，网卡不会删除<code>虚拟ip</code>,
 备服务器网卡也有<code>虚拟ip</code>，请求还是会到主服务器上。 但是如果主服务器宕机, 那么就不会有这样的问题。</p>
 </li>
+<li>
+<p>linux的内核参数配置<code>/etc/sysctl.conf</code>里<code>net.ipv4.ip_nonlocal_bind=1</code>。</p>
+</li>
 </ol>
 
 </section>
@@ -1484,7 +1487,7 @@
         
         
         发表了65篇文章 · 
-        总计112.50k字
+        总计112.56k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>

@@ -6,10 +6,10 @@
         <description>Recent content in Keepalived on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 13 Oct 2025 09:01:49 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/keepalived/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 14 Oct 2025 09:01:49 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/keepalived/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>keepalived 配置虚拟ip</title>
         <link>https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/</link>
-        <pubDate>Mon, 13 Oct 2025 09:01:49 +0800</pubDate>
+        <pubDate>Tue, 14 Oct 2025 09:01:49 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/</guid>
         <description>&lt;img src="https://QuincyGao.github.io/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/backup.jpg" alt="Featured image of post keepalived 配置虚拟ip" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
@@ -583,6 +583,9 @@
 &lt;li&gt;
 &lt;p&gt;如果&lt;code&gt;keepalived&lt;/code&gt;的配置中不使用&lt;code&gt;notify_stop&lt;/code&gt;这样的钩子，当主服务器&lt;code&gt;keepalived&lt;/code&gt;容器停止时，网卡不会删除&lt;code&gt;虚拟ip&lt;/code&gt;,
 备服务器网卡也有&lt;code&gt;虚拟ip&lt;/code&gt;，请求还是会到主服务器上。 但是如果主服务器宕机, 那么就不会有这样的问题。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linux的内核参数配置&lt;code&gt;/etc/sysctl.conf&lt;/code&gt;里&lt;code&gt;net.ipv4.ip_nonlocal_bind=1&lt;/code&gt;。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 </description>
