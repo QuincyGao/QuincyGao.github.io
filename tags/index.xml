@@ -6,7 +6,15 @@
         <description>Recent content in 标签 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Mon, 20 Oct 2025 15:49:33 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 04 Nov 2025 09:42:30 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Freeswitch</title>
+        <link>https://QuincyGao.github.io/tags/freeswitch/</link>
+        <pubDate>Fri, 31 Oct 2025 09:42:30 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/tags/freeswitch/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>Keepalived</title>
         <link>https://QuincyGao.github.io/tags/keepalived/</link>
         <pubDate>Mon, 20 Oct 2025 15:49:33 +0800</pubDate>
@@ -52,14 +60,6 @@
         <pubDate>Wed, 17 Sep 2025 09:55:53 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/tags/stun/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Freeswitch</title>
-        <link>https://QuincyGao.github.io/tags/freeswitch/</link>
-        <pubDate>Fri, 12 Sep 2025 09:44:01 +0800</pubDate>
-        
-        <guid>https://QuincyGao.github.io/tags/freeswitch/</guid>
         <description></description>
         </item>
         <item>

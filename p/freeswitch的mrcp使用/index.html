@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景 freeswitch在做智能呼叫系统时，如何拿到用户的语音流是个难点，大体上会有三种方案：\nfreeswitch使用mrcp协议和unimrcp交互, unimrcp来集成对接asr/tts,esl还可用。 freeswitch使用media_bug把语音流旁路到业务服务,再把语音流发送到asr。 大部分公司使用的是这种方案, 只是具体的实现方式不太一样, esl还可用。 把freeswitch作为ua, 业务服务来实现uac(外呼)或者uas(呼入),这种需要自己实现sip交互, esl无法使用。这种更灵活，缺点是有点复杂，freeswitch的一些特性功能就没法用了。 智能呼叫系统一般都具有:打断(用户打断机器人或者机器人打断用户),按键,转人工等功能。\n">
+<title>freeswitch的mrcp使用</title>
+
+<link rel='canonical' href='https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="freeswitch的mrcp使用">
+<meta property='og:description' content="背景 freeswitch在做智能呼叫系统时，如何拿到用户的语音流是个难点，大体上会有三种方案：\nfreeswitch使用mrcp协议和unimrcp交互, unimrcp来集成对接asr/tts,esl还可用。 freeswitch使用media_bug把语音流旁路到业务服务,再把语音流发送到asr。 大部分公司使用的是这种方案, 只是具体的实现方式不太一样, esl还可用。 把freeswitch作为ua, 业务服务来实现uac(外呼)或者uas(呼入),这种需要自己实现sip交互, esl无法使用。这种更灵活，缺点是有点复杂，freeswitch的一些特性功能就没法用了。 智能呼叫系统一般都具有:打断(用户打断机器人或者机器人打断用户),按键,转人工等功能。\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/'>
+<meta property='og:site_name' content='QuincyGao Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='freeswitch' /><meta property='article:published_time' content='2025-10-31T09:42:30&#43;08:00'/><meta property='article:modified_time' content='2025-11-04T09:42:30&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/backup.jpg' />
+<meta name="twitter:title" content="freeswitch的mrcp使用">
+<meta name="twitter:description" content="背景 freeswitch在做智能呼叫系统时，如何拿到用户的语音流是个难点，大体上会有三种方案：\nfreeswitch使用mrcp协议和unimrcp交互, unimrcp来集成对接asr/tts,esl还可用。 freeswitch使用media_bug把语音流旁路到业务服务,再把语音流发送到asr。 大部分公司使用的是这种方案, 只是具体的实现方式不太一样, esl还可用。 把freeswitch作为ua, 业务服务来实现uac(外呼)或者uas(呼入),这种需要自己实现sip交互, esl无法使用。这种更灵活，缺点是有点复杂，freeswitch的一些特性功能就没法用了。 智能呼叫系统一般都具有:打断(用户打断机器人或者机器人打断用户),按键,转人工等功能。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/backup.jpg' />
+    <link rel="shortcut icon" href="/favicon.png" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/QuincyGao_hu9863765197253960442.jpg" width="300"
+                            height="225" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">QuincyGao Blog</a></h1>
+            <h2 class="site-description">事在人为，境由心造</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://bilibili.com'
+                        target="_blank"
+                        title="Bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Bilibili-Logo--Streamline-Ultimate.svg" height="24" width="24"><desc>Bilibili Logo Streamline Icon: https://streamlinehq.com</desc><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.90263 6.93445H19.0575s1.4674 0 1.4674 1.46739v9.27356s0 1.4673 -1.4674 1.4673H4.90263s-1.46739 0 -1.46739 -1.4673V8.40184s0 -1.46739 1.46739 -1.46739Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M14.7251 15.8387c-0.0599 0.2695 -0.3493 0.6189 -0.9982 0.6189 -1.1779 0 -1.707 -1.4674 -1.707 -1.4674s-0.529 1.4674 -1.7069 1.4674c-0.68879 0 -0.99824 -0.3494 -0.99824 -0.6189" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.65306 4.24927c-1.03607 0.00264 -2.02881 0.41607 -2.76049 1.14962C1.16089 6.13245 0.749997 7.12623 0.75 8.16231V17.925c0 1.0351 0.41121 2.0279 1.14318 2.7598 0.73197 0.732 1.72472 1.1432 2.75988 1.1432h0.99823v0.2196c0.0276 0.3053 0.16838 0.5892 0.39465 0.7959 0.22627 0.2067 0.52168 0.3213 0.82817 0.3213 0.30649 0 0.6019 -0.1146 0.82818 -0.3213 0.22627 -0.2067 0.36704 -0.4906 0.39465 -0.7959v-0.2495h7.80616v0.2495c0.0276 0.3053 0.1683 0.5892 0.3946 0.7959 0.2263 0.2067 0.5217 0.3213 0.8282 0.3213s0.6019 -0.1146 0.8282 -0.3213c0.2262 -0.2067 0.367 -0.4906 0.3946 -0.7959v-0.2495h0.9982c1.0352 0 2.028 -0.4112 2.7599 -1.1432 0.732 -0.732 1.1432 -1.7247 1.1432 -2.7599V8.16231c0 -1.03608 -0.4109 -2.02986 -1.1426 -2.76342 -0.7317 -0.73355 -1.7244 -1.14698 -2.7605 -1.14962H4.65306Z" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m5.72116 11.6761 3.84317 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m18.2389 11.6761 -3.8431 -0.7786" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.12045 0.835205 9.53438 4.24914" stroke-width="1.5"></path><path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M17.8396 0.835205 14.4257 4.24914" stroke-width="1.5"></path></svg>
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/QuincyGao'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    
+    <title>github [#142]</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+
+</defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="#000000">
+            <g id="icons" transform="translate(56.000000, 160.000000)">
+                <path d="M94,7399 C99.523,7399 104,7403.59 104,7409.253 C104,7413.782 101.138,7417.624 97.167,7418.981 C96.66,7419.082 96.48,7418.762 96.48,7418.489 C96.48,7418.151 96.492,7417.047 96.492,7415.675 C96.492,7414.719 96.172,7414.095 95.813,7413.777 C98.04,7413.523 100.38,7412.656 100.38,7408.718 C100.38,7407.598 99.992,7406.684 99.35,7405.966 C99.454,7405.707 99.797,7404.664 99.252,7403.252 C99.252,7403.252 98.414,7402.977 96.505,7404.303 C95.706,7404.076 94.85,7403.962 94,7403.958 C93.15,7403.962 92.295,7404.076 91.497,7404.303 C89.586,7402.977 88.746,7403.252 88.746,7403.252 C88.203,7404.664 88.546,7405.707 88.649,7405.966 C88.01,7406.684 87.619,7407.598 87.619,7408.718 C87.619,7412.646 89.954,7413.526 92.175,7413.785 C91.889,7414.041 91.63,7414.493 91.54,7415.156 C90.97,7415.418 89.522,7415.871 88.63,7414.304 C88.63,7414.304 88.101,7413.319 87.097,7413.247 C87.097,7413.247 86.122,7413.234 87.029,7413.87 C87.029,7413.87 87.684,7414.185 88.139,7415.37 C88.139,7415.37 88.726,7417.2 91.508,7416.58 C91.513,7417.437 91.522,7418.245 91.522,7418.489 C91.522,7418.76 91.338,7419.077 90.839,7418.982 C86.865,7417.627 84,7413.783 84,7409.253 C84,7403.59 88.478,7399 94,7399" id="github-[#142]">
+
+</path>
+            </g>
+        </g>
+    </g>
+</svg>
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 507.93 507.93" xml:space="preserve">
+<g>
+	<rect x="103.527" y="225.828" style="fill:#FFFFFF;" width="300.9" height="253.9"/>
+	<polygon style="fill:#FFFFFF;" points="53.427,197.528 454.427,197.528 253.927,32.428 	"/>
+</g>
+<path style="fill:#56ACE0;" d="M253.927,68.928l-20.1,16.6h12.7c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-47l-21,17.3h19.9
+	c7.8,0,14.1,6.3,14.1,14.1s-6.3,14.1-14.1,14.1h-53.2c-0.3,0-0.5-0.1-0.8-0.1l-12.4,10.2h243.8L253.927,68.928z"/>
+<rect x="202.427" y="337.028" style="fill:#FFC10D;" width="103" height="142.6"/>
+<path style="fill:#194F82;" d="M501.627,199.828l-238.7-196.6c-5.2-4.3-12.7-4.3-17.9,0l-239.9,197.6c-4.6,3.8-6.3,10-4.3,15.7
+	c2,5.6,7.3,9.3,13.3,9.3h61.1v268c0,7.8,6.3,14.1,14.1,14.1h329.2c7.8,0,14.1-6.3,14.1-14.1v-268h61.1c0.1,0,0.1,0,0.1,0
+	c7.8,0,14.1-6.3,14.1-14.1C508.027,206.728,505.427,202.328,501.627,199.828z M305.427,479.628h-103v-142.6h103V479.628z
+	 M404.427,479.628h-70.8v-156.7c0-7.8-6.3-14.1-14.1-14.1h-131.2c-7.8,0-14.1,6.3-14.1,14.1v156.7h-70.8v-253.8h300.9v253.8H404.427
+	z M53.427,197.528l200.5-165.1l200.5,165.2h-401V197.528z"/>
+</svg>
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M76.412,326.853h85.075c6.012,0,10.925-4.848,10.925-10.925V32.97
+	c0-6.012-4.848-10.925-10.925-10.925H76.412c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C65.487,322.004,70.4,326.853,76.412,326.853z"/>
+<path style="fill:#FFC10D;" d="M231.564,326.853h85.075c5.107,0,9.374-3.556,10.602-8.275l0.388-285.608
+	c0-6.012-4.848-10.925-10.925-10.925h-85.139c-6.012,0-10.925,4.848-10.925,10.925v282.958
+	C220.574,322.004,225.552,326.853,231.564,326.853z"/>
+<g>
+	<path style="fill:#FFFFFF;" d="M118.885,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C128.711,260.073,124.315,255.677,118.885,255.677z"/>
+	<path style="fill:#FFFFFF;" d="M274.036,255.677c-5.43,0-9.826,4.396-9.826,9.826c0,5.43,4.396,9.826,9.826,9.826
+		c5.43,0,9.826-4.396,9.826-9.826C283.863,260.073,279.467,255.677,274.036,255.677z"/>
+</g>
+<g>
+	<path style="fill:#194F82;" d="M118.885,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C87.273,282.828,101.495,296.921,118.885,296.921z M118.885,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826S113.519,255.547,118.885,255.547z"/>
+	<path style="fill:#194F82;" d="M98.198,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,82.295,92.186,87.143,98.198,87.143z"/>
+	<path style="fill:#194F82;" d="M98.198,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H98.198c-6.012,0-10.925,4.848-10.925,10.925C87.273,136.145,92.186,140.994,98.198,140.994z"/>
+	<path style="fill:#194F82;" d="M274.036,296.921c17.455,0,31.612-14.222,31.612-31.612c0-17.455-14.222-31.612-31.612-31.612
+		s-31.612,14.222-31.612,31.612C242.489,282.828,256.582,296.921,274.036,296.921z M274.036,255.547c5.43,0,9.826,4.396,9.826,9.826
+		s-4.396,9.826-9.826,9.826c-5.43,0-9.826-4.396-9.826-9.826C264.275,259.943,268.671,255.547,274.036,255.547z"/>
+	<path style="fill:#194F82;" d="M253.35,87.143h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,82.295,247.337,87.143,253.35,87.143z"/>
+	<path style="fill:#194F82;" d="M253.35,140.994h41.438c6.012,0,10.925-4.848,10.925-10.925c0-6.012-4.848-10.925-10.925-10.925
+		H253.35c-6.012,0-10.925,4.848-10.925,10.925C242.489,136.145,247.337,140.994,253.35,140.994z"/>
+	<path style="fill:#194F82;" d="M381.737,203.378h-32.388V32.97c0-18.036-14.675-32.711-32.711-32.711h-85.075
+		c-18.036,0-32.711,14.675-32.711,32.711v282.958c0,3.879,0.711,7.499,1.939,10.925h-8.404c1.228-3.426,1.939-7.111,1.939-10.925
+		V32.97c0-18.036-14.675-32.711-32.711-32.711H76.412c-18.036,0-32.711,14.675-32.711,32.711v170.473H10.925
+		C4.913,203.442,0,208.291,0,214.368v167.046c0,6.012,4.848,10.925,10.925,10.925h370.747c6.012,0,10.925-4.848,10.925-10.925
+		V214.368C392.598,208.291,387.749,203.378,381.737,203.378z M220.574,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925l-0.388,285.608c-1.164,4.719-5.43,8.275-10.602,8.275h-84.945
+		c-6.012,0-10.925-4.848-10.925-10.925V32.97H220.574z M65.487,32.97c0-6.012,4.848-10.925,10.925-10.925h85.075
+		c6.012,0,10.925,4.848,10.925,10.925v282.958c0,6.012-4.848,10.925-10.925,10.925H76.412c-6.012,0-10.925-4.848-10.925-10.925
+		C65.487,315.992,65.487,32.97,65.487,32.97z M370.812,370.424H21.851V225.164h21.786v112.485c0,6.012,4.848,10.925,10.925,10.925
+		h283.539c6.012,0,10.925-4.848,10.925-10.925l0.388-112.485h21.463v145.261H370.812z"/>
+</g>
+<path style="fill:#56ACE0;" d="M349.026,337.778c0,6.012-4.848,10.925-10.925,10.925H54.626c-6.012,0-10.925-4.848-10.925-10.925
+	V225.293H21.851v145.261h348.962V225.228h-21.463L349.026,337.778z"/>
+</svg>
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.609 392.609" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M273.713,147.774c0,69.495-56.501,125.931-125.931,125.931c-69.495,0-125.931-56.501-125.931-125.931
+	c0-69.495,56.501-125.931,125.931-125.931C217.212,21.843,273.713,78.344,273.713,147.774z"/>
+<path style="fill:#56ACE0;" d="M370.747,348.695c0,1.422-1.616,6.271-7.176,12.283c-6.206,6.659-12.477,9.762-14.739,9.762h-0.065
+	c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129c9.18-7.24,17.455-15.515,24.63-24.63
+	c0.065,0,0.065,0,0.129,0C327.564,286.699,369.131,329.301,370.747,348.695z"/>
+<path style="fill:#FFC10D;" d="M208.679,86.877l-14.481,14.481c-17.131,17.131-46.545,5.042-46.545-19.265V61.6
+	c-49.002,0-88.372,40.792-86.109,90.246c2.004,43.895,38.141,80.032,82.036,82.036c49.455,2.263,90.246-37.172,90.246-86.109
+	C233.956,124.049,224.323,102.522,208.679,86.877z"/>
+<path style="fill:#194F82;" d="M276.105,220.954c12.347-21.527,19.459-46.545,19.459-73.18c0-81.455-66.327-147.717-147.846-147.717
+	S0,66.32,0,147.904s66.327,147.717,147.717,147.717c26.57,0,51.523-7.111,73.18-19.459
+	c39.822,53.333,91.863,113.519,126.061,116.364c12.283,0.517,22.885-6.723,32.776-16.743c5.172-5.624,13.77-16.937,12.8-28.768
+	C389.624,312.881,329.438,260.776,276.105,220.954z M147.717,273.77c-69.495,0-125.931-56.501-125.931-125.931
+	S78.287,21.908,147.717,21.908s125.931,56.501,125.931,125.931S217.212,273.77,147.717,273.77z M363.572,360.978
+	c-6.206,6.659-12.412,9.762-14.739,9.762h-0.065c-19.459-1.616-61.996-43.184-109.576-106.796c0-0.065,0-0.065,0-0.129
+	c9.18-7.24,17.455-15.515,24.63-24.63c0.065,0,0.065,0,0.129,0c63.612,47.58,105.18,90.182,106.796,109.576
+	C370.747,350.118,369.131,354.966,363.572,360.978z"/>
+</svg>
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E9%93%BE/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.598 392.598" xml:space="preserve">
+<path style="fill:#56ACE0;" d="M120.469,49.455c0,15.257-12.412,27.669-27.669,27.669c-15.192,0-27.669-12.412-27.669-27.669
+	S77.543,21.786,92.8,21.786C108.057,21.786,120.469,34.198,120.469,49.455z"/>
+<path style="fill:#FFFFFF;" d="M62.287,265.503h61.026v105.244h-19.588v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.012,0-10.925,4.849-10.925,10.925v42.861H62.287V265.503z"/>
+<path style="fill:#FFC10D;" d="M144.129,181.657v62.061H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C123.572,135.822,144.129,156.38,144.129,181.657z"/>
+<path style="fill:#FFFFFF;" d="M272.129,49.455c0-15.257,12.412-27.669,27.669-27.669c15.257,0,27.669,12.412,27.669,27.669
+	s-12.412,27.669-27.669,27.669C284.606,77.123,272.129,64.711,272.129,49.455z"/>
+<path style="fill:#FFC10D;" d="M269.156,265.503h61.026v105.244h-19.523v-42.861c0-6.012-4.848-10.925-10.925-10.925
+	c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653L269.156,265.503L269.156,265.503z"/>
+<path style="fill:#56ACE0;" d="M351.127,181.657v62.061H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99
+	C330.57,135.822,351.127,156.38,351.127,181.657z"/>
+<g>
+	<path style="fill:#194F82;" d="M98.295,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.877c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C165.98,144.356,135.661,113.972,98.295,113.972z M144.129,243.717
+		H41.471v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834L144.129,243.717
+		L144.129,243.717z M123.378,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.012,0-10.925,4.849-10.925,10.925
+		v42.861H62.287V265.503h61.026L123.378,370.747L123.378,370.747z"/>
+	<path style="fill:#194F82;" d="M92.8,0C65.519,0,43.281,22.174,43.281,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S120.081,0,92.8,0z M92.8,77.123c-15.192,0-27.669-12.412-27.669-27.669S77.543,21.786,92.8,21.786
+		s27.669,12.412,27.669,27.669S108.057,77.123,92.8,77.123z"/>
+	<path style="fill:#194F82;" d="M305.228,113.972h-10.99c-37.301,0-67.685,30.384-67.685,67.685v72.921
+		c0,6.012,4.848,10.925,10.925,10.925h9.891v116.17c0,6.012,4.848,10.925,10.925,10.925h82.941c6.012,0,10.925-4.848,10.925-10.925
+		v-116.17h9.891c6.012,0,10.925-4.848,10.925-10.925v-72.921C372.913,144.356,342.594,113.972,305.228,113.972z M351.127,243.717
+		H248.469v-62.061c0-25.277,20.558-45.834,45.834-45.834h10.99c25.277,0,45.834,20.558,45.834,45.834V243.717L351.127,243.717z
+		 M330.311,370.747h-19.653v-42.861c0-6.012-4.848-10.925-10.925-10.925c-6.077,0-10.925,4.849-10.925,10.925v42.861h-19.653
+		V265.503h61.026v105.244H330.311z"/>
+	<path style="fill:#194F82;" d="M299.798,0c-27.281,0-49.455,22.174-49.455,49.455s22.174,49.455,49.455,49.455
+		s49.455-22.174,49.455-49.455S327.014,0,299.798,0z M299.798,77.123c-15.192,0-27.669-12.412-27.669-27.669
+		s12.412-27.669,27.669-27.669s27.669,12.412,27.669,27.669S315.055,77.123,299.798,77.123z"/>
+</g>
+</svg>
+                
+                <span>友链</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                
+                
+                    <?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg height="800px" width="800px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+	 viewBox="0 0 392.533 392.533" xml:space="preserve">
+<path style="fill:#FFFFFF;" d="M196.267,21.851c-96.194,0-174.481,78.287-174.481,174.481s78.287,174.481,174.481,174.481
+	s174.481-78.287,174.481-174.481S292.461,21.851,196.267,21.851z"/>
+<path style="fill:#FFC10D;" d="M196.267,348.962c-84.17,0-152.695-68.461-152.695-152.695s68.525-152.63,152.695-152.63
+	s152.695,68.461,152.695,152.695S280.436,348.962,196.267,348.962z"/>
+<path style="fill:#FFFFFF;" d="M131.814,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	c8.21,0,14.933-6.723,14.933-14.933C146.747,132.267,140.024,125.543,131.814,125.543z"/>
+<path style="fill:#194F82;" d="M131.814,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+	s36.719-16.485,36.719-36.719S152.048,103.758,131.814,103.758z M131.814,155.41c-8.21,0-14.933-6.723-14.933-14.933
+	c0-8.21,6.723-14.933,14.933-14.933c8.21,0,14.933,6.723,14.933,14.933C146.747,148.752,140.024,155.41,131.814,155.41z"/>
+<path style="fill:#FFFFFF;" d="M260.719,125.543c-8.21,0-14.933,6.723-14.933,14.933s6.723,14.933,14.933,14.933
+	s14.933-6.723,14.933-14.933S268.994,125.543,260.719,125.543z"/>
+<g>
+	<path style="fill:#194F82;" d="M260.719,103.758c-20.234,0-36.719,16.485-36.719,36.719s16.485,36.719,36.719,36.719
+		c20.234,0,36.719-16.485,36.719-36.719S280.954,103.758,260.719,103.758z M260.719,155.41c-8.21,0-14.933-6.723-14.933-14.933
+		c0-8.21,6.723-14.933,14.933-14.933s14.933,6.723,14.933,14.933C275.653,148.752,268.994,155.41,260.719,155.41z"/>
+	<path style="fill:#194F82;" d="M196.267,0C87.984,0,0,87.984,0,196.267s87.984,196.267,196.267,196.267
+		s196.267-87.984,196.267-196.267S304.549,0,196.267,0z M196.267,370.747c-96.194,0-174.481-78.287-174.481-174.481
+		S100.073,21.786,196.267,21.786s174.481,78.287,174.481,174.481S292.461,370.747,196.267,370.747z"/>
+	<path style="fill:#194F82;" d="M279.079,265.051c-45.64,45.64-119.984,45.64-165.689,0c-4.267-4.267-11.119-4.202-15.451,0
+		c-4.848,4.719-3.943,10.99,0,15.451c55.661,55.467,143.515,53.075,196.525,0c3.685-4.784,5.042-10.731,0-15.451
+		C290.133,260.913,283.345,260.784,279.079,265.051z"/>
+</g>
+</svg>
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+                    
+                        <li id="i18n-switch">  
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-language" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M4 5h7" />
+  <path d="M9 3v2c0 4.418 -2.239 8 -5 8" />
+  <path d="M5 9c-.003 2.144 2.952 3.908 6.7 4" />
+  <path d="M12 20l4 -9l4 9" />
+  <path d="M19.1 18h-6.2" />
+</svg>
+
+
+
+                            <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
+                                
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
+                                
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
+                                
+                            </select>
+                        </li>
+                    
+                
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#背景">背景</a></li>
+    <li><a href="#测试方法">测试方法</a>
+      <ol>
+        <li><a href="#detect_speech">detect_speech</a></li>
+        <li><a href="#speak">speak</a></li>
+        <li><a href="#play_and_detect_speech">play_and_detect_speech</a></li>
+        <li><a href="#play_and_get_digits">play_and_get_digits</a></li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/">
+                <img src="/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/backup_hu14610932619014319796.jpg"
+                        srcset="/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/backup_hu14610932619014319796.jpg 800w, /p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/backup_hu6719474425327761839.jpg 1600w"
+                        width="800" 
+                        height="534" 
+                        loading="lazy"
+                        alt="Featured image of post freeswitch的mrcp使用" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/daily-life/" style="background-color: #d09daa; color: #fff;">
+                技术生活
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/">freeswitch的mrcp使用</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-10-31</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 6 分钟,共2764 字
+                </time>
+            </div>
+        
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-eye"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" /></svg>
+            <time class="article-pageview">
+                <span class="waline-pageview-count" data-path="/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/">0</span> 次浏览
+            </time>
+        </div>
+    
+        <div>
+            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-message-dots"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 11v.01" /><path d="M8 11v.01" /><path d="M16 11v.01" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z" /></svg>
+            <time class="article-comment">
+                <span class="waline-comment-count" data-path="/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/">0</span> 条评论
+            </time>
+        </div>
+    </footer>
+    
+
+    
+</div>
+
+</header>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ1MPL226K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YJ1MPL226K');
+</script>
+
+    <section class="article-content">
+    
+    
+    <h2 id="背景">背景
+</h2><p><code>freeswitch</code>在做<code>智能呼叫系统</code>时，如何拿到用户的语音流是个难点，大体上会有三种方案：</p>
+<ol>
+<li><code>freeswitch</code>使用<code>mrcp</code>协议和<code>unimrcp</code>交互, <code>unimrcp</code>来集成对接<code>asr/tts</code>,<code>esl</code>还可用。</li>
+<li><code>freeswitch</code>使用<code>media_bug</code>把语音流旁路到<code>业务服务</code>,再把语音流发送到<code>asr</code>。
+大部分公司使用的是这种方案, 只是具体的实现方式不太一样, <code>esl</code>还可用。</li>
+<li>把<code>freeswitch</code>作为<code>ua</code>, <code>业务服务</code>来实现<code>uac(外呼)</code>或者<code>uas(呼入)</code>,这种需要自己实现<code>sip</code>交互,
+<code>esl</code>无法使用。这种更灵活，缺点是有点复杂，<code>freeswitch</code>的一些特性功能就没法用了。</li>
+</ol>
+<p><code>智能呼叫系统</code>一般都具有:<code>打断(用户打断机器人或者机器人打断用户)</code>,<code>按键</code>,<code>转人工</code>等功能。</p>
+<p>本章介绍第一种方案, 使用<code>esl</code>方式查看这些功能的具体效果。<a class="link" href="https://developer.signalwire.com/freeswitch/FreeSWITCH-Explained/Modules/mod-dptools/6586756"  target="_blank" rel="noopener"
+    >freeswitch的官方文档</a></p>
+<p><code>freeswitch</code>版本为:</p>
+<blockquote>
+<p>Version 1.10.7-release+git<del>20211024T163933Z</del>883d2cb662~64bit</p>
+</blockquote>
+<h2 id="测试方法">测试方法
+</h2><ol>
+<li>freeswitch 呼入配置</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">conf/dialplan/default.xml
+</span></span><span class="line"><span class="cl">&lt;extension name=&#34;88990&#34;&gt;
+</span></span><span class="line"><span class="cl">    &lt;condition field=&#34;destination_number&#34; expression=&#34;^88990$&#34;&gt;
+</span></span><span class="line"><span class="cl">       &lt;action application=&#34;answer&#34;/&gt;
+</span></span><span class="line"><span class="cl">       &lt;action application=&#34;park&#34;/&gt;
+</span></span><span class="line"><span class="cl">    &lt;/condition&gt;   
+</span></span><span class="line"><span class="cl">&lt;/extension&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="2">
+<li>
+<p>添加自己的<code>mrcp</code>服务<code>conf/mrcp_profiles/sbc-asr.xml,sbc-tts.xml</code></p>
+</li>
+<li>
+<p>添加<code>grammar</code>文件<code>grammar/ali.gram</code></p>
+</li>
+</ol>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">cat ali.gram 
+</span></span><span class="line"><span class="cl">#JSGF V1.0;
+</span></span><span class="line"><span class="cl">grammar example;
+</span></span><span class="line"><span class="cl">public &lt;main&gt; = [ &lt;pre&gt; ] ( &lt;weather&gt; {WEATHER} | &lt;sports&gt;  {SPORTS} | &lt;stocks&gt; {STOCKS} ) ;
+</span></span><span class="line"><span class="cl">&lt;pre&gt; = ( I would like [ to hear ] ) | ( hear ) | ( [ please ] get [ me ] ) | ( look up );
+</span></span><span class="line"><span class="cl">&lt;weather&gt; = [ the ] weather;
+</span></span><span class="line"><span class="cl">&lt;sports&gt; = sports [ news ];
+</span></span><span class="line"><span class="cl">&lt;stocks&gt; = ( [ a ] stock ( quote | quotes ) ) | stocks;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol start="3">
+<li>
+<p>使用<code>esl</code>方式连接<code>freeswitch</code>。</p>
+</li>
+<li>
+<p>软电话拨打<code>88990</code>。</p>
+</li>
+</ol>
+<h3 id="detect_speech">detect_speech
+</h3><p>用来识别用户的语音流, 并返回识别结果。使用方法主要有:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">detect_speech &lt;mod_name&gt; &lt;gram_name&gt; &lt;gram_path&gt; [&lt;addr&gt;]
+</span></span><span class="line"><span class="cl">detect_speech grammar &lt;gram_name&gt; [&lt;path&gt;]
+</span></span><span class="line"><span class="cl">detect_speech grammaron &lt;gram_name&gt;
+</span></span><span class="line"><span class="cl">detect_speech grammaroff &lt;gram_name&gt;
+</span></span><span class="line"><span class="cl">detect_speech grammarsalloff
+</span></span><span class="line"><span class="cl">detect_speech nogrammar &lt;gram_name&gt;
+</span></span><span class="line"><span class="cl">detect_speech param &lt;name&gt; &lt;value&gt;
+</span></span><span class="line"><span class="cl">detect_speech pause
+</span></span><span class="line"><span class="cl">detect_speech resume
+</span></span><span class="line"><span class="cl">detect_speech start_input_timers
+</span></span><span class="line"><span class="cl">detect_speech stop
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>esl</code>中的调用命令为<code>detect_speech uuid unimrcp:sbc-asr {recognition-timeout=1000}ali default</code>,<code>uuid</code>根据实际情况填写。</p>
+<p>可以看到相关的日志：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">EXECUTE [depth=1] sofia/internal/1000@172.16.4.111 detect_speech(unimrcp:sbc-asr {recognition-timeout=1000}ali default )
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mod_unimrcp.c:3128 asr_handle: name = unimrcp, codec = (null), rate = 8000, grammar = (null), param = sbc-asr
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mod_unimrcp.c:3130 codec = L16, rate = 8000, dest = (null)
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [NOTICE] mrcp_application.c:96 (ASR-26) Create MRCP Handle 0x7fac94029610 [sbc-asr]
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mrcp_client_session.c:133 (ASR-26) Create Channel ASR-26 &lt;new&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mrcp_client_session.c:387 (ASR-26) Receive App Request ASR-26 &lt;new&gt; [2]
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mrcp_client.c:700 (ASR-26) Add MRCP Handle ASR-26 &lt;new&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [NOTICE] mrcp_client_session.c:719 (ASR-26) Add Control Channel ASR-26 &lt;new@speechrecog&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mrcp_client_session.c:411 (ASR-26) Send Offer ASR-26 &lt;new&gt; [c:1 a:1 v:0] to 172.16.7.240:8060
+</span></span><span class="line"><span class="cl">2025-10-31 16:50:51.556688 59.43% [INFO] mrcp_sofiasip_client_agent.c:354 (ASR-26) Local SDP ASR-26 &lt;new&gt;
+</span></span><span class="line"><span class="cl">v=0
+</span></span><span class="line"><span class="cl">o=FreeSWITCH 0 0 IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">s=-
+</span></span><span class="line"><span class="cl">c=IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">t=0 0
+</span></span><span class="line"><span class="cl">m=application 9 TCP/MRCPv2 1
+</span></span><span class="line"><span class="cl">a=setup:active
+</span></span><span class="line"><span class="cl">a=connection:new
+</span></span><span class="line"><span class="cl">a=resource:speechrecog
+</span></span><span class="line"><span class="cl">a=cmid:1
+</span></span><span class="line"><span class="cl">m=audio 4004 RTP/AVP 0 8 96
+</span></span><span class="line"><span class="cl">a=rtpmap:0 PCMU/8000
+</span></span><span class="line"><span class="cl">a=rtpmap:8 PCMA/8000
+</span></span><span class="line"><span class="cl">a=rtpmap:96 L16/8000
+</span></span><span class="line"><span class="cl">a=sendonly
+</span></span><span class="line"><span class="cl">a=ptime:20
+</span></span><span class="line"><span class="cl">a=mid:1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为我在测试时<code>asr</code>有点问题，没有返回结果，正常情况下,读<code>DETECTED_SPEECH</code>事件，就可以看到识别结果。</p>
+<blockquote>
+<p><code>detect_speech</code>没法打断<code>speak</code>在播放的<code>tts</code>语音。</p>
+</blockquote>
+<h3 id="speak">speak
+</h3><p>调用<code>mrcp</code>把文本合成语音,并播发给用户。 <code>esl</code>的命令为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">uuid_setvar</span> <span class="n">uuid</span> <span class="n">tts_engine</span> <span class="n">unimrcp</span><span class="p">:</span><span class="n">sbc</span><span class="o">-</span><span class="n">tts</span> <span class="p">(</span><span class="err">设置</span><span class="n">unimrcp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">uuid_setvar</span> <span class="n">uuid</span> <span class="n">tts_voice</span> <span class="n">EN</span> <span class="p">(</span><span class="err">设置语言</span><span class="p">,</span><span class="err">非必须</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">speak</span> <span class="n">uuid</span> <span class="s2">&#34;welcome to unimrcp, thank you&#34;</span> <span class="p">(</span><span class="err">合成语音</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>看到的日志为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">EXECUTE [depth=1] sofia/internal/1000@172.16.4.111 speak(welcome to unimrcp, thank you)
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [INFO] mod_unimrcp.c:1625 speech_handle: name = unimrcp, rate = 8000, speed = 0, samples = 160, voice = , engine = unimrcp, param = sbc-tts
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [INFO] mod_unimrcp.c:1628 voice = EN, rate = 8000
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [NOTICE] mrcp_application.c:96 (TTS-27) Create MRCP Handle 0x7facec054130 [sbc-tts]
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [INFO] mrcp_client_session.c:133 (TTS-27) Create Channel TTS-27 &lt;new&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [INFO] mrcp_client_session.c:387 (TTS-27) Receive App Request TTS-27 &lt;new&gt; [2]
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [INFO] mrcp_client.c:700 (TTS-27) Add MRCP Handle TTS-27 &lt;new&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.516557 59.87% [NOTICE] mrcp_client_session.c:719 (TTS-27) Add Control Channel TTS-27 &lt;new@speechsynth&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.536560 59.87% [INFO] mrcp_client_session.c:411 (TTS-27) Send Offer TTS-27 &lt;new&gt; [c:1 a:1 v:0] to 172.16.7.240:8060
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.536560 59.87% [INFO] mrcp_sofiasip_client_agent.c:354 (TTS-27) Local SDP TTS-27 &lt;new&gt;
+</span></span><span class="line"><span class="cl">v=0
+</span></span><span class="line"><span class="cl">o=FreeSWITCH 0 0 IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">s=-
+</span></span><span class="line"><span class="cl">c=IN IP4 172.16.4.111
+</span></span><span class="line"><span class="cl">t=0 0
+</span></span><span class="line"><span class="cl">m=application 9 TCP/MRCPv2 1
+</span></span><span class="line"><span class="cl">a=setup:active
+</span></span><span class="line"><span class="cl">a=connection:new
+</span></span><span class="line"><span class="cl">a=resource:speechsynth
+</span></span><span class="line"><span class="cl">a=cmid:1
+</span></span><span class="line"><span class="cl">m=audio 4048 RTP/AVP 0
+</span></span><span class="line"><span class="cl">a=rtpmap:0 PCMU/8000
+</span></span><span class="line"><span class="cl">a=recvonly
+</span></span><span class="line"><span class="cl">a=mid:1
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2025-10-31 17:07:22.536560 59.87% [INFO] mrcp_sofiasip_client_agent.c:609 () Receive SIP Event [nua_i_state] Status 0 INVITE sent [sbc-tts]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="play_and_detect_speech">play_and_detect_speech
+</h3><p>播放<code>tts</code>语音的同时，识别用户的语音流。可以打断<code>tts</code>的播放。</p>
+<p><code>lua</code>的方法，可以参考这篇文章:<a class="link" href="https://www.freeswitch.org.cn/books/case-study/5.3-%E7%94%A8play_and_detect_speech%E5%AE%9E%E7%8E%B0%E4%BA%BA%E6%9C%BA%E8%AF%AD%E9%9F%B3%E4%BA%A4%E4%BA%92%E7%9A%84%E7%A4%BA%E4%BE%8B.html"  target="_blank" rel="noopener"
+    >用play_and_detect_speech实现人机语音交互的示例</a></p>
+<p><code>esl</code>中的使用命令为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">uuid_setvar</span> <span class="n">uuid</span> <span class="n">tts_engine</span> <span class="n">unimrcp</span><span class="p">:</span><span class="n">sbc</span><span class="o">-</span><span class="n">tts</span> <span class="p">(</span><span class="err">设置</span><span class="n">unimrcp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">uuid_setvar</span> <span class="n">uuid</span> <span class="n">tts_voice</span> <span class="n">EN</span> <span class="p">(</span><span class="err">设置语言</span><span class="p">,</span><span class="err">非必须</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">play_and_detect_speech</span> <span class="n">uuid</span> <span class="n">say</span><span class="p">:</span><span class="n">welcome</span> <span class="n">to</span> <span class="n">unimrcp</span><span class="p">,</span> <span class="n">thank</span> <span class="n">you</span><span class="o">.</span> <span class="n">detect</span><span class="p">:</span><span class="n">unimrcp</span><span class="p">:</span><span class="n">sbc</span><span class="o">-</span><span class="n">tts</span> <span class="p">{</span><span class="n">start</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">timers</span><span class="o">=</span><span class="bp">true</span><span class="p">,</span><span class="n">recognition</span><span class="o">-</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span><span class="n">no</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">timeout</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span><span class="n">speech</span><span class="o">-</span><span class="n">complete</span><span class="o">-</span><span class="n">timeout</span><span class="o">=</span><span class="mi">20000</span><span class="p">}</span><span class="n">ali</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这种方法的打断机制有两种：</p>
+<ol>
+<li><code>unimrcp</code>进行<code>asr</code>识别是返回了<code>START-OF-INPUT</code>事件，检测到用户说话。</li>
+<li><code>unimrcp</code>进行<code>asr</code>识别是返回了<code>RECOGNIZE-COMPLETE</code>事件,识别完成返回一句话。</li>
+</ol>
+<p>经过测试发现，大部分都是<code>START-OF-INPUT</code>事件，太过敏感了，日志为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2025-10-31 17:17:16.756586 57.40% [INFO] mrcp_client_session.c:500 (TTS-30) Raise App MRCP Response TTS-30 &lt;a7f677acb63a11f0&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.916563 57.60% [INFO] mrcp_client_connection.c:635 () Receive MRCPv2 Data 172.16.4.111:43794 &lt;-&gt; 172.16.7.240:1544 [94 bytes]
+</span></span><span class="line"><span class="cl">MRCP/2.0 94 START-OF-INPUT 2 IN-PROGRESS
+</span></span><span class="line"><span class="cl">Channel-Identifier: a7d6756ab63a11f0@speechrecog
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.916563 57.60% [INFO] mrcp_client_session.c:516 (ASR-29) Raise App MRCP Event ASR-29 &lt;a7d6756ab63a11f0&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.956559 57.60% [INFO] switch_ivr_async.c:4834 (sofia/internal/1000@172.16.4.111) START OF SPEECH
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.956559 57.60% [INFO] mrcp_client_session.c:392 (TTS-30) Receive App MRCP Request TTS-30 &lt;a7f677acb63a11f0&gt;
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.956559 57.60% [INFO] mrcp_client_session.c:622 (TTS-30) Send MRCP Request TTS-30 &lt;a7f677acb63a11f0@speechsynth&gt; [2]
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.956559 57.60% [INFO] mrcp_client_connection.c:530 (TTS-30) Send MRCPv2 Data 172.16.4.111:43794 &lt;-&gt; 172.16.7.240:1544 [72 bytes]
+</span></span><span class="line"><span class="cl">MRCP/2.0 72 STOP 2
+</span></span><span class="line"><span class="cl">Channel-Identifier: a7f677acb63a11f0@speechsynth
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2025-10-31 17:17:18.976561 57.60% [INFO] mrcp_client_connection.c:635 () Receive MRCPv2 Data 172.16.4.111:43794 &lt;-&gt; 172.16.7.240:1544 [108 bytes]
+</span></span><span class="line"><span class="cl">MRCP/2.0 108 2 200 COMPLETE
+</span></span><span class="line"><span class="cl">Channel-Identifier: a7f677acb63a11f0@speechsynth
+</span></span><span class="line"><span class="cl">Active-Request-Id-List: 1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>针对这种情况，有两种方法尝试：</p>
+<ol>
+<li>优化<code>unimrcp</code>中的语音检测的算法，我用了<code>webrtc</code>的噪声过滤，效果不太理想。</li>
+<li><code>unimrcp</code>去掉<code>START-OF-INPUT</code>,这样就只会在识别出用户的一句话之后才能打断。
+也会有点问题，就是打断表现的会慢一些，因为要等用户说完一句话，才会返回识别结果。
+方法可以参考：https://blog.csdn.net/qq1779062842/article/details/106471665</li>
+</ol>
+<p>另外如果在此节点<code>按键</code>呢? 日志如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">2025-10-31 17:36:34.816860 58.40% [DEBUG] apt_consumer_task.c:141 () Wait for Messages [MRCP Client]
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:34.816860 58.40% [DEBUG] switch_ivr_play_say.c:2817 Speaking text: Websocket server may return JSON object containing base64 encoded audio to be played by the user.
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:34.856554 58.40% [DEBUG] switch_rtp.c:7934 Correct audio ip/port confirmed.
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:34.856554 58.40% [DEBUG] switch_core_io.c:448 Setting BUG Codec PCMA:8
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:34.876612 58.40% [DEBUG] switch_rtp.c:1982 rtcp_stats_init: audio ssrc[1321737180] base_seq[19527]
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.056592 57.03% [DEBUG] switch_rtp.c:8179 RTP RECV DTMF 1:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.056592 57.03% [DEBUG] mod_unimrcp.c:3457 (ASR-33) Queued DTMF: 1
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.056592 57.03% [INFO] switch_channel.c:527 RECV DTMF 1:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.056592 57.03% [DEBUG] switch_ivr_async.c:4862 (sofia/internal/1000@172.16.4.111) IGNORE NON-TERMINATOR DIGIT 1
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.456573 57.00% [DEBUG] switch_rtp.c:8179 RTP RECV DTMF 2:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.456573 57.00% [DEBUG] mod_unimrcp.c:3457 (ASR-33) Queued DTMF: 2
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.456573 57.00% [INFO] switch_channel.c:527 RECV DTMF 2:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.456573 57.00% [DEBUG] switch_ivr_async.c:4862 (sofia/internal/1000@172.16.4.111) IGNORE NON-TERMINATOR DIGIT 2
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.956563 57.00% [DEBUG] switch_rtp.c:8179 RTP RECV DTMF 1:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.956563 57.00% [DEBUG] mod_unimrcp.c:3457 (ASR-33) Queued DTMF: 1
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.956563 57.00% [INFO] switch_channel.c:527 RECV DTMF 1:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:38.956563 57.00% [DEBUG] switch_ivr_async.c:4862 (sofia/internal/1000@172.16.4.111) IGNORE NON-TERMINATOR DIGIT 1
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:39.476560 57.13% [DEBUG] switch_rtp.c:8179 RTP RECV DTMF 2:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:39.476560 57.13% [DEBUG] mod_unimrcp.c:3457 (ASR-33) Queued DTMF: 2
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:39.476560 57.13% [INFO] switch_channel.c:527 RECV DTMF 2:1600
+</span></span><span class="line"><span class="cl">2025-10-31 17:36:39.476560 57.13% [DEBUG] switch_ivr_async.c:4862 (sofia/internal/1000@172.16.4.111) IGNORE NON-TERMINATOR DIGIT 2
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>可以看到能收到<code>按键</code>，但是<code>无法打断</code>。有报：<code>IGNORE NON-TERMINATOR DIGIT</code>意思是没有设置终止符而忽略了按键,这样设置还是没解决此问题：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">play_and_detect_speech uuid say:welcome to unimrcp, thank you. detect:unimrcp:sbc-tts {start-input-timers=true,recognition-timeout=10000,no-input-timeout=30000,speech-complete-timeout=20000}builtin:dtmf/digits?length=4&amp;terminators=#&amp;interdigit-timeout=3000
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="play_and_get_digits">play_and_get_digits
+</h3><p>这个是专门用来收集按键的方法。用法参数：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="nb">min</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="nb">max</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">tries</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">timeout</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">terminators</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">file</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">invalid_file</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">var_name</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">regexp</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">digit_timeout</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">transfer_on_failure</span><span class="o">&gt;</span><span class="p">]]]]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>该功能只能播放音频文件，不能调用mrcp来生成语音流。</p>
+</blockquote>
+<p>播放文件是使用示例为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">&lt;extension name=&#34;collect_digits&#34;&gt;
+</span></span><span class="line"><span class="cl">  &lt;condition field=&#34;destination_number&#34; expression=&#34;^5000$&#34;&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;answer&#34;/&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;sleep&#34; data=&#34;1000&#34;/&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;play_and_get_digits&#34;
+</span></span><span class="line"><span class="cl">            data=&#34;1 4 3 5000 # ivr/8000/ivr-enter_source_telephone_number.wav ivr/8000/ivr-invalid_extension_try_again.wav user_input ^[0-9]+$ 3000&#34;/&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;log&#34; data=&#34;INFO User entered: ${user_input}&#34;/&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    &lt;!-- 跳转到下一个处理扩展 --&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;transfer&#34; data=&#34;${user_input} XML default&#34;/&gt;
+</span></span><span class="line"><span class="cl">  &lt;/conition&gt;
+</span></span><span class="line"><span class="cl">&lt;/extension&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&lt;!-- 定义分支 --&gt;
+</span></span><span class="line"><span class="cl">&lt;extension name=&#34;ivr_option_1&#34;&gt;
+</span></span><span class="line"><span class="cl">  &lt;condition field=&#34;destination_number&#34; expression=&#34;^1$&#34;&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;transfer&#34; data=&#34;1002 XML default&#34;/&gt;
+</span></span><span class="line"><span class="cl">  &lt;/condition&gt;
+</span></span><span class="line"><span class="cl">&lt;/extension&gt;
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">&lt;extension name=&#34;ivr_option_2&#34;&gt;
+</span></span><span class="line"><span class="cl">  &lt;condition field=&#34;destination_number&#34; expression=&#34;^2$&#34;&gt;
+</span></span><span class="line"><span class="cl">    &lt;action application=&#34;playback&#34; data=&#34;ivr/8000/ivr-your_caller_id_information_is.wav&#34;/&gt;
+</span></span><span class="line"><span class="cl">  &lt;/condition&gt;
+</span></span><span class="line"><span class="cl">&lt;/extension&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>该模块功能为按键1，拨打1002，按键2，播放语音ivr/8000/ivr-your_caller_id_information_is.wav。</p>
+<p>按1转1002坐席的实际测试的日志为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">play_and_get_digits</span><span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">5000</span> <span class="c1"># ivr/8000/ivr-enter_source_telephone_number.wav ivr/8000/ivr-invalid_extension_try_again.wav user_input ^[0-9]+$ 3000)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">35.867339</span> <span class="mf">55.97</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">switch_channel</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">527</span> <span class="n">RECV</span> <span class="n">DTMF</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1600</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">36.947328</span> <span class="mf">55.83</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">switch_channel</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">527</span> <span class="n">RECV</span> <span class="n">DTMF</span> <span class="c1">#:1600</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="nb">log</span><span class="p">(</span><span class="n">INFO</span> <span class="n">User</span> <span class="n">entered</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">36.947328</span> <span class="mf">55.83</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">mod_dptools</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">1879</span> <span class="n">User</span> <span class="n">entered</span><span class="p">:</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">transfer</span><span class="p">(</span><span class="mi">1</span> <span class="n">XML</span> <span class="n">default</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">36.947328</span> <span class="mf">55.83</span><span class="o">%</span> <span class="p">[</span><span class="n">NOTICE</span><span class="p">]</span> <span class="n">switch_ivr</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">2296</span> <span class="n">Transfer</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">to</span> <span class="n">XML</span><span class="p">[</span><span class="mi">1</span><span class="err">@</span><span class="n">default</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">36.947328</span> <span class="mf">55.83</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">mod_dialplan_xml</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">639</span> <span class="n">Processing</span> <span class="mi">1000</span> <span class="o">&lt;</span><span class="mi">1000</span><span class="o">&gt;-&gt;</span><span class="mi">1</span> <span class="ow">in</span> <span class="n">context</span> <span class="n">default</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">set</span><span class="p">(</span><span class="n">open</span><span class="o">=</span><span class="bp">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">transfer</span><span class="p">(</span><span class="mi">1002</span> <span class="n">XML</span> <span class="n">default</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">36.947328</span> <span class="mf">55.83</span><span class="o">%</span> <span class="p">[</span><span class="n">NOTICE</span><span class="p">]</span> <span class="n">switch_ivr</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">2296</span> <span class="n">Transfer</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">to</span> <span class="n">XML</span><span class="p">[</span><span class="mi">1002</span><span class="err">@</span><span class="n">default</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">35</span><span class="p">:</span><span class="mf">36.947328</span> <span class="mf">55.83</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">mod_dialplan_xml</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">639</span> <span class="n">Processing</span> <span class="mi">1000</span> <span class="o">&lt;</span><span class="mi">1000</span><span class="o">&gt;-&gt;</span><span class="mi">1002</span> <span class="ow">in</span> <span class="n">context</span> <span class="n">default</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">set</span><span class="p">(</span><span class="n">open</span><span class="o">=</span><span class="bp">true</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="k">export</span><span class="p">(</span><span class="n">dialed_extension</span><span class="o">=</span><span class="mi">1002</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>另外也可以接收多个按键，例如：123#,日志为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="n">play_and_get_digits</span><span class="p">(</span><span class="mi">1</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">5000</span> <span class="c1"># ivr/8000/ivr-enter_source_telephone_number.wav ivr/8000/ivr-invalid_extension_try_again.wav user_input ^[0-9]+$ 3000)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mf">05.347863</span> <span class="mf">56.50</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">switch_channel</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">527</span> <span class="n">RECV</span> <span class="n">DTMF</span> <span class="mi">1</span><span class="p">:</span><span class="mi">1600</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mf">05.747320</span> <span class="mf">56.50</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">switch_channel</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">527</span> <span class="n">RECV</span> <span class="n">DTMF</span> <span class="mi">2</span><span class="p">:</span><span class="mi">1600</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mf">06.167313</span> <span class="mf">56.53</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">switch_channel</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">527</span> <span class="n">RECV</span> <span class="n">DTMF</span> <span class="mi">3</span><span class="p">:</span><span class="mi">1600</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mf">06.847320</span> <span class="mf">56.27</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">switch_channel</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">527</span> <span class="n">RECV</span> <span class="n">DTMF</span> <span class="mi">4</span><span class="p">:</span><span class="mi">1600</span>
+</span></span><span class="line"><span class="cl"><span class="n">EXECUTE</span> <span class="p">[</span><span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">]</span> <span class="n">sofia</span><span class="o">/</span><span class="n">internal</span><span class="o">/</span><span class="mi">1000</span><span class="err">@</span><span class="mf">172.16</span><span class="o">.</span><span class="mf">4.111</span> <span class="nb">log</span><span class="p">(</span><span class="n">INFO</span> <span class="n">User</span> <span class="n">entered</span><span class="p">:</span> <span class="mi">1234</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mi">2025</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">04</span> <span class="mi">14</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mf">06.847320</span> <span class="mf">56.27</span><span class="o">%</span> <span class="p">[</span><span class="n">INFO</span><span class="p">]</span> <span class="n">mod_dptools</span><span class="o">.</span><span class="n">c</span><span class="p">:</span><span class="mi">1879</span> <span class="n">User</span> <span class="n">entered</span><span class="p">:</span> <span class="mi">1234</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="总结">总结
+</h2><p>本章我们介绍了使用<code>mrcp</code>场景下的<code>打断</code>和<code>按键</code>收集功能。
+如果不对源码修改，实际体验上效果远远达不到实用需求。</p>
+
+</section>
+
+
+    
+<footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/freeswitch/">Freeswitch</a>
+        
+    </section>
+
+    
+    
+		
+		
+			<div style="padding: 10px 0; margin: 20px auto; width: 100%; font-size:16px; text-align: center;">
+				<button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+					<span>打赏</span></button>
+				<div id="QR" style="display: none;">
+					
+						<div id="wechat" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="wechat_qr" src="/img/wechat.png" alt="WeChat Pay"></a>
+							<p>微信</p>
+						</div>
+					
+					
+						<div id="alipay" style="display: inline-block">
+							<a class="fancybox" rel="group">
+								<img id="alipay_qr" src="/img/alipay.png" alt="Alipay"></a>
+							<p>支付宝</p>
+						</div>
+					
+				</div>
+			</div>
+	    
+    
+
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 2025-11-04
+        </span>
+    </section></footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/">
+        
+        
+            <div class="article-image">
+                <img src="/p/freeswitch1.10.7%E7%BC%A9%E5%87%8F%E9%95%9C%E5%83%8F%E5%8C%85%E5%A4%A7%E5%B0%8F/backup.b7a09f496f6a74db97f9ec35084cb3c3_hu10129560867060518036.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post freeswitch1.10.7缩减镜像包大小"
+                        
+                        data-hash="md5-t6CfSW9qdNuX&#43;ew1CEyzww==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">freeswitch1.10.7缩减镜像包大小</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/keepalived%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip%E8%A1%A5%E5%85%85/">
+        
+        
+            <div class="article-image">
+                <img src="/p/keepalived%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip%E8%A1%A5%E5%85%85/backup.c0558b36a3f018ac4b86637ef3f620d2_hu1385751020403313299.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post keepalived配置虚拟ip补充"
+                        
+                        data-hash="md5-wFWLNqPwGKxLhmN&#43;8/Yg0g==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">keepalived配置虚拟ip补充</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/">
+        
+        
+            <div class="article-image">
+                <img src="/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/backup.2a34180026f8d24e981c410a7e164367_hu10316705517648937859.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post keepalived 配置虚拟ip"
+                        
+                        data-hash="md5-KjQYACb40k6YHEEKfhZDZw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">keepalived 配置虚拟ip</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/">
+        
+        
+            <div class="article-image">
+                <img src="/p/coturn-%E5%88%9D%E4%BD%93%E9%AA%8C/backup.bcd9a878db5a948532fa609d63bad481_hu10781721336759713388.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post coturn 初体验"
+                        
+                        data-hash="md5-vNmoeNtalIUy&#43;mCdY7rUgQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">coturn 初体验</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/containerd--nerdctl-%E5%88%9D%E4%BD%93%E9%AA%8C/">
+        
+        
+            <div class="article-image">
+                <img src="/p/containerd--nerdctl-%E5%88%9D%E4%BD%93%E9%AA%8C/backup.fb8cfa43608d739553f9de1c50c0ff95_hu8790484644845834034.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post containerd &#43; nerdctl 初体验"
+                        
+                        data-hash="md5-&#43;4z6Q2CNc5VT&#43;d4cUMD/lQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">containerd &#43; nerdctl 初体验</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    <link rel="stylesheet" href="https://unpkg.com/@waline/client@v3/dist/waline.css"/>
+<div id="waline" class="waline-container"></div>
+<style>
+    .waline-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+        --waline-font-size: var(--article-font-size);
+    }
+    .waline-container .wl-count {
+        color: var(--card-text-color-main);
+    }
+</style><script type="module">
+    import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
+</script>
+
+    
+
+    <footer class="site-footer">
+    <script type="module">
+        import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
+        pageviewCount({
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    <script type="module">
+        import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
+        commentCount({
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
+        });
+    </script>
+    
+    <section class="running-time">
+    本博客已稳定运行
+    <span id="runningdays" class="running-days"></span>
+    </section>
+    
+    <section class="totalcount">
+        
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+        
+        发表了67篇文章 · 
+        总计116.74k字
+    </section>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
+    <span id="busuanzi_container_site_uv">您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者</span>
+    <section class="copyright">
+        &copy; 
+        
+        2025 QuincyGao Blog
+    </section>
+    
+    <section class="powerby">
+        
+        <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025368587号-1| </a>使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.29.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+
+<script>
+    let s1 = '2025-01-10'; 
+    s1 = new Date(s1.replace(/-/g, "/"));
+    let s2 = new Date();
+    let timeDifference = s2.getTime() - s1.getTime();
+
+    let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    let hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    let minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+
+    let result = days + "天" + hours + "小时" + minutes + "分钟";
+    document.getElementById('runningdays').innerHTML = result;
+</script>
+
+
+
+<a href="#" id="back-to-top" title="返回顶部"></a>
+
+
+<style>
+  #back-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 55px;
+    width: 55px;
+    height: 55px;
+    border-radius: 7px;
+    background-color: rgba(64, 158, 255, 0.5);
+    box-shadow: var(--shadow-l2);
+    font-size: 30px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+  }
+
+  #back-to-top:before {
+    content: ' ';
+    display: inline-block;
+    position: relative;
+    top: 0;
+    transform: rotate(135deg);
+    height: 10px;
+    width: 10px;
+    border-width: 0 0 2px 2px;
+    border-color: var(--back-to-top-color);
+    border-style: solid;
+  }
+
+  #back-to-top:hover:before {
+    border-color: #2674e0;
+  }
+
+   
+  @media screen and (max-width: 768px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      font-size: 10px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1024px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 40px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1280px) {
+    #back-to-top {
+      bottom: 20px;
+      right: 55px;
+    }
+  }
+
+   
+  @media screen and (min-width: 1536px) {
+    #back-to-top {
+      visibility: hidden;
+    }
+  }
+</style>
+
+
+<script>
+  function backToTop() {
+    document.documentElement.scrollIntoView({
+      behavior: 'smooth',
+    })
+  }
+
+  window.onload = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop > 0) {
+      totopBtn.style.display = 'inline'
+    } else {
+      totopBtn.style.display = 'none'
+    }
+  }
+
+  window.onscroll = function () {
+    let scrollTop =
+      this.document.documentElement.scrollTop || this.document.body.scrollTop
+    let totopBtn = this.document.getElementById('back-to-top')
+    if (scrollTop < 200) {
+      totopBtn.style.display = 'none'
+    } else {
+      totopBtn.style.display = 'inline'
+      totopBtn.addEventListener('click', backToTop, false)
+    }
+  }
+</script>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-YJ1MPL226K"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-YJ1MPL226K');
+</script>
+    </body>
+</html>
