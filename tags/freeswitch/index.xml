@@ -7,12 +7,12 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Thu, 06 Nov 2025 11:03:23 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/tags/freeswitch/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>freeswitch媒体旁路方案</title>
-        <link>https://QuincyGao.github.io/p/freeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF%E6%96%B9%E6%A1%88/</link>
+        <title>智能呼叫系统方案二(freeswitch媒体旁路)</title>
+        <link>https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%BA%8Cfreeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF/</link>
         <pubDate>Thu, 06 Nov 2025 11:03:23 +0800</pubDate>
         
-        <guid>https://QuincyGao.github.io/p/freeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF%E6%96%B9%E6%A1%88/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/p/freeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF%E6%96%B9%E6%A1%88/backup.jpg" alt="Featured image of post freeswitch媒体旁路方案" /&gt;&lt;h2 id=&#34;freeswitch-旁路方案&#34;&gt;freeswitch 旁路方案
+        <guid>https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%BA%8Cfreeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%BA%8Cfreeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF/backup.jpg" alt="Featured image of post 智能呼叫系统方案二(freeswitch媒体旁路)" /&gt;&lt;h2 id=&#34;freeswitch-旁路方案&#34;&gt;freeswitch 旁路方案
 &lt;/h2&gt;&lt;p&gt;目前旁路方案中，开源可用的有:&lt;a class=&#34;link&#34; href=&#34;https://github.com/amigniter/mod_audio_stream.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
     &gt;mod_audio_stream&lt;/a&gt;,
 这个模块是把用户语音流以&lt;code&gt;ws&lt;/code&gt;的方式发送给服务端，服务端收到之后就可以进行&lt;code&gt;ASR&lt;/code&gt;相关的识别。&lt;/p&gt;
@@ -423,12 +423,12 @@
 </description>
         </item>
         <item>
-        <title>freeswitch的mrcp使用</title>
-        <link>https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/</link>
+        <title>智能呼叫系统方案一(mrcp使用)</title>
+        <link>https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%B8%80mrcp%E4%BD%BF%E7%94%A8/</link>
         <pubDate>Fri, 31 Oct 2025 09:42:30 +0800</pubDate>
         
-        <guid>https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/p/freeswitch%E7%9A%84mrcp%E4%BD%BF%E7%94%A8/backup.jpg" alt="Featured image of post freeswitch的mrcp使用" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+        <guid>https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%B8%80mrcp%E4%BD%BF%E7%94%A8/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%B8%80mrcp%E4%BD%BF%E7%94%A8/backup.jpg" alt="Featured image of post 智能呼叫系统方案一(mrcp使用)" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
 &lt;/h2&gt;&lt;p&gt;&lt;code&gt;freeswitch&lt;/code&gt;在做&lt;code&gt;智能呼叫系统&lt;/code&gt;时，如何拿到用户的语音流是个难点，大体上会有三种方案：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;freeswitch&lt;/code&gt;使用&lt;code&gt;mrcp&lt;/code&gt;协议和&lt;code&gt;unimrcp&lt;/code&gt;交互, &lt;code&gt;unimrcp&lt;/code&gt;来集成对接&lt;code&gt;asr/tts&lt;/code&gt;,&lt;code&gt;esl&lt;/code&gt;还可用。&lt;/li&gt;
