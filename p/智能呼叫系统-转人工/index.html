@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景\r在智能呼叫系统中，当客户需要人工服务时，需要将呼叫转人工。如果使用了esl, 那么转人工的方法有两种：\n使用esl的api命令api originate 转人工。 使用esl的api命令api bridge 转人工。 背景\r">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="背景 在智能呼叫系统中,转人工是一个重要的功能，有几个功能点需要注意:\n一般的场景是转一次人工, 后续的呼叫都由人工客服处理。 但是也会有转多次人工的场景，比如：当前的客服处理不了，需要转到级别高的客服处理。 转人工后的通话是否能录音？ 一般的处理方式是转人工成功之后，就认为智能呼叫系统处理结束， 后续客户和客服的通话不录音，他们之间的通话只会在freeswitch中转发。 接下来我们会对转人工的方式进行详细的说明。\n">
 <title>智能呼叫系统-转人工</title>
 
-<link rel='canonical' href='http://localhost:1313/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/'>
+<link rel='canonical' href='https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/'>
 
-<link rel="stylesheet" href="/scss/style.min.659cff12d9612f6e60f67883f263575cd36f1e97a7c240eb9384ad0b7f904cdc.css"><meta property='og:title' content="智能呼叫系统-转人工">
-<meta property='og:description' content="背景\r在智能呼叫系统中，当客户需要人工服务时，需要将呼叫转人工。如果使用了esl, 那么转人工的方法有两种：\n使用esl的api命令api originate 转人工。 使用esl的api命令api bridge 转人工。 背景\r">
-<meta property='og:url' content='http://localhost:1313/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/'>
+<link rel="stylesheet" href="/scss/style.min.259dacd0db0265a40eaf1939ad2454b5535d8dc86e763b6d8fdef4fdd51f27f9.css"><meta property='og:title' content="智能呼叫系统-转人工">
+<meta property='og:description' content="背景 在智能呼叫系统中,转人工是一个重要的功能，有几个功能点需要注意:\n一般的场景是转一次人工, 后续的呼叫都由人工客服处理。 但是也会有转多次人工的场景，比如：当前的客服处理不了，需要转到级别高的客服处理。 转人工后的通话是否能录音？ 一般的处理方式是转人工成功之后，就认为智能呼叫系统处理结束， 后续客户和客服的通话不录音，他们之间的通话只会在freeswitch中转发。 接下来我们会对转人工的方式进行详细的说明。\n">
+<meta property='og:url' content='https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/'>
 <meta property='og:site_name' content='QuincyGao Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='freeswitch' /><meta property='article:published_time' content='2025-11-07T09:40:38&#43;08:00'/><meta property='article:modified_time' content='2025-11-07T09:40:38&#43;08:00'/><meta property='og:image' content='http://localhost:1313/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup.jpg' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='freeswitch' /><meta property='article:published_time' content='2025-11-18T14:22:40&#43;08:00'/><meta property='article:modified_time' content='2025-11-18T14:22:40&#43;08:00'/><meta property='og:image' content='https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup.jpg' />
 <meta name="twitter:title" content="智能呼叫系统-转人工">
-<meta name="twitter:description" content="背景\r在智能呼叫系统中，当客户需要人工服务时，需要将呼叫转人工。如果使用了esl, 那么转人工的方法有两种：\n使用esl的api命令api originate 转人工。 使用esl的api命令api bridge 转人工。 背景\r"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='http://localhost:1313/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup.jpg' />
+<meta name="twitter:description" content="背景 在智能呼叫系统中,转人工是一个重要的功能，有几个功能点需要注意:\n一般的场景是转一次人工, 后续的呼叫都由人工客服处理。 但是也会有转多次人工的场景，比如：当前的客服处理不了，需要转到级别高的客服处理。 转人工后的通话是否能录音？ 一般的处理方式是转人工成功之后，就认为智能呼叫系统处理结束， 后续客户和客服的通话不录音，他们之间的通话只会在freeswitch中转发。 接下来我们会对转人工的方式进行详细的说明。\n"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup.jpg' />
     <link rel="shortcut icon" href="/favicon.png" />
 
     </head>
@@ -343,9 +343,9 @@
 
                             <select name="language" title="language" onchange="window.location.href = this.selectedOptions[0].value">
                                 
-                                    <option value="http://localhost:1313/" selected>Chinese</option>
+                                    <option value="https://QuincyGao.github.io/" selected>Chinese</option>
                                 
-                                    <option value="http://localhost:1313/en/" >English</option>
+                                    <option value="https://QuincyGao.github.io/en/" >English</option>
                                 
                             </select>
                         </li>
@@ -401,7 +401,30 @@
             <nav id="TableOfContents">
   <ol>
     <li><a href="#背景">背景</a></li>
-    <li><a href="#背景-1">背景</a></li>
+    <li><a href="#转人工方式">转人工方式</a>
+      <ol>
+        <li><a href="#bridge">bridge</a></li>
+        <li><a href="#uuid_bridge">uuid_bridge</a></li>
+        <li><a href="#deflect">deflect</a>
+          <ol>
+            <li><a href="#交互流程">交互流程</a></li>
+          </ol>
+        </li>
+        <li><a href="#uuid_deflect">uuid_deflect</a></li>
+        <li><a href="#redirect">redirect</a>
+          <ol>
+            <li><a href="#交互流程-1">交互流程</a></li>
+          </ol>
+        </li>
+        <li><a href="#transfer">transfer</a>
+          <ol>
+            <li><a href="#交互流程-2">交互流程</a></li>
+          </ol>
+        </li>
+        <li><a href="#uuid_transfer">uuid_transfer</a></li>
+      </ol>
+    </li>
+    <li><a href="#总结">总结</a></li>
   </ol>
 </nav>
         </div>
@@ -417,10 +440,10 @@
     <header class="article-header">
         <div class="article-image">
             <a href="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/">
-                <img src="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup_hu5824321304528232056.jpg"
-                        srcset="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup_hu5824321304528232056.jpg 800w, /p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup_hu15966494295669086927.jpg 1600w"
+                <img src="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup_hu12037761985915116189.jpg"
+                        srcset="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup_hu12037761985915116189.jpg 800w, /p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup_hu3786450136672640877.jpg 1600w"
                         width="800" 
-                        height="533" 
+                        height="508" 
                         loading="lazy"
                         alt="Featured image of post 智能呼叫系统-转人工" />
                 
@@ -463,7 +486,7 @@
   <path d="M3 11h16" />
   <path d="M18 16.496v1.504l1 1" />
 </svg>
-                <time class="article-time--published">2025-11-07</time>
+                <time class="article-time--published">2025-11-18</time>
             </div>
         
 
@@ -478,7 +501,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 1 分钟,共92 字
+                    阅读时长: 6 分钟,共2863 字
                 </time>
             </div>
         
@@ -515,14 +538,251 @@
     
     
     <h2 id="背景">背景
-</h2><p>在智能呼叫系统中，当客户需要人工服务时，需要将呼叫转人工。如果使用了<code>esl</code>, 那么转人工的方法有两种：</p>
+</h2><p>在智能呼叫系统中,<code>转人工</code>是一个重要的功能，有几个功能点需要注意:</p>
 <ol>
-<li>使用<code>esl</code>的<code>api</code>命令<code>api originate</code> 转人工。</li>
-<li>使用<code>esl</code>的<code>api</code>命令<code>api bridge</code> 转人工。</li>
+<li>一般的场景是<code>转一次人工</code>, 后续的呼叫都由人工客服处理。
+但是也会有<code>转多次人工</code>的场景，比如：当前的客服处理不了，需要转到级别高的客服处理。</li>
+<li>转人工后的通话是否能录音？ 一般的处理方式是转人工成功之后，就认为智能呼叫系统处理结束，
+后续客户和客服的通话不录音，他们之间的通话只会在<code>freeswitch</code>中转发。</li>
 </ol>
-<h2 id="背景-1">背景
-</h2>
+<p>接下来我们会对<code>转人工</code>的方式进行详细的说明。</p>
+<h2 id="转人工方式">转人工方式
+</h2><ol>
+<li>
+<p>使用<code>esl</code>方式通过<code>freeswitch</code>转人工</p>
+</li>
+<li>
+<p>通过<code>REFER</code>信令转人工</p>
+</li>
+</ol>
+<h3 id="bridge">bridge
+</h3><p><code>bridge</code>的用法为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">bridge &lt;target_endpoint&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中<code>&lt;target_endpoint&gt;</code>是要转人工的客服的<code>SIP</code>地址, 可以为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">user/1000
+</span></span><span class="line"><span class="cl">lcr/18005558355
+</span></span><span class="line"><span class="cl">sofia/external/18005558355@sip.tollfreegateway.com
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>bridge</code>会主动发送<code>INVITE</code>给客服，然后再把两通电话桥接起来。</p>
+<p><code>bridge user/1002, user/1003</code>:这个会同时拨打两个坐席号<code>1002</code>,<code>1003</code>,哪个先接通哪个就先桥接哪个.
+另外一个坐席会挂断。</p>
+<p><code>bridge user/1002|user/1003</code>: 会先拨打<code>1002</code>,如果<code>1002</code>不接通, 才会拨打<code>1003</code>。</p>
+<p><code>bridge user/1002:_:user/1003</code> 和上面的<code>,</code>功能一样，不过此方法是多线程方式。</p>
+<h3 id="uuid_bridge">uuid_bridge
+</h3><p><code>uuid_bridge</code>的用法为:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">uuid_bridge &lt;uuid&gt; &lt;other_uuid&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中<code>&lt;uuid&gt;</code>是要桥接的通话的<code>UUID</code>, <code>&lt;other_uuid&gt;</code>是转人工的<code>UUID</code>。</p>
+<p><code>uuid_bridge</code>需要你先发送<code>INVITE</code>给客服，然后再用<code>uuid_bridge</code>桥接。</p>
+<h3 id="deflect">deflect
+</h3><p>使用方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">deflect SIPURI
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><code>deflect</code>会在一个接通的会话中，会挂断当前的channel,
+然后发送<code>Refer</code>信令和<code>INVITE</code>信令给转人工方。</p>
+<p><code>sip_refer_continue_after_reply</code>如果为<code>true</code>,
+就不会挂断当前的会话，然后发送<code>REFER</code>信令。<a class="link" href="https://datatracker.ietf.org/doc/html/rfc3515"  target="_blank" rel="noopener"
+    ><code>Refer</code>的详细协议</a></p>
+<h4 id="交互流程">交互流程
+</h4><pre class="mermaid">
+    sequenceDiagram
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): INVITE 
+    Note over microSIP(A),fs(172.16.4.111): Session-Expires: 1800
+    fs(172.16.4.111)-&gt;&gt;microSIP(A): 200OK
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): ACK 
+    Note over fs(172.16.4.111),microSIP(A): 接通电话
+    fs(172.16.4.111)-&gt;&gt; microSIP(A): REFER  
+    Note over fs(172.16.4.111), microSIP(A): Refer-To:&lt;sip:B@172.16.4.114:5060&gt;&lt;br/&gt;Referred-By:&lt;sip:172.16.4.111&gt;
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): 202 Accepted
+    microSIP(A)-&gt;&gt;fs(172.16.4.114): INVITE
+    fs(172.16.4.114)--&gt;&gt;microSIP(A): 100 Trying
+    fs(172.16.4.114)-&gt;&gt;microSIP(B): INVITE
+    microSIP(B)--&gt;&gt;fs(172.16.4.114): 100 Trying
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): NOTIFY
+    Note over microSIP(A),fs(172.16.4.111): Event: refer&lt;br&gt;SIP/2.0 100 Trying
+    fs(172.16.4.111)-&gt;&gt; microSIP(A): 200OK
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): INVITE(SDP)
+    Note over microSIP(A),fs(172.16.4.111): Session-Expires: 1800；refresher=uac
+    microSIP(B)-&gt;&gt;fs(172.16.4.114): 180 Ringing
+    fs(172.16.4.114)-&gt;&gt;microSIP(A): 183 Ringing
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): NOTIFY 
+    Note over microSIP(A),fs(172.16.4.111): Event: refer&lt;br&gt;SIP/2.0 183 Ringing
+    fs(172.16.4.111)-&gt;&gt; microSIP(A): 200OK
+    fs(172.16.4.111)--&gt;&gt; microSIP(A): 100 Trying
+    fs(172.16.4.111)-&gt;&gt; microSIP(A): 200OK(SDP) 
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): ACK
+    microSIP(B)-&gt;&gt;fs(172.16.4.114): 200OK
+    fs(172.16.4.114)-&gt;&gt;microSIP(A): 200OK
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): NOTIFY 
+    Note over microSIP(A),fs(172.16.4.111): Event: refer&lt;br&gt;SIP/2.0 200 OK
+    fs(172.16.4.111)-&gt;&gt; microSIP(A): 200OK
+    fs(172.16.4.111)-&gt;&gt;microSIP(A): BYE
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): 200OK 
+    microSIP(A)-&gt;&gt;fs(172.16.4.114): ACK 
+    fs(172.16.4.114)-&gt;&gt;microSIP(B): ACK
+    Note over fs(172.16.4.114),microSIP(B): 通话接通
+    microSIP(B)-&gt;&gt;fs(172.16.4.114): BYE
+    Note over microSIP(B),fs(172.16.4.114): 通话结束
+    fs(172.16.4.114)-&gt;&gt;microSIP(A): BYE
+    microSIP(A)-&gt;&gt;fs(172.16.4.114): 200OK
+    fs(172.16.4.114)-&gt;&gt;microSIP(B): 200OK
+</pre>
+
+<p><code>refer</code>的流程是：</p>
+<ol>
+<li><code>fs(172.16.4.111)</code> 发送<code>REFER</code>信令给<code>UAC</code>,并带上<code>Refer-To</code>头域,</li>
+<li><code>UAC</code>如果接受<code>REFER</code>信令,那么会给一个<code>202 Accepted</code>信令,</li>
+<li><code>UAC</code>后面就会拨打<code>REFER</code>信令中的<code>Refer-To</code>头域中转人工的地址。</li>
+<li><code>UAC</code>和转人工的信令过程都会通过<code>NOTIFY</code>通知<code>fs(172.16.4.111)</code>。</li>
+<li>当<code>UAC</code>和转人工的通话接通后, <code>fs(172.16.4.111)</code>会挂断和<code>UAC</code>的通话。</li>
+</ol>
+<p>小结：</p>
+<ol>
+<li>转人工成功之后，转人工的语音流不会再经过<code>fs(172.16.4.111)</code>,所以也就无法录音了。</li>
+<li>转人工时,<code>microSIP(A)</code>也有往<code>fs(172.16.4.111)</code>发送<code>INVITE</code>,这个<code>INVITE</code>其实相当于<code>UPDATE</code>,
+通知<code>fs(172.16.4.111)</code>媒体信息更新。</li>
+<li><code>sip_refer_continue_after_reply</code>我设置成了<code>true</code>,但是还是会挂断当前的会话，和描述的功能不一样。我的<code>freeswitch</code>版本就是<code>1.10.7</code></li>
+</ol>
+<h3 id="uuid_deflect">uuid_deflect
+</h3><p>使用方法:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">uuid_deflect &lt;uuid&gt; SIPURI
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>功能和<code>deflect</code> 一样, 只是<code>uuid_deflect</code>是通过<code>UUID</code>来转人工的。</p>
+<h3 id="redirect">redirect
+</h3><p>使用方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">redirect SIPURI,SIPURI
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>未接通时，想转人工，可以使用此功能。</p>
+<h4 id="交互流程-1">交互流程
+</h4><pre class="mermaid">
+    sequenceDiagram
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): INVITE 
+    Note over microSIP(A),fs(172.16.4.111): Session-Expires: 1800
+    fs(172.16.4.111)--&gt;&gt;microSIP(A): 100 Trying
+    fs(172.16.4.111)-&gt;&gt; microSIP(A): 302 Moved Temporarily
+    Note over fs(172.16.4.111), microSIP(A): Contact: &#34;unknown&#34; &lt;sip:1009@172.16.4.114:5060&gt;&lt;br/&gt;Remote-Party-ID:&#34;88990&#34; &lt;sip:88990@172.16.4.111&gt;；party=calling
+    microSIP(A)-&gt;&gt;fs(172.16.4.111): ACK
+    microSIP(A)-&gt;&gt;fs(172.16.4.114): INVITE
+    Note over microSIP(A),fs(172.16.4.114): To: &#34;unknown&#34; &lt;sip:1009@172.16.4.114&gt;
+    fs(172.16.4.114)--&gt;&gt;microSIP(A): 100 Trying
+    fs(172.16.4.114)-&gt;&gt;microSIP(B): INVITE
+    microSIP(B)--&gt;&gt;fs(172.16.4.114): 100 Trying
+    microSIP(B)-&gt;&gt;fs(172.16.4.114): 180 Ringing
+    fs(172.16.4.114)-&gt;&gt; microSIP(A): 183 Ringing
+    microSIP(B)--&gt;&gt;fs(172.16.4.114): 200OK(SDP)
+    Note over microSIP(B),fs(172.16.4.114): 通话接通
+    fs(172.16.4.114)-&gt;&gt; microSIP(A): 200OK(SDP)
+    microSIP(A)-&gt;&gt;fs(172.16.4.114): ACK 
+    fs(172.16.4.114)-&gt;&gt;microSIP(B): ACK
+</pre>
+
+<p>使用<code>redirect</code>时, <code>fs(172.16.4.111)</code>返回<code>302 Moved Temporarily</code>, 然后<code>UAC</code>会根据<code>Contact</code>头域, 重新发送<code>INVITE</code>信令。
+后续的交互就和<code>fs(172.16.4.111)</code>没有任何关系了。</p>
+<h3 id="transfer">transfer
+</h3><p>用法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">transfer &lt;destination_number&gt; [&lt;dialplan&gt; [&lt;context&gt;]]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>因为是转到线路上，所以使用的方式为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"> &lt;action application=&#34;transfer&#34; data=&#34;sip:1009@172.16.4.114:5060&#34;/&gt;
+</span></span><span class="line"><span class="cl"> &lt;action application=&#34;park&#34;/&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h4 id="交互流程-2">交互流程
+</h4><pre class="mermaid">
+    sequenceDiagram
+    microSIP(A)-&gt;&gt; fs(172.16.4.111：5060): INVITE 
+    Note over microSIP(A),fs(172.16.4.111：5060): Session-Expires: 1800
+    fs(172.16.4.111：5060) --&gt;&gt; microSIP(A): 100 Trying
+    fs(172.16.4.111：5080) -&gt;&gt; fs(172.16.4.114：5060): INVITE
+    Note over fs(172.16.4.111：5080), fs(172.16.4.114：5060): To: &lt;sip:1009@172.16.4.114：5060&gt;
+    fs(172.16.4.114：5060)--&gt;&gt; fs(172.16.4.111：5080): 100 Trying
+    fs(172.16.4.114：5060)-&gt;&gt; microSIP(B): INVITE
+    microSIP(B)-&gt;&gt;fs(172.16.4.114：5060): 100 TBrying
+    microSIP(B)-&gt;&gt;fs(172.16.4.114：5060): 180 Ringing
+    fs(172.16.4.114：5060)-&gt;&gt;fs(172.16.4.111：5080): 183 Ringing
+    fs(172.16.4.111：5060)-&gt;&gt;microSIP(A): 183 Ringing
+    microSIP(B)-&gt;&gt;fs(172.16.4.114：5060): 200OK
+    Note over microSIP(B),fs(172.16.4.114：5060): 通话接通
+    fs(172.16.4.114：5060)-&gt;&gt;fs(172.16.4.111：5080): 200OK
+    fs(172.16.4.111：5060)-&gt;&gt; microSIP(A): 200OK
+    microSIP(A)-&gt;&gt;fs(172.16.4.111：5060): ACK
+    fs(172.16.4.111：5080)-&gt;&gt; fs(172.16.4.114：5060): ACK
+    fs(172.16.4.114：5060)-&gt;&gt; microSIP(B): ACK 
+    microSIP(B)-&gt;&gt;fs(172.16.4.114：5060): BYE
+    Note over microSIP(B),fs(172.16.4.114：5060): 通话结束
+    fs(172.16.4.114：5060)-&gt;&gt; fs(172.16.4.111：5080): BYE
+    fs(172.16.4.111：5060)-&gt;&gt; microSIP(A): BYE
+    microSIP(A)-&gt;&gt;fs(172.16.4.111：5060): ACK
+    fs(172.16.4.111：5080)-&gt;&gt; fs(172.16.4.114：5060): ACK
+    fs(172.16.4.114：5060)-&gt;&gt; microSIP(B): ACK
+</pre>
+
+<p>可以看到,<code>transfer</code>转人工时，不会挂断原来的通话。<code>fs(172.16.4.111)</code>上也能记录转人工录音。</p>
+<h3 id="uuid_transfer">uuid_transfer
+</h3><h2 id="总结">总结
+</h2><ol>
+<li>未接通时, 可以使用<code>redirect</code>,<code>transfer</code>功能, 转人工。</li>
+<li>接通时, 可以使用<code>deflect</code>,<code>bridge</code>, <code>transfer</code>功能, 转人工。</li>
+<li>转人工可以录音的有：<code>bridge</code>, <code>transfer</code>，不能录音的有：<code>deflect</code>,<code>redirect</code>。</li>
+</ol>
+
 </section>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
+  </script>
 
 
     
@@ -676,6 +936,30 @@
             
                 
 <article class="has-image">
+    <a href="/p/docker%E5%AE%B9%E5%99%A8%E5%86%85%E5%AD%98%E5%A2%9E%E9%95%BF%E6%8E%92%E6%9F%A5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/docker%E5%AE%B9%E5%99%A8%E5%86%85%E5%AD%98%E5%A2%9E%E9%95%BF%E6%8E%92%E6%9F%A5/backup.4a348aa0ce4ae9f19649e1ee9ff26673_hu8785738500738525949.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post docker容器内存增长排查"
+                        
+                        data-hash="md5-SjSKoM5K6fGWSeHun/Jmcw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">docker容器内存增长排查</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/keepalived%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip%E8%A1%A5%E5%85%85/">
         
         
@@ -693,30 +977,6 @@
 
         <div class="article-details">
             <h2 class="article-title">keepalived配置虚拟ip补充</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/">
-        
-        
-            <div class="article-image">
-                <img src="/p/keepalived-%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip/backup.2a34180026f8d24e981c410a7e164367_hu10316705517648937859.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post keepalived 配置虚拟ip"
-                        
-                        data-hash="md5-KjQYACb40k6YHEEKfhZDZw==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">keepalived 配置虚拟ip</h2>
         </div>
     </a>
 </article>
@@ -744,7 +1004,7 @@
     }
 </style><script type="module">
     import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8365","visitor":"true"});
+    init({"avatar":"","dark":"html[data-scheme=\"dark\"]","el":"#waline","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"lang":"en","locale":{"admin":"Admin","reaction0":"非常有用","reaction1":"有帮助","reaction2":"一般","reaction3":"无帮助","reactionTitle":"这篇文章对你有帮助吗？"},"pageview":"true","placeholder":"","reaction":["https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_heart_eyes.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_thumbsup.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_zhoumei.png","https://npm.elemecdn.com/@waline/emojis@1.1.0/bilibili/bb_grievance.png"],"requiredMeta":["name"],"serverURL":"https://blog.xiaopeng.site:8364","visitor":"true"});
 </script>
 
     
@@ -753,13 +1013,13 @@
     <script type="module">
         import { pageviewCount } from 'https://unpkg.com/@waline/client@v3/dist/pageview.js';
         pageviewCount({
-          serverURL: "https:\/\/blog.xiaopeng.site:8365"
+          serverURL: "https:\/\/blog.xiaopeng.site:8364"
         });
     </script>
     <script type="module">
         import { commentCount } from 'https://unpkg.com/@waline/client@v3/dist/comment.js';
         commentCount({
-            serverURL: "https:\/\/blog.xiaopeng.site:8365"
+            serverURL: "https:\/\/blog.xiaopeng.site:8364"
         });
     </script>
     
@@ -917,9 +1177,11 @@
         
             
         
+            
         
-        发表了69篇文章 · 
-        总计118.89k字
+        
+        发表了70篇文章 · 
+        总计123.19k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
@@ -1018,7 +1280,7 @@
 
             </main>
         </div>
-        <script type="text/javascript" src="/ts/main.9588b5e63ce3e1815e9dd7bd78c514d91e83e1660843be9935f0702315b11b89.js" defer></script>
+        <script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
 <script>
     (function () {
         const customFont = document.createElement('link');

@@ -6,7 +6,254 @@
         <description>Recent content in 技术生活 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 14 Nov 2025 09:40:38 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 18 Nov 2025 14:22:40 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>智能呼叫系统-转人工</title>
+        <link>https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/</link>
+        <pubDate>Tue, 18 Nov 2025 14:22:40 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F-%E8%BD%AC%E4%BA%BA%E5%B7%A5/backup.jpg" alt="Featured image of post 智能呼叫系统-转人工" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;在智能呼叫系统中,&lt;code&gt;转人工&lt;/code&gt;是一个重要的功能，有几个功能点需要注意:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;一般的场景是&lt;code&gt;转一次人工&lt;/code&gt;, 后续的呼叫都由人工客服处理。
+但是也会有&lt;code&gt;转多次人工&lt;/code&gt;的场景，比如：当前的客服处理不了，需要转到级别高的客服处理。&lt;/li&gt;
+&lt;li&gt;转人工后的通话是否能录音？ 一般的处理方式是转人工成功之后，就认为智能呼叫系统处理结束，
+后续客户和客服的通话不录音，他们之间的通话只会在&lt;code&gt;freeswitch&lt;/code&gt;中转发。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;接下来我们会对&lt;code&gt;转人工&lt;/code&gt;的方式进行详细的说明。&lt;/p&gt;
+&lt;h2 id=&#34;转人工方式&#34;&gt;转人工方式
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;使用&lt;code&gt;esl&lt;/code&gt;方式通过&lt;code&gt;freeswitch&lt;/code&gt;转人工&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;通过&lt;code&gt;REFER&lt;/code&gt;信令转人工&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;bridge&#34;&gt;bridge
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;bridge&lt;/code&gt;的用法为:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;bridge &amp;lt;target_endpoint&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;其中&lt;code&gt;&amp;lt;target_endpoint&amp;gt;&lt;/code&gt;是要转人工的客服的&lt;code&gt;SIP&lt;/code&gt;地址, 可以为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;user/1000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;lcr/18005558355
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;sofia/external/18005558355@sip.tollfreegateway.com
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;bridge&lt;/code&gt;会主动发送&lt;code&gt;INVITE&lt;/code&gt;给客服，然后再把两通电话桥接起来。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bridge user/1002, user/1003&lt;/code&gt;:这个会同时拨打两个坐席号&lt;code&gt;1002&lt;/code&gt;,&lt;code&gt;1003&lt;/code&gt;,哪个先接通哪个就先桥接哪个.
+另外一个坐席会挂断。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bridge user/1002|user/1003&lt;/code&gt;: 会先拨打&lt;code&gt;1002&lt;/code&gt;,如果&lt;code&gt;1002&lt;/code&gt;不接通, 才会拨打&lt;code&gt;1003&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;bridge user/1002:_:user/1003&lt;/code&gt; 和上面的&lt;code&gt;,&lt;/code&gt;功能一样，不过此方法是多线程方式。&lt;/p&gt;
+&lt;h3 id=&#34;uuid_bridge&#34;&gt;uuid_bridge
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;uuid_bridge&lt;/code&gt;的用法为:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;uuid_bridge &amp;lt;uuid&amp;gt; &amp;lt;other_uuid&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;其中&lt;code&gt;&amp;lt;uuid&amp;gt;&lt;/code&gt;是要桥接的通话的&lt;code&gt;UUID&lt;/code&gt;, &lt;code&gt;&amp;lt;other_uuid&amp;gt;&lt;/code&gt;是转人工的&lt;code&gt;UUID&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;uuid_bridge&lt;/code&gt;需要你先发送&lt;code&gt;INVITE&lt;/code&gt;给客服，然后再用&lt;code&gt;uuid_bridge&lt;/code&gt;桥接。&lt;/p&gt;
+&lt;h3 id=&#34;deflect&#34;&gt;deflect
+&lt;/h3&gt;&lt;p&gt;使用方法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;deflect SIPURI
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;deflect&lt;/code&gt;会在一个接通的会话中，会挂断当前的channel,
+然后发送&lt;code&gt;Refer&lt;/code&gt;信令和&lt;code&gt;INVITE&lt;/code&gt;信令给转人工方。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;sip_refer_continue_after_reply&lt;/code&gt;如果为&lt;code&gt;true&lt;/code&gt;,
+就不会挂断当前的会话，然后发送&lt;code&gt;REFER&lt;/code&gt;信令。&lt;a class=&#34;link&#34; href=&#34;https://datatracker.ietf.org/doc/html/rfc3515&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;&lt;code&gt;Refer&lt;/code&gt;的详细协议&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;交互流程&#34;&gt;交互流程
+&lt;/h4&gt;&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): INVITE 
+    Note over microSIP(A),fs(172.16.4.111): Session-Expires: 1800
+    fs(172.16.4.111)-&amp;gt;&amp;gt;microSIP(A): 200OK
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): ACK 
+    Note over fs(172.16.4.111),microSIP(A): 接通电话
+    fs(172.16.4.111)-&amp;gt;&amp;gt; microSIP(A): REFER  
+    Note over fs(172.16.4.111), microSIP(A): Refer-To:&amp;lt;sip:B@172.16.4.114:5060&amp;gt;&amp;lt;br/&amp;gt;Referred-By:&amp;lt;sip:172.16.4.111&amp;gt;
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): 202 Accepted
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.114): INVITE
+    fs(172.16.4.114)--&amp;gt;&amp;gt;microSIP(A): 100 Trying
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(B): INVITE
+    microSIP(B)--&amp;gt;&amp;gt;fs(172.16.4.114): 100 Trying
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): NOTIFY
+    Note over microSIP(A),fs(172.16.4.111): Event: refer&amp;lt;br&amp;gt;SIP/2.0 100 Trying
+    fs(172.16.4.111)-&amp;gt;&amp;gt; microSIP(A): 200OK
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): INVITE(SDP)
+    Note over microSIP(A),fs(172.16.4.111): Session-Expires: 1800；refresher=uac
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114): 180 Ringing
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(A): 183 Ringing
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): NOTIFY 
+    Note over microSIP(A),fs(172.16.4.111): Event: refer&amp;lt;br&amp;gt;SIP/2.0 183 Ringing
+    fs(172.16.4.111)-&amp;gt;&amp;gt; microSIP(A): 200OK
+    fs(172.16.4.111)--&amp;gt;&amp;gt; microSIP(A): 100 Trying
+    fs(172.16.4.111)-&amp;gt;&amp;gt; microSIP(A): 200OK(SDP) 
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): ACK
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114): 200OK
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(A): 200OK
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): NOTIFY 
+    Note over microSIP(A),fs(172.16.4.111): Event: refer&amp;lt;br&amp;gt;SIP/2.0 200 OK
+    fs(172.16.4.111)-&amp;gt;&amp;gt; microSIP(A): 200OK
+    fs(172.16.4.111)-&amp;gt;&amp;gt;microSIP(A): BYE
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): 200OK 
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.114): ACK 
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(B): ACK
+    Note over fs(172.16.4.114),microSIP(B): 通话接通
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114): BYE
+    Note over microSIP(B),fs(172.16.4.114): 通话结束
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(A): BYE
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.114): 200OK
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(B): 200OK
+&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;refer&lt;/code&gt;的流程是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;fs(172.16.4.111)&lt;/code&gt; 发送&lt;code&gt;REFER&lt;/code&gt;信令给&lt;code&gt;UAC&lt;/code&gt;,并带上&lt;code&gt;Refer-To&lt;/code&gt;头域,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;UAC&lt;/code&gt;如果接受&lt;code&gt;REFER&lt;/code&gt;信令,那么会给一个&lt;code&gt;202 Accepted&lt;/code&gt;信令,&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;UAC&lt;/code&gt;后面就会拨打&lt;code&gt;REFER&lt;/code&gt;信令中的&lt;code&gt;Refer-To&lt;/code&gt;头域中转人工的地址。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;UAC&lt;/code&gt;和转人工的信令过程都会通过&lt;code&gt;NOTIFY&lt;/code&gt;通知&lt;code&gt;fs(172.16.4.111)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;当&lt;code&gt;UAC&lt;/code&gt;和转人工的通话接通后, &lt;code&gt;fs(172.16.4.111)&lt;/code&gt;会挂断和&lt;code&gt;UAC&lt;/code&gt;的通话。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;小结：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;转人工成功之后，转人工的语音流不会再经过&lt;code&gt;fs(172.16.4.111)&lt;/code&gt;,所以也就无法录音了。&lt;/li&gt;
+&lt;li&gt;转人工时,&lt;code&gt;microSIP(A)&lt;/code&gt;也有往&lt;code&gt;fs(172.16.4.111)&lt;/code&gt;发送&lt;code&gt;INVITE&lt;/code&gt;,这个&lt;code&gt;INVITE&lt;/code&gt;其实相当于&lt;code&gt;UPDATE&lt;/code&gt;,
+通知&lt;code&gt;fs(172.16.4.111)&lt;/code&gt;媒体信息更新。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sip_refer_continue_after_reply&lt;/code&gt;我设置成了&lt;code&gt;true&lt;/code&gt;,但是还是会挂断当前的会话，和描述的功能不一样。我的&lt;code&gt;freeswitch&lt;/code&gt;版本就是&lt;code&gt;1.10.7&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;uuid_deflect&#34;&gt;uuid_deflect
+&lt;/h3&gt;&lt;p&gt;使用方法:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;uuid_deflect &amp;lt;uuid&amp;gt; SIPURI
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;功能和&lt;code&gt;deflect&lt;/code&gt; 一样, 只是&lt;code&gt;uuid_deflect&lt;/code&gt;是通过&lt;code&gt;UUID&lt;/code&gt;来转人工的。&lt;/p&gt;
+&lt;h3 id=&#34;redirect&#34;&gt;redirect
+&lt;/h3&gt;&lt;p&gt;使用方法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;redirect SIPURI,SIPURI
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;未接通时，想转人工，可以使用此功能。&lt;/p&gt;
+&lt;h4 id=&#34;交互流程-1&#34;&gt;交互流程
+&lt;/h4&gt;&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): INVITE 
+    Note over microSIP(A),fs(172.16.4.111): Session-Expires: 1800
+    fs(172.16.4.111)--&amp;gt;&amp;gt;microSIP(A): 100 Trying
+    fs(172.16.4.111)-&amp;gt;&amp;gt; microSIP(A): 302 Moved Temporarily
+    Note over fs(172.16.4.111), microSIP(A): Contact: &amp;#34;unknown&amp;#34; &amp;lt;sip:1009@172.16.4.114:5060&amp;gt;&amp;lt;br/&amp;gt;Remote-Party-ID:&amp;#34;88990&amp;#34; &amp;lt;sip:88990@172.16.4.111&amp;gt;；party=calling
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111): ACK
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.114): INVITE
+    Note over microSIP(A),fs(172.16.4.114): To: &amp;#34;unknown&amp;#34; &amp;lt;sip:1009@172.16.4.114&amp;gt;
+    fs(172.16.4.114)--&amp;gt;&amp;gt;microSIP(A): 100 Trying
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(B): INVITE
+    microSIP(B)--&amp;gt;&amp;gt;fs(172.16.4.114): 100 Trying
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114): 180 Ringing
+    fs(172.16.4.114)-&amp;gt;&amp;gt; microSIP(A): 183 Ringing
+    microSIP(B)--&amp;gt;&amp;gt;fs(172.16.4.114): 200OK(SDP)
+    Note over microSIP(B),fs(172.16.4.114): 通话接通
+    fs(172.16.4.114)-&amp;gt;&amp;gt; microSIP(A): 200OK(SDP)
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.114): ACK 
+    fs(172.16.4.114)-&amp;gt;&amp;gt;microSIP(B): ACK
+&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;code&gt;redirect&lt;/code&gt;时, &lt;code&gt;fs(172.16.4.111)&lt;/code&gt;返回&lt;code&gt;302 Moved Temporarily&lt;/code&gt;, 然后&lt;code&gt;UAC&lt;/code&gt;会根据&lt;code&gt;Contact&lt;/code&gt;头域, 重新发送&lt;code&gt;INVITE&lt;/code&gt;信令。
+后续的交互就和&lt;code&gt;fs(172.16.4.111)&lt;/code&gt;没有任何关系了。&lt;/p&gt;
+&lt;h3 id=&#34;transfer&#34;&gt;transfer
+&lt;/h3&gt;&lt;p&gt;用法：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;transfer &amp;lt;destination_number&amp;gt; [&amp;lt;dialplan&amp;gt; [&amp;lt;context&amp;gt;]]
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;因为是转到线路上，所以使用的方式为：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &amp;lt;action application=&amp;#34;transfer&amp;#34; data=&amp;#34;sip:1009@172.16.4.114:5060&amp;#34;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; &amp;lt;action application=&amp;#34;park&amp;#34;/&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;交互流程-2&#34;&gt;交互流程
+&lt;/h4&gt;&lt;pre class=&#34;mermaid&#34;&gt;
+    sequenceDiagram
+    microSIP(A)-&amp;gt;&amp;gt; fs(172.16.4.111：5060): INVITE 
+    Note over microSIP(A),fs(172.16.4.111：5060): Session-Expires: 1800
+    fs(172.16.4.111：5060) --&amp;gt;&amp;gt; microSIP(A): 100 Trying
+    fs(172.16.4.111：5080) -&amp;gt;&amp;gt; fs(172.16.4.114：5060): INVITE
+    Note over fs(172.16.4.111：5080), fs(172.16.4.114：5060): To: &amp;lt;sip:1009@172.16.4.114：5060&amp;gt;
+    fs(172.16.4.114：5060)--&amp;gt;&amp;gt; fs(172.16.4.111：5080): 100 Trying
+    fs(172.16.4.114：5060)-&amp;gt;&amp;gt; microSIP(B): INVITE
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114：5060): 100 TBrying
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114：5060): 180 Ringing
+    fs(172.16.4.114：5060)-&amp;gt;&amp;gt;fs(172.16.4.111：5080): 183 Ringing
+    fs(172.16.4.111：5060)-&amp;gt;&amp;gt;microSIP(A): 183 Ringing
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114：5060): 200OK
+    Note over microSIP(B),fs(172.16.4.114：5060): 通话接通
+    fs(172.16.4.114：5060)-&amp;gt;&amp;gt;fs(172.16.4.111：5080): 200OK
+    fs(172.16.4.111：5060)-&amp;gt;&amp;gt; microSIP(A): 200OK
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111：5060): ACK
+    fs(172.16.4.111：5080)-&amp;gt;&amp;gt; fs(172.16.4.114：5060): ACK
+    fs(172.16.4.114：5060)-&amp;gt;&amp;gt; microSIP(B): ACK 
+    microSIP(B)-&amp;gt;&amp;gt;fs(172.16.4.114：5060): BYE
+    Note over microSIP(B),fs(172.16.4.114：5060): 通话结束
+    fs(172.16.4.114：5060)-&amp;gt;&amp;gt; fs(172.16.4.111：5080): BYE
+    fs(172.16.4.111：5060)-&amp;gt;&amp;gt; microSIP(A): BYE
+    microSIP(A)-&amp;gt;&amp;gt;fs(172.16.4.111：5060): ACK
+    fs(172.16.4.111：5080)-&amp;gt;&amp;gt; fs(172.16.4.114：5060): ACK
+    fs(172.16.4.114：5060)-&amp;gt;&amp;gt; microSIP(B): ACK
+&lt;/pre&gt;
+
+&lt;p&gt;可以看到,&lt;code&gt;transfer&lt;/code&gt;转人工时，不会挂断原来的通话。&lt;code&gt;fs(172.16.4.111)&lt;/code&gt;上也能记录转人工录音。&lt;/p&gt;
+&lt;h3 id=&#34;uuid_transfer&#34;&gt;uuid_transfer
+&lt;/h3&gt;&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;未接通时, 可以使用&lt;code&gt;redirect&lt;/code&gt;,&lt;code&gt;transfer&lt;/code&gt;功能, 转人工。&lt;/li&gt;
+&lt;li&gt;接通时, 可以使用&lt;code&gt;deflect&lt;/code&gt;,&lt;code&gt;bridge&lt;/code&gt;, &lt;code&gt;transfer&lt;/code&gt;功能, 转人工。&lt;/li&gt;
+&lt;li&gt;转人工可以录音的有：&lt;code&gt;bridge&lt;/code&gt;, &lt;code&gt;transfer&lt;/code&gt;，不能录音的有：&lt;code&gt;deflect&lt;/code&gt;,&lt;code&gt;redirect&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>docker容器内存增长排查</title>
         <link>https://QuincyGao.github.io/p/docker%E5%AE%B9%E5%99%A8%E5%86%85%E5%AD%98%E5%A2%9E%E9%95%BF%E6%8E%92%E6%9F%A5/</link>
         <pubDate>Fri, 14 Nov 2025 09:40:38 +0800</pubDate>
