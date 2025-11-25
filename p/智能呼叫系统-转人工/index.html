@@ -421,7 +421,6 @@
             <li><a href="#交互流程-2">交互流程</a></li>
           </ol>
         </li>
-        <li><a href="#uuid_transfer">uuid_transfer</a></li>
       </ol>
     </li>
     <li><a href="#总结">总结</a></li>
@@ -501,7 +500,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 6 分钟,共2863 字
+                    阅读时长: 6 分钟,共2865 字
                 </time>
             </div>
         
@@ -742,13 +741,13 @@
 </h4><pre class="mermaid">
     sequenceDiagram
     microSIP(A)-&gt;&gt; fs(172.16.4.111：5060): INVITE 
-    Note over microSIP(A),fs(172.16.4.111：5060): Session-Expires: 1800
+    Note over microSIP(A),fs(172.16.4.111：5060): 拨打电话
     fs(172.16.4.111：5060) --&gt;&gt; microSIP(A): 100 Trying
     fs(172.16.4.111：5080) -&gt;&gt; fs(172.16.4.114：5060): INVITE
     Note over fs(172.16.4.111：5080), fs(172.16.4.114：5060): To: &lt;sip:1009@172.16.4.114：5060&gt;
     fs(172.16.4.114：5060)--&gt;&gt; fs(172.16.4.111：5080): 100 Trying
     fs(172.16.4.114：5060)-&gt;&gt; microSIP(B): INVITE
-    microSIP(B)-&gt;&gt;fs(172.16.4.114：5060): 100 TBrying
+    microSIP(B)--&gt;&gt;fs(172.16.4.114：5060): 100 Trying
     microSIP(B)-&gt;&gt;fs(172.16.4.114：5060): 180 Ringing
     fs(172.16.4.114：5060)-&gt;&gt;fs(172.16.4.111：5080): 183 Ringing
     fs(172.16.4.111：5060)-&gt;&gt;microSIP(A): 183 Ringing
@@ -769,8 +768,7 @@
 </pre>
 
 <p>可以看到,<code>transfer</code>转人工时，不会挂断原来的通话。<code>fs(172.16.4.111)</code>上也能记录转人工录音。</p>
-<h3 id="uuid_transfer">uuid_transfer
-</h3><h2 id="总结">总结
+<h2 id="总结">总结
 </h2><ol>
 <li>未接通时, 可以使用<code>redirect</code>,<code>transfer</code>功能, 转人工。</li>
 <li>接通时, 可以使用<code>deflect</code>,<code>bridge</code>, <code>transfer</code>功能, 转人工。</li>
@@ -864,6 +862,30 @@
             
                 
 <article class="has-image">
+    <a href="/p/freeswitch-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%88%86%E5%8F%91/">
+        
+        
+            <div class="article-image">
+                <img src="/p/freeswitch-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%88%86%E5%8F%91/backup.e105191f5073f0cac7b1a9d9728995c3_hu13849515816075978751.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post freeswitch 负载均衡分发"
+                        
+                        data-hash="md5-4QUZH1Bz8MrHsanZcomVww==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">freeswitch 负载均衡分发</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%BA%8Cfreeswitch%E5%AA%92%E4%BD%93%E6%97%81%E8%B7%AF/">
         
         
@@ -953,30 +975,6 @@
 
         <div class="article-details">
             <h2 class="article-title">docker容器内存增长排查</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/keepalived%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip%E8%A1%A5%E5%85%85/">
-        
-        
-            <div class="article-image">
-                <img src="/p/keepalived%E9%85%8D%E7%BD%AE%E8%99%9A%E6%8B%9Fip%E8%A1%A5%E5%85%85/backup.c0558b36a3f018ac4b86637ef3f620d2_hu1385751020403313299.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post keepalived配置虚拟ip补充"
-                        
-                        data-hash="md5-wFWLNqPwGKxLhmN&#43;8/Yg0g==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">keepalived配置虚拟ip补充</h2>
         </div>
     </a>
 </article>
@@ -1179,9 +1177,11 @@
         
             
         
+            
         
-        发表了70篇文章 · 
-        总计123.19k字
+        
+        发表了71篇文章 · 
+        总计124.64k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
