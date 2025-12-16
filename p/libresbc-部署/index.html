@@ -485,7 +485,7 @@
 
 
                 <time class="article-time--reading">
-                    阅读时长: 5 分钟,共2260 字
+                    阅读时长: 5 分钟,共2398 字
                 </time>
             </div>
         
@@ -780,6 +780,7 @@
 </span></span></code></pre></td></tr></table>
 </div>
 </div><p>如果不做这样的调整，<code>luarocks install</code>安装时，会因为相关的依赖没安装好，导致安装失败。</p>
+<p>然后把<code>libresbc/liberator/kamcfg/layer.j2.lua</code>和<code>libresbc/callng/utilities.lua</code>中的<code>json=require(&quot;json&quot;)</code>替换为<code>json=require(&quot;cjson&quot;)</code>。</p>
 <ol start="5">
 <li>修改<code>libresbc/liberator/main.py</code>中的<code>http监听服务</code>, 调整为：</li>
 </ol>
@@ -1176,6 +1177,30 @@
             
                 
 <article class="has-image">
+    <a href="/p/libresbc%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">
+        
+        
+            <div class="article-image">
+                <img src="/p/libresbc%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/backup.78357601d5214049754a39486aca4871_hu12083867770293934679.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post libresbc实现原理"
+                        
+                        data-hash="md5-eDV2AdUhQEl1SjlIaspIcQ==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">libresbc实现原理</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
     <a href="/p/freeswitch-%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E5%88%86%E5%8F%91/">
         
         
@@ -1265,30 +1290,6 @@
 
         <div class="article-details">
             <h2 class="article-title">智能呼叫系统方案二(freeswitch媒体旁路)</h2>
-        </div>
-    </a>
-</article>
-
-            
-                
-<article class="has-image">
-    <a href="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%B8%80mrcp%E4%BD%BF%E7%94%A8/">
-        
-        
-            <div class="article-image">
-                <img src="/p/%E6%99%BA%E8%83%BD%E5%91%BC%E5%8F%AB%E7%B3%BB%E7%BB%9F%E6%96%B9%E6%A1%88%E4%B8%80mrcp%E4%BD%BF%E7%94%A8/backup.3412f12e89dc0f23553277bc3b940062_hu4987143238625173242.jpg" 
-                        width="250" 
-                        height="150" 
-                        loading="lazy"
-                        alt="Featured image of post 智能呼叫系统方案一(mrcp使用)"
-                        
-                        data-hash="md5-NBLxLoncDyNVMne8O5QAYg==">
-                
-            </div>
-        
-
-        <div class="article-details">
-            <h2 class="article-title">智能呼叫系统方案一(mrcp使用)</h2>
         </div>
     </a>
 </article>
@@ -1495,9 +1496,11 @@
         
             
         
+            
         
-        发表了72篇文章 · 
-        总计126.91k字
+        
+        发表了73篇文章 · 
+        总计128.65k字
     </section>
     <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <span id="busuanzi_container_site_pv">本站总访问量 <span id="busuanzi_value_site_pv"></span> 次 · </span>
