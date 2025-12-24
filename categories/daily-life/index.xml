@@ -6,7 +6,511 @@
         <description>Recent content in 技术生活 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 17 Dec 2025 09:50:41 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 24 Dec 2025 11:12:46 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>unimrcp音频降噪方案</title>
+        <link>https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/</link>
+        <pubDate>Wed, 24 Dec 2025 11:12:46 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/backup.jpg" alt="Featured image of post unimrcp音频降噪方案" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;unimrcp&lt;/code&gt; 本身没有提供降噪功能，降噪的功能一般由对接的&lt;code&gt;asr&lt;/code&gt; 服务提供。但是如果&lt;code&gt;asr&lt;/code&gt; 服务没有提供降噪功能，
+那么就需要在&lt;code&gt;unimrcp&lt;/code&gt; 中实现降噪功能。结合已有的技术积累，目前主要有以下两种方案：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;集成&lt;code&gt;webrtc&lt;/code&gt;源码中的降噪模块。&lt;/li&gt;
+&lt;li&gt;使用&lt;code&gt;ffmpeg&lt;/code&gt;来实现降噪功能。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;接下来，我将详细介绍这两种方案的实现效果，下面是原始&lt;code&gt;8k&lt;/code&gt;的音频文件，没有降噪处理。&lt;/p&gt;
+
+
+
+
+&lt;audio id=&#34;music-0&#34; controls preload=&#34;auto&#34;&gt;
+  &lt;source src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/test-8kHz.wav&#34; type=&#34;audio/wav&#34;&gt;
+  Your browser does not support the audio element.
+&lt;/audio&gt;
+
+&lt;h2 id=&#34;webrtc-降噪&#34;&gt;webrtc 降噪
+&lt;/h2&gt;&lt;h3 id=&#34;webrtc-源码介绍&#34;&gt;webrtc 源码介绍
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;webrtc&lt;/code&gt;的源码地址为: &lt;a class=&#34;link&#34; href=&#34;https://webrtc.googlesource.com/src&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://webrtc.googlesource.com/src&lt;/a&gt;, 最新版本是&lt;code&gt;c++&lt;/code&gt;的。&lt;/p&gt;
+&lt;p&gt;因为&lt;code&gt;unimrcp&lt;/code&gt;是&lt;code&gt;c&lt;/code&gt;的，所以要集成&lt;code&gt;webrtc&lt;/code&gt;的&lt;code&gt;c++&lt;/code&gt;代码，有一定的难度，想挑战的可以尝试一下。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;webrtc&lt;/code&gt;的降噪模块在&lt;code&gt;src/modules/audio_processing/ns/noise_suppressor.cc&lt;/code&gt;文件中。&lt;/p&gt;
+&lt;p&gt;我集成的是&lt;code&gt;webrtc&lt;/code&gt;早期的版本，之前的版本是&lt;code&gt;c&lt;/code&gt;写的，时间为&lt;code&gt;2013&lt;/code&gt;。这是&lt;code&gt;git log&lt;/code&gt;信息：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;commit 3bca0df1d47f4ab54cf05ce9d8e11c90f84974ba (HEAD -&amp;gt; master, origin/master, origin/HEAD)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Author: wu@webrtc.org &amp;lt;wu@webrtc.org@4adac7df-926f-26a2-2b94-8c16560cd09d&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Date:   Mon Dec 16 16:49:46 2013 +0000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    Update stable to r5300.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    git-svn-id: http://webrtc.googlecode.com/svn/stable/webrtc@5301 4adac7df-926f-26a2-2b94-8c16560cd09d
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;commit 658db909bd7d105d954f3021f825a55873a81499
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Author: wu@webrtc.org &amp;lt;wu@webrtc.org@4adac7df-926f-26a2-2b94-8c16560cd09d&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Date:   Fri Dec 13 19:20:56 2013 +0000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    Update stable to r5287.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    git-svn-id: http://webrtc.googlecode.com/svn/stable/webrtc@5288 4adac7df-926f-26a2-2b94-8c16560cd09d
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;commit 15a8a6e7edb2c8df7f5b21e759ace213a4ab7292
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Author: wu@webrtc.org &amp;lt;wu@webrtc.org@4adac7df-926f-26a2-2b94-8c16560cd09d&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Date:   Fri Dec 13 00:53:00 2013 +0000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    Update stable to r5277.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    git-svn-id: http://webrtc.googlecode.com/svn/stable/webrtc@5278 4adac7df-926f-26a2-2b94-8c16560cd09d
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h3 id=&#34;webrtc-降噪效果&#34;&gt;webrtc 降噪效果
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;webrtc&lt;/code&gt;的降噪等级有&lt;code&gt;0-3&lt;/code&gt;共&lt;code&gt;4&lt;/code&gt;个等级, &lt;code&gt;0&lt;/code&gt;最低，&lt;code&gt;3&lt;/code&gt;最高, 以下是实际测试的波形图：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;降噪等级&lt;code&gt;1&lt;/code&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode1.png&#34;
+	width=&#34;1640&#34;
+	height=&#34;379&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode1_hu2633341105998453609.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode1_hu8230660498706903029.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;mode=1&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;432&#34;
+		data-flex-basis=&#34;1038px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;降噪等级&lt;code&gt;2&lt;/code&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode2.png&#34;
+	width=&#34;1654&#34;
+	height=&#34;450&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode2_hu5971436099160351307.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode2_hu16795266842301724180.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;mode=2&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;367&#34;
+		data-flex-basis=&#34;882px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;降噪等级&lt;code&gt;3&lt;/code&gt;：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode3.png&#34;
+	width=&#34;1657&#34;
+	height=&#34;442&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode3_hu3309885913753943851.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mode3_hu12761299905902057730.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;mode=3&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;374&#34;
+		data-flex-basis=&#34;899px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到，对于背景噪音较大时，&lt;code&gt;webrtc&lt;/code&gt;的降噪效果不好。&lt;/p&gt;
+&lt;h2 id=&#34;ffmpeg-降噪模块&#34;&gt;ffmpeg 降噪模块
+&lt;/h2&gt;&lt;h3 id=&#34;集成方式&#34;&gt;集成方式
+&lt;/h3&gt;&lt;p&gt;实现方式比较多，可以使用&lt;code&gt;c&lt;/code&gt;调用&lt;code&gt;ffmpeg&lt;/code&gt;, 我用的是&lt;code&gt;golang&lt;/code&gt;调用&lt;code&gt;ffmpeg&lt;/code&gt;, 提供&lt;code&gt;.so&lt;/code&gt;给&lt;code&gt;unimrcp&lt;/code&gt;调用。&lt;/p&gt;
+&lt;h3 id=&#34;ffmpeg-降噪类型&#34;&gt;ffmpeg 降噪类型
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;ffmpeg&lt;/code&gt; 降噪算法有多种，包括：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;推荐滤镜&lt;/th&gt;
+          &lt;th&gt;场景&lt;/th&gt;
+          &lt;th&gt;降噪强度&lt;/th&gt;
+          &lt;th&gt;CPU开销&lt;/th&gt;
+          &lt;th&gt;实时性建议&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;afftdn&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;通用背景噪音&lt;/td&gt;
+          &lt;td&gt;中等&lt;/td&gt;
+          &lt;td&gt;低&lt;/td&gt;
+          &lt;td&gt;效果均衡，无需外部文件，计算快。&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;arnndn&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;专业人声提取 (会议)&lt;/td&gt;
+          &lt;td&gt;极高&lt;/td&gt;
+          &lt;td&gt;中/高&lt;/td&gt;
+          &lt;td&gt;针对语音优化，效果最接近专业软件,需要模型文件。&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;anlmdn&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;高保真除噪(音乐)&lt;/td&gt;
+          &lt;td&gt;高&lt;/td&gt;
+          &lt;td&gt;高&lt;/td&gt;
+          &lt;td&gt;不推荐高并发流式&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;agate&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;消除空白期杂音&lt;/td&gt;
+          &lt;td&gt;取决于阈值&lt;/td&gt;
+          &lt;td&gt;极低&lt;/td&gt;
+          &lt;td&gt;配合其他降噪滤镜使用，效果好。&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;&lt;code&gt;highpass/lowpass&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;电流嗡嗡声&lt;/td&gt;
+          &lt;td&gt;低&lt;/td&gt;
+          &lt;td&gt;低&lt;/td&gt;
+          &lt;td&gt;直接切断高低频段，简单粗暴有效。&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;官方文档：&lt;a class=&#34;link&#34; href=&#34;https://ffmpeg.org/ffmpeg-filters.html#afftdn&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;ffmpeg filter 文档&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;afftdn自适应采样&#34;&gt;afftdn(自适应采样)
+&lt;/h3&gt;&lt;p&gt;常用参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;nr&lt;/code&gt;: 降噪强度，默认: &lt;code&gt;12dB&lt;/code&gt;, 范围: &lt;code&gt;0.01-97dB&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;nf&lt;/code&gt;: 噪声底电平，默认：&lt;code&gt;-50dB&lt;/code&gt;, 范围: &lt;code&gt;-80dB到-20dB&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;使用命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -f s16le -ar 8000 -ac 1  -i input.pcm  -af &amp;#34;afftdn=nr=12dB:nf=-50dB&amp;#34;  -ar 8000 -f wav output.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;可以看到这个降噪幅度很小，最高也就&lt;code&gt;97dB&lt;/code&gt;, 所以针对我们打电话示例中的音频，背景声有几千&lt;code&gt;dB&lt;/code&gt;，降噪效果并不好。&lt;/p&gt;
+&lt;h3 id=&#34;arnndn神经网络降噪&#34;&gt;arnndn(神经网络降噪)
+&lt;/h3&gt;&lt;p&gt;其参数只有两个：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;m&lt;/code&gt;: 模型文件路径，必须。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;mix&lt;/code&gt;: 混合系数，默认: &lt;code&gt;1&lt;/code&gt;, 范围: &lt;code&gt;-1到1&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;模型文件有：&lt;code&gt;bd.rnnn&lt;/code&gt;,&lt;code&gt;cb.rnnn&lt;/code&gt;,&lt;code&gt;lq.rnnn&lt;/code&gt;,&lt;code&gt;mp.rnnn&lt;/code&gt;,&lt;code&gt;sh.rnnn&lt;/code&gt;,&lt;code&gt;std.rnnn&lt;/code&gt;,常用的是&lt;code&gt;cb.rnnn&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;通过对比，&lt;code&gt;std.cnnn&lt;/code&gt;降噪最差，&lt;code&gt;sh.rnnn&lt;/code&gt;效果更好，其他的都差不多，自己可以按照实际情况选择。&lt;/p&gt;
+&lt;p&gt;可以从: &lt;a class=&#34;link&#34; href=&#34;https://github.com/richardpl/arnndn-models.git&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;https://github.com/richardpl/arnndn-models.git&lt;/a&gt; 下载模型文件。&lt;/p&gt;
+&lt;p&gt;如果你的&lt;code&gt;cb.cnnn&lt;/code&gt;在其他的目录下，就可以这样：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -f s16le -ar 8000 -ac 1  -i input.pcm  -af &amp;#34;arnndn=m=./models/cb.rnnn&amp;#34;  -ar 8000 -f wav output.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;原始的音频波形为：
+&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/original.png&#34;
+	width=&#34;1583&#34;
+	height=&#34;718&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/original_hu17432476966090746875.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/original_hu7104791346383222931.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;original&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;220&#34;
+		data-flex-basis=&#34;529px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;cbrnnn-降噪效果&#34;&gt;cb.rnnn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/cb.cnnn.png&#34;
+	width=&#34;1644&#34;
+	height=&#34;391&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/cb.cnnn_hu137966458747956233.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/cb.cnnn_hu8015861298297042895.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;cb.rnnn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;420&#34;
+		data-flex-basis=&#34;1009px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到效果很好， 背景噪音被显著减少，语音也没有明显的失真。相比于原始音频，人声的分贝也降低了很多，
+当用户声音较小时，可能会失真。&lt;/p&gt;
+&lt;h4 id=&#34;bdrnnn-降噪效果&#34;&gt;bd.rnnn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/bd.cnnn.png&#34;
+	width=&#34;1652&#34;
+	height=&#34;347&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/bd.cnnn_hu1544285755336385710.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/bd.cnnn_hu15709099370235746766.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;bd.rnnn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;476&#34;
+		data-flex-basis=&#34;1142px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;lqrnnn-降噪效果&#34;&gt;lq.rnnn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/lq.cnnn.png&#34;
+	width=&#34;1648&#34;
+	height=&#34;578&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/lq.cnnn_hu11302061315919886276.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/lq.cnnn_hu971728315584405005.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;lq.rnnn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;285&#34;
+		data-flex-basis=&#34;684px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;mprnnn-降噪效果&#34;&gt;mp.rnnn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mp.cnnn.png&#34;
+	width=&#34;1644&#34;
+	height=&#34;498&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mp.cnnn_hu8994171186353338693.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/mp.cnnn_hu16005506474264934712.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;mp.rnnn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;330&#34;
+		data-flex-basis=&#34;792px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;shrnnn-降噪效果&#34;&gt;sh.rnnn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/sh.cnnn.png&#34;
+	width=&#34;1653&#34;
+	height=&#34;491&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/sh.cnnn_hu10918911562466425096.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/sh.cnnn_hu3554999151863043051.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sh.rnnn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;336&#34;
+		data-flex-basis=&#34;807px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h4 id=&#34;stdrnnn-降噪效果&#34;&gt;std.rnnn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/std.cnnn.png&#34;
+	width=&#34;1675&#34;
+	height=&#34;745&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/std.cnnn_hu4080334607978424510.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/std.cnnn_hu7811168117015319320.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;std.rnnn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;224&#34;
+		data-flex-basis=&#34;539px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;anlmdn非局部均值去噪&#34;&gt;anlmdn(非局部均值去噪)
+&lt;/h3&gt;&lt;p&gt;常用参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt;: 降噪强度，默认: &lt;code&gt;0.00001&lt;/code&gt;, 范围: &lt;code&gt;0.00001-10000dB&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;p&lt;/code&gt;: 补丁长度（毫秒），用于匹配相似音频块的长度，默认：&lt;code&gt;2ms&lt;/code&gt;, 范围: &lt;code&gt;1-100ms&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;/code&gt;: 搜索窗口长度（毫秒），在多大的范围内寻找相似的声音块，默认: &lt;code&gt;6ms&lt;/code&gt;, 范围: &lt;code&gt;2-300ms&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;m&lt;/code&gt;: 平滑因子，默认: &lt;code&gt;11&lt;/code&gt;, 范围: &lt;code&gt;1-1000&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;使用命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -f s16le -ar 8000 -ac 1  -i input.pcm  -af &amp;#34;anlmdn=s=1000&amp;#34;  -ar 8000 -f wav output.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;我把&lt;code&gt;s=1000dB&lt;/code&gt;, 这样可以达到和&lt;code&gt;arnndn&lt;/code&gt;一样的效果，但是如果声音较小时，会失真，所以&lt;code&gt;s&lt;/code&gt;设置多大很重要。
+和&lt;code&gt;highpass/lowpass&lt;/code&gt;降噪滤镜配合使用，效果会更好。&lt;/p&gt;
+&lt;h4 id=&#34;anlmdn-降噪效果&#34;&gt;anlmdn 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/anlmdn.png&#34;
+	width=&#34;1668&#34;
+	height=&#34;927&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/anlmdn_hu8881155624323022893.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/anlmdn_hu8682777321973160269.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;anlmdn&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;179&#34;
+		data-flex-basis=&#34;431px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;agate自动门限&#34;&gt;agate(自动门限)
+&lt;/h3&gt;&lt;p&gt;它的工作原理像一个“自动开关”：&lt;/p&gt;
+&lt;p&gt;当声音低于某个设定的阈值（Threshold）时，它会降低音量甚至静音；&lt;/p&gt;
+&lt;p&gt;当声音高于阈值时，它会让声音通过。&lt;/p&gt;
+&lt;p&gt;常用参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;threshold&lt;/code&gt;: 门限阈值，低于此电平的声音将被压缩/静音。值越小越灵敏，默认: &lt;code&gt;0.125&lt;/code&gt;, 范围: &lt;code&gt;0-1&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ratio&lt;/code&gt;: 压缩比，门关闭时音量降低的倍数, 默认: &lt;code&gt;2&lt;/code&gt;, 范围: &lt;code&gt;1-9000&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;attack&lt;/code&gt;: 攻击时间（毫秒），声音超过阈值后，门开启的速度，默认: &lt;code&gt;20ms&lt;/code&gt;, 范围: &lt;code&gt;0.01-9000ms&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;release&lt;/code&gt;: 释放时间（毫秒），声音低于阈值后，门关闭的速度，默认: &lt;code&gt;250ms&lt;/code&gt;, 范围: &lt;code&gt;0.01-9000ms&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;makeup&lt;/code&gt;:  增益补偿，由于门可能会降低整体能量，可以用它补回音量, 默认: &lt;code&gt;1&lt;/code&gt;, 范围: &lt;code&gt;1-64&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;knee&lt;/code&gt;: 拐点柔顺度。让开关切换更自然，不至于听起来很突兀， 默认: 2.828427125,, 范围: &lt;code&gt;1-8&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;使用命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -f s16le -ar 8000 -ac 1  -i input.pcm  -af &amp;#34;agate&amp;#34;  -ar 8000 -f wav agate.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;agate-降噪效果&#34;&gt;agate 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/agate.png&#34;
+	width=&#34;1634&#34;
+	height=&#34;943&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/agate_hu14516253418336348482.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/agate_hu2630564769447346798.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;agate&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;173&#34;
+		data-flex-basis=&#34;415px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;看着效果也不错，但是和&lt;code&gt;highpass/lowpass&lt;/code&gt;降噪滤镜配合使用，效果会更好。&lt;/p&gt;
+&lt;h3 id=&#34;highpasslowpass高通低通滤波&#34;&gt;highpass/lowpass(高通/低通滤波)
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;highpass&lt;/code&gt;: 让高于设定频率的声音通过，切断低于该频率的声音。
+&lt;code&gt;lowpass&lt;/code&gt;: 让低于设定频率的声音通过，切断高于该频率的声音。&lt;/p&gt;
+&lt;p&gt;常用参数：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;f&lt;/code&gt;: 截止频率，&lt;code&gt;highpass&lt;/code&gt;默认: &lt;code&gt;3000Hz&lt;/code&gt;, &lt;code&gt;lowpass&lt;/code&gt;默认: &lt;code&gt;500Hz&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;p&lt;/code&gt;: 滤波器阶数, 增加阶数会让边缘切得更“陡”，默认: &lt;code&gt;2&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;w&lt;/code&gt;: 带宽，控制过渡带的形状。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;使用命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -f s16le -ar 8000 -ac 1  -i input.pcm  -af &amp;#34;highpass=f=1000,lowpass=f=3400&amp;#34;  -ar 8000 -f wav highpass.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h4 id=&#34;highpasslowpass-降噪效果&#34;&gt;highpass/lowpass 降噪效果
+&lt;/h4&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass.png&#34;
+	width=&#34;1661&#34;
+	height=&#34;690&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass_hu12182156445977353755.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass_hu2631994616717235089.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;highpass/lowpass&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;240&#34;
+		data-flex-basis=&#34;577px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;有一定的降噪能力，但是还达不到想要的结果。&lt;/p&gt;
+&lt;h3 id=&#34;组合以上降噪滤镜&#34;&gt;组合以上降噪滤镜
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;highpass/lowpass&lt;/code&gt;+ &lt;code&gt;anlmdn&lt;/code&gt;+ &lt;code&gt;agate&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;使用命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -ar 8000 -ac 1 -f s16le -i input.pcm -af &amp;#34;highpass=f=300,lowpass=f=3700, anlmdn=s=0.001:p=0.002:r=0.006, agate=threshold=-30dB:ratio=10:attack=10:release=200&amp;#34;  -ar 8000 -f wav pass-1.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;效果 ：
+&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass-1.png&#34;
+	width=&#34;1657&#34;
+	height=&#34;885&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass-1_hu4847828744873971016.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass-1_hu16840933804244868651.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;pass-1&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;187&#34;
+		data-flex-basis=&#34;449px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到把背景音都去掉了，而且语音也没有明显的失真。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;code&gt;highpass/lowpass&lt;/code&gt;+ &lt;code&gt;arnndn&lt;/code&gt;+ &lt;code&gt;agate&lt;/code&gt;(补充增益)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;使用命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ffmpeg -ar 8000 -ac 1 -f s16le -i input.pcm -af &amp;#34;highpass=f=300, lowpass=f=3400, anlmdn=s=0.002, agate=threshold=-32dB:ratio=15:makeup=1.5&amp;#34;  -ar 8000 -f wav pass-2.wav
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;效果 ：
+&lt;img src=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass-2.png&#34;
+	width=&#34;1677&#34;
+	height=&#34;1067&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass-2_hu10644851421860893575.png 480w, https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/pass-2_hu6049566379125944501.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;pass-2&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;157&#34;
+		data-flex-basis=&#34;377px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到加了增益，人声分贝也提高了。&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;实际的降噪能力，还是&lt;code&gt;ffmpeg&lt;/code&gt;更好。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ffmpeg&lt;/code&gt;降噪算法首选&lt;code&gt;arnndn&lt;/code&gt;, 可能CPU占用较高。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ffmpeg&lt;/code&gt;次一级的算法可以使用&lt;code&gt;highpass/lowpass&lt;/code&gt;+ &lt;code&gt;anlmdn&lt;/code&gt;+ &lt;code&gt;agate&lt;/code&gt;组合方式，效果也不错。需要根据实际情况调整参数。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>webrtc文章推荐</title>
         <link>https://QuincyGao.github.io/p/webrtc%E6%96%87%E7%AB%A0%E6%8E%A8%E8%8D%90/</link>
         <pubDate>Wed, 17 Dec 2025 09:50:41 +0800</pubDate>
