@@ -6,7 +6,30 @@
         <description>Recent content in 技术生活 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 24 Dec 2025 11:12:46 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 29 Dec 2025 11:41:30 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/daily-life/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>音频处理golang库推荐</title>
+        <link>https://QuincyGao.github.io/p/%E9%9F%B3%E9%A2%91%E5%A4%84%E7%90%86golang%E5%BA%93%E6%8E%A8%E8%8D%90/</link>
+        <pubDate>Mon, 29 Dec 2025 11:41:30 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/%E9%9F%B3%E9%A2%91%E5%A4%84%E7%90%86golang%E5%BA%93%E6%8E%A8%E8%8D%90/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/%E9%9F%B3%E9%A2%91%E5%A4%84%E7%90%86golang%E5%BA%93%E6%8E%A8%E8%8D%90/backup.jpg" alt="Featured image of post 音频处理golang库推荐" /&gt;&lt;h2 id=&#34;背景说明&#34;&gt;背景说明
+&lt;/h2&gt;&lt;p&gt;在&lt;code&gt;呼叫系统&lt;/code&gt;中，经常需要对音频进行处理，比如调整采样率，格式转换，降噪等。
+查找&lt;code&gt;github&lt;/code&gt;上的库, 大部分都和&lt;code&gt;video&lt;/code&gt;混在一起，
+所以决定开发单独的音频处理的库：&lt;a class=&#34;link&#34; href=&#34;https://github.com/QuincyGao/audio-go&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;audio-go&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;功能介绍&#34;&gt;功能介绍
+&lt;/h2&gt;&lt;p&gt;目前支持&lt;code&gt;流式&lt;/code&gt;和&lt;code&gt;文件&lt;/code&gt;处理，功能有：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;音频格式转换&lt;/li&gt;
+&lt;li&gt;音频采样率转换&lt;/li&gt;
+&lt;li&gt;音频声道合成和分离&lt;/li&gt;
+&lt;li&gt;支持音频降噪（使用&lt;code&gt;filter&lt;/code&gt;功能）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;使用示例&#34;&gt;使用示例
+&lt;/h2&gt;&lt;p&gt;具体的使用说明可以参考&lt;code&gt;example&lt;/code&gt;or &lt;code&gt;audio_test.go&lt;/code&gt;。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>unimrcp音频降噪方案</title>
         <link>https://QuincyGao.github.io/p/unimrcp%E9%9F%B3%E9%A2%91%E9%99%8D%E5%99%AA%E6%96%B9%E6%A1%88/</link>
         <pubDate>Wed, 24 Dec 2025 11:12:46 +0800</pubDate>
