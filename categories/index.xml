@@ -6,21 +6,21 @@
         <description>Recent content in 分类 on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 13 Jan 2026 09:52:38 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 20 Jan 2026 15:04:52 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>opensips</title>
+        <link>https://QuincyGao.github.io/categories/opensips/</link>
+        <pubDate>Tue, 20 Jan 2026 15:04:52 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/categories/opensips/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/categories/opensips/opensips.jpg" alt="Featured image of post opensips" /&gt;</description>
+        </item>
+        <item>
         <title>技术生活</title>
         <link>https://QuincyGao.github.io/categories/daily-life/</link>
         <pubDate>Tue, 13 Jan 2026 09:52:38 +0800</pubDate>
         
         <guid>https://QuincyGao.github.io/categories/daily-life/</guid>
         <description>&lt;img src="https://QuincyGao.github.io/categories/daily-life/life.png" alt="Featured image of post 技术生活" /&gt;</description>
-        </item>
-        <item>
-        <title>opensips</title>
-        <link>https://QuincyGao.github.io/categories/opensips/</link>
-        <pubDate>Fri, 05 Sep 2025 09:31:00 +0800</pubDate>
-        
-        <guid>https://QuincyGao.github.io/categories/opensips/</guid>
-        <description>&lt;img src="https://QuincyGao.github.io/categories/opensips/opensips.jpg" alt="Featured image of post opensips" /&gt;</description>
         </item>
         <item>
         <title>kamailio</title>

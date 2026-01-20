@@ -6,7 +6,109 @@
         <description>Recent content in opensips on QuincyGao Blog</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Fri, 05 Sep 2025 09:31:00 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 20 Jan 2026 15:04:52 +0800</lastBuildDate><atom:link href="https://QuincyGao.github.io/categories/opensips/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>opensips的topology_hiding巧用</title>
+        <link>https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/</link>
+        <pubDate>Tue, 20 Jan 2026 15:04:52 +0800</pubDate>
+        
+        <guid>https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/</guid>
+        <description>&lt;img src="https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/backup.jpg" alt="Featured image of post opensips的topology_hiding巧用" /&gt;&lt;h2 id=&#34;背景&#34;&gt;背景
+&lt;/h2&gt;&lt;p&gt;最近在使用&lt;code&gt;opensips&lt;/code&gt;作为&lt;code&gt;sbc&lt;/code&gt;对接&lt;code&gt;电信运营商&lt;/code&gt;时，&lt;code&gt;运营商&lt;/code&gt;要求发出去的&lt;code&gt;sip请求&lt;/code&gt;都不能带&lt;code&gt;私网ip&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;对于正常的&lt;code&gt;sip协议&lt;/code&gt;来说，发出请求的&lt;code&gt;INVITE&lt;/code&gt;信令中的&lt;code&gt;From&lt;/code&gt;,&lt;code&gt;To&lt;/code&gt;,&lt;code&gt;Contact&lt;/code&gt;头字段是可以包含&lt;code&gt;私网ip&lt;/code&gt;的。
+正常的设备不会对其校验。但是这个运营商有这块的要求，所以从&lt;code&gt;opensips&lt;/code&gt;出去的&lt;code&gt;sip信令&lt;/code&gt;要做更改。&lt;/p&gt;
+&lt;p&gt;本次使用的&lt;code&gt;opensips&lt;/code&gt;版本为: &lt;code&gt;3.3.10&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;问题&#34;&gt;问题
+&lt;/h2&gt;&lt;h3 id=&#34;使用的场景&#34;&gt;使用的场景
+&lt;/h3&gt;&lt;p&gt;外呼场景是：&lt;code&gt;freeswitch&lt;/code&gt;&amp;mdash;&amp;gt;&lt;code&gt;opensips&lt;/code&gt;&amp;mdash;&amp;gt;&lt;code&gt;运营商&lt;/code&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;原始invite信令&#34;&gt;原始INVITE信令
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/sip.png&#34;
+	width=&#34;869&#34;
+	height=&#34;390&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/sip_hu17090717657043598800.png 480w, https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/sip_hu3756753834329014774.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;222&#34;
+		data-flex-basis=&#34;534px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;这是&lt;code&gt;opensips&lt;/code&gt;发送到&lt;code&gt;运营商&lt;/code&gt;的&lt;code&gt;INVITE&lt;/code&gt;信令, 要点：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;Record-Route&lt;/code&gt;和&lt;code&gt;Via&lt;/code&gt;:是&lt;code&gt;opensips&lt;/code&gt;新增自己的&lt;code&gt;外网ip&lt;/code&gt;和&lt;code&gt;端口&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;From&lt;/code&gt;要改成：&lt;code&gt;opensips&lt;/code&gt;的&lt;code&gt;外网ip&lt;/code&gt;和&lt;code&gt;端口&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;To&lt;/code&gt;要改成：&lt;code&gt;运营商&lt;/code&gt;的&lt;code&gt;外网ip&lt;/code&gt;和&lt;code&gt;端口&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Contact&lt;/code&gt;要改成：&lt;code&gt;opensips&lt;/code&gt;的&lt;code&gt;外网ip&lt;/code&gt;和&lt;code&gt;端口&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;解决&#34;&gt;解决
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;基础&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;From&lt;/code&gt;, &lt;code&gt;To&lt;/code&gt;, &lt;code&gt;Contact&lt;/code&gt;这些字段可以在&lt;code&gt;t_relay&lt;/code&gt;之前，先删除再追加，示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gdscript3&#34; data-lang=&#34;gdscript3&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;remove_hf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;From&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;from_hr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;From: &amp;#34;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;$&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;var&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;from&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;\r\n&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;append_hf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;$var(from_hr)&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;From&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;code&gt;Via&lt;/code&gt;没法通过这种方式来处理，所以要使用进阶方式。&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;进阶&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;topology_hiding&lt;/code&gt;的官网文档为：&lt;a class=&#34;link&#34; href=&#34;https://opensips.org/docs/modules/3.3.x/topology_hiding.html#func_topology_hiding&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;topology_hiding&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这个模块可以隐藏和存储&lt;code&gt;Via&lt;/code&gt;,&lt;code&gt;Record-Route&lt;/code&gt;和&lt;code&gt;Route&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;我在&lt;code&gt;create_dialog&lt;/code&gt;之后使用&lt;code&gt;topology_hiding&lt;/code&gt;, 示例：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;if (!create_dialog(&amp;#34;B&amp;#34;)) {
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    send_reply(500,&amp;#34;Internal Server Error&amp;#34;);
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    exit;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;}
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;topology_hiding();
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;得到了&lt;code&gt;INVITE&lt;/code&gt;的消息为：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/sip1.png&#34;
+	width=&#34;893&#34;
+	height=&#34;325&#34;
+	srcset=&#34;https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/sip1_hu6416443366700212836.png 480w, https://QuincyGao.github.io/p/opensips%E7%9A%84topology_hiding%E5%B7%A7%E7%94%A8/sip1_hu464127556342284064.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;sip&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;274&#34;
+		data-flex-basis=&#34;659px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;可以看到确实把&lt;code&gt;freeswitch&lt;/code&gt;的&lt;code&gt;Via&lt;/code&gt;隐藏了。&lt;/p&gt;
+&lt;p&gt;另外还会在&lt;code&gt;运营商&lt;/code&gt;给出&lt;code&gt;200Ok&lt;/code&gt;到&lt;code&gt;freeswitch&lt;/code&gt;,&lt;code&gt;freeswitch&lt;/code&gt;返回&lt;code&gt;ACK&lt;/code&gt;时，&lt;code&gt;opensips&lt;/code&gt;转发&lt;code&gt;ACK&lt;/code&gt;时带上自己的&lt;code&gt;外网ip&lt;/code&gt;到&lt;code&gt;Route&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;总结&#34;&gt;总结
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;topology_hiding&lt;/code&gt;的使用时机很重要，要在&lt;code&gt;create_dialog&lt;/code&gt;之后，&lt;code&gt;record_route_preset&lt;/code&gt;之前。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果是在&lt;code&gt;create_dialog&lt;/code&gt;之前，会导致接通之后，&lt;code&gt;200Ok&lt;/code&gt;的&lt;code&gt;ACK&lt;/code&gt;或者&lt;code&gt;BYE&lt;/code&gt;里带&lt;code&gt;freeswitch&lt;/code&gt;的&lt;code&gt;Via&lt;/code&gt;，这是不符合要求的。&lt;/li&gt;
+&lt;li&gt;如果是在&lt;code&gt;record_route_preset&lt;/code&gt;之后，会导致&lt;code&gt;opensips&lt;/code&gt;自己的&lt;code&gt;Record-Route&lt;/code&gt;也被隐藏，这会导致&lt;code&gt;运营商&lt;/code&gt;无法正确路由到&lt;code&gt;opensips&lt;/code&gt;。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+        </item>
+        <item>
         <title>关于rtpengine的几个小知识</title>
         <link>https://QuincyGao.github.io/p/%E5%85%B3%E4%BA%8Ertpengine%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B0%8F%E7%9F%A5%E8%AF%86/</link>
         <pubDate>Fri, 05 Sep 2025 09:31:00 +0800</pubDate>
